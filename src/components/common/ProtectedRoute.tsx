@@ -14,6 +14,11 @@ export default function ProtectedRoute({ children, allowedRoles, redirectTo = '/
   const { isAuthenticated, isLoading, hasRole } = useAuth();
   const location = useLocation();
 
+  // Check localStorage as fallback during initial load
+  const storedToken = localStorage.getItem('travelops_token');
+  const storedUser = localStorage.getItem('travelops_user');
+  const hasStoredAuth = storedToken && storedUser;
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -25,7 +30,8 @@ export default function ProtectedRoute({ children, allowedRoles, redirectTo = '/
     );
   }
 
-  if (!isAuthenticated) {
+  // Check both state and localStorage
+  if (!isAuthenticated && !hasStoredAuth) {
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Globe, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('admin@travelops.pro');
   const [password, setPassword] = useState('password');
@@ -12,20 +12,26 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Redirect when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
       const success = await login(email, password);
-      if (success) {
-        navigate('/');
-      } else {
+      if (!success) {
         setError('Invalid email or password. Try: admin@travelops.pro');
+        setLoading(false);
       }
+      // Don't set loading to false here - let useEffect handle redirect
     } catch (err) {
       setError('Login failed. Please try again.');
-    } finally {
       setLoading(false);
     }
   };

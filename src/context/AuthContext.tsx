@@ -15,25 +15,29 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
+  // Initialize state synchronously from localStorage
+  const getInitialAuth = () => {
     const storedToken = localStorage.getItem('travelops_token');
     const storedUser = localStorage.getItem('travelops_user');
     
     if (storedToken && storedUser) {
       try {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+        return {
+          user: JSON.parse(storedUser) as User,
+          token: storedToken,
+        };
       } catch (error) {
         localStorage.removeItem('travelops_token');
         localStorage.removeItem('travelops_user');
       }
     }
-    setIsLoading(false);
-  }, []);
+    return { user: null, token: null };
+  };
+
+  const initialAuth = getInitialAuth();
+  const [user, setUser] = useState<User | null>(initialAuth.user);
+  const [token, setToken] = useState<string | null>(initialAuth.token);
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
