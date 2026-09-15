@@ -51,11 +51,11 @@ export default function Vendors() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           <button
             onClick={() => setView('directory')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <Users className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">
@@ -77,11 +77,11 @@ export default function Vendors() {
 
           <button
             onClick={() => setView('add')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <Plus className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">
@@ -135,7 +135,7 @@ export default function Vendors() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {mockVendors.map(vendor => (
-            <div key={vendor.id} className="bg-white rounded-lg border border-slate-200 p-5 hover:shadow-lg transition-all">
+            <div key={vendor.id} className="bg-white rounded-3xl border border-slate-200 p-5 hover:shadow-lg transition-all">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-lg">
@@ -186,7 +186,7 @@ export default function Vendors() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
+      <div className="bg-white rounded-3xl border border-slate-200 p-6">
         <form className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

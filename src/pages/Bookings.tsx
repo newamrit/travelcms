@@ -128,7 +128,7 @@ export default function Bookings() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {bookings.map((booking) => (
-          <div key={booking.id} className="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition-all">
+          <div key={booking.id} className="bg-white rounded-3xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all">
             <div className="p-5 border-b border-slate-100">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
@@ -186,11 +186,11 @@ export default function Bookings() {
           {/* All Bookings Card */}
           <button
             onClick={() => setView('all')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <CalendarCheck className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">
@@ -213,11 +213,11 @@ export default function Bookings() {
           {/* Create Booking Card */}
           <button
             onClick={() => setView('create')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <Plus className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">
@@ -255,11 +255,11 @@ export default function Bookings() {
             {/* School/College Card */}
             <button
               onClick={() => setView('school_college')}
-              className="group bg-white rounded-xl border-2 border-slate-200 p-8 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-xl hover:-translate-y-1"
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-8 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-xl hover:-translate-y-1"
               style={{ minHeight: '300px' }}
             >
               <div className="flex flex-col items-center justify-center h-full space-y-4">
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <GraduationCap className="w-12 h-12 text-white" />
                 </div>
                 <div className="text-center">
@@ -282,11 +282,11 @@ export default function Bookings() {
             {/* Corporate Retreat Card */}
             <button
               onClick={() => setView('corporate_retreat')}
-              className="group bg-white rounded-xl border-2 border-slate-200 p-8 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-xl hover:-translate-y-1"
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-8 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-xl hover:-translate-y-1"
               style={{ minHeight: '300px' }}
             >
               <div className="flex flex-col items-center justify-center h-full space-y-4">
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <Building2 className="w-12 h-12 text-white" />
                 </div>
                 <div className="text-center">
@@ -309,11 +309,11 @@ export default function Bookings() {
             {/* Vacation & Family Card */}
             <button
               onClick={() => setView('vacation_family')}
-              className="group bg-white rounded-xl border-2 border-slate-200 p-8 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-xl hover:-translate-y-1"
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-8 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-xl hover:-translate-y-1"
               style={{ minHeight: '300px' }}
             >
               <div className="flex flex-col items-center justify-center h-full space-y-4">
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <Palmtree className="w-12 h-12 text-white" />
                 </div>
                 <div className="text-center">
@@ -357,7 +357,7 @@ export default function Bookings() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6">
           <form className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

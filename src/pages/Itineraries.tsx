@@ -177,12 +177,12 @@ export default function Itineraries() {
           {/* Saved Itineraries Card */}
           <button
             onClick={() => setView('saved')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-primary-500 hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-primary-500 hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
               {/* Large Icon */}
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <FolderOpen className="w-16 h-16 text-white" />
               </div>
 
@@ -211,12 +211,12 @@ export default function Itineraries() {
           {/* Itinerary Builder Card */}
           <button
             onClick={() => setView('builder')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-accent-500 hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-accent-500 hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
               {/* Large Icon */}
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <PenTool className="w-16 h-16 text-white" />
               </div>
 

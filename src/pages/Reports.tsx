@@ -17,11 +17,11 @@ export default function Reports() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           <button
             onClick={() => setView('financial')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <FileBarChart className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">
@@ -49,11 +49,11 @@ export default function Reports() {
 
           <button
             onClick={() => setView('operational')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <PieChart className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">
@@ -101,7 +101,7 @@ export default function Reports() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="bg-white rounded-3xl border border-slate-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center"><DollarSign className="w-5 h-5 text-green-600" /></div>
               <span className="flex items-center gap-0.5 text-xs font-medium text-green-600"><ArrowUpRight className="w-3 h-3" /> +23%</span>
@@ -109,7 +109,7 @@ export default function Reports() {
             <p className="text-2xl font-bold text-slate-800">${summary.totalRevenue.toLocaleString()}</p>
             <p className="text-sm text-slate-500 mt-1">Total Revenue</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="bg-white rounded-3xl border border-slate-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center"><TrendingUp className="w-5 h-5 text-red-600" /></div>
               <span className="flex items-center gap-0.5 text-xs font-medium text-red-600"><ArrowUpRight className="w-3 h-3" /> +18%</span>
@@ -117,7 +117,7 @@ export default function Reports() {
             <p className="text-2xl font-bold text-slate-800">${summary.totalCosts.toLocaleString()}</p>
             <p className="text-sm text-slate-500 mt-1">Total Costs</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="bg-white rounded-3xl border border-slate-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center"><BarChart3 className="w-5 h-5 text-primary-600" /></div>
               <span className="flex items-center gap-0.5 text-xs font-medium text-green-600"><ArrowUpRight className="w-3 h-3" /> +28%</span>
@@ -127,7 +127,7 @@ export default function Reports() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6">
           <h3 className="text-lg font-semibold text-slate-800 mb-4">Monthly Revenue Trend</h3>
           <div className="flex items-end gap-3 h-48">
             {[
@@ -164,29 +164,29 @@ export default function Reports() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
+        <div className="bg-white rounded-3xl border border-slate-200 p-5">
           <p className="text-sm text-slate-500">Total Bookings</p>
           <p className="text-2xl font-bold text-[#012871]">24</p>
           <p className="text-xs text-green-600 mt-1">+12% from last month</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
+        <div className="bg-white rounded-3xl border border-slate-200 p-5">
           <p className="text-sm text-slate-500">Active Leads</p>
           <p className="text-2xl font-bold text-[#f35500]">47</p>
           <p className="text-xs text-green-600 mt-1">+8% from last month</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
+        <div className="bg-white rounded-3xl border border-slate-200 p-5">
           <p className="text-sm text-slate-500">Conversion Rate</p>
           <p className="text-2xl font-bold text-[#012871]">51%</p>
           <p className="text-xs text-green-600 mt-1">+5% from last month</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
+        <div className="bg-white rounded-3xl border border-slate-200 p-5">
           <p className="text-sm text-slate-500">Avg. Booking Value</p>
           <p className="text-2xl font-bold text-[#f35500]">$3,225</p>
           <p className="text-xs text-green-600 mt-1">+15% from last month</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
+      <div className="bg-white rounded-3xl border border-slate-200 p-6">
         <h3 className="text-lg font-semibold text-slate-800 mb-4">Lead Pipeline Status</h3>
         <div className="space-y-4">
           {[

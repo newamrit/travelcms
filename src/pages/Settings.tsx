@@ -15,11 +15,11 @@ export default function Settings() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           <button
             onClick={() => setView('general')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <Building2 className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">

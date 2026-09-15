@@ -35,11 +35,11 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           <button
             onClick={() => setView('overview')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <BarChart3 className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">
@@ -67,11 +67,11 @@ export default function Dashboard() {
 
           <button
             onClick={() => setView('actions')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <Zap className="w-16 h-16 text-white" />
               </div>
               <div className="text-center">
@@ -224,48 +224,48 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Link to="/customers" className="bg-white rounded-xl border-2 border-slate-200 p-6 hover:border-[#012871] hover:shadow-lg transition-all group">
-          <div className="w-12 h-12 rounded-lg bg-[#012871] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <Link to="/customers" className="bg-white rounded-3xl border-2 border-slate-200 p-6 hover:border-[#012871] hover:shadow-lg transition-all group">
+          <div className="w-12 h-12 rounded-2xl bg-[#012871] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
             <Users className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-1">New Customer</h3>
           <p className="text-sm text-slate-500">Register a new customer</p>
         </Link>
 
-        <Link to="/invoices" className="bg-white rounded-xl border-2 border-slate-200 p-6 hover:border-[#f35500] hover:shadow-lg transition-all group">
-          <div className="w-12 h-12 rounded-lg bg-[#f35500] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <Link to="/invoices" className="bg-white rounded-3xl border-2 border-slate-200 p-6 hover:border-[#f35500] hover:shadow-lg transition-all group">
+          <div className="w-12 h-12 rounded-2xl bg-[#f35500] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
             <DollarSign className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-1">Create Invoice</h3>
           <p className="text-sm text-slate-500">Generate a new invoice</p>
         </Link>
 
-        <Link to="/bookings" className="bg-white rounded-xl border-2 border-slate-200 p-6 hover:border-[#012871] hover:shadow-lg transition-all group">
-          <div className="w-12 h-12 rounded-lg bg-[#012871] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <Link to="/bookings" className="bg-white rounded-3xl border-2 border-slate-200 p-6 hover:border-[#012871] hover:shadow-lg transition-all group">
+          <div className="w-12 h-12 rounded-2xl bg-[#012871] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
             <Calendar className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-1">New Booking</h3>
           <p className="text-sm text-slate-500">Create a new booking</p>
         </Link>
 
-        <Link to="/itineraries" className="bg-white rounded-xl border-2 border-slate-200 p-6 hover:border-[#f35500] hover:shadow-lg transition-all group">
-          <div className="w-12 h-12 rounded-lg bg-[#f35500] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <Link to="/itineraries" className="bg-white rounded-3xl border-2 border-slate-200 p-6 hover:border-[#f35500] hover:shadow-lg transition-all group">
+          <div className="w-12 h-12 rounded-2xl bg-[#f35500] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
             <Activity className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-1">New Itinerary</h3>
           <p className="text-sm text-slate-500">Build a trip plan</p>
         </Link>
 
-        <Link to="/vendors" className="bg-white rounded-xl border-2 border-slate-200 p-6 hover:border-[#012871] hover:shadow-lg transition-all group">
-          <div className="w-12 h-12 rounded-lg bg-[#012871] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <Link to="/vendors" className="bg-white rounded-3xl border-2 border-slate-200 p-6 hover:border-[#012871] hover:shadow-lg transition-all group">
+          <div className="w-12 h-12 rounded-2xl bg-[#012871] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
             <Building2 className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-1">Add Vendor</h3>
           <p className="text-sm text-slate-500">Register a new vendor</p>
         </Link>
 
-        <Link to="/reports" className="bg-white rounded-xl border-2 border-slate-200 p-6 hover:border-[#f35500] hover:shadow-lg transition-all group">
-          <div className="w-12 h-12 rounded-lg bg-[#f35500] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <Link to="/reports" className="bg-white rounded-3xl border-2 border-slate-200 p-6 hover:border-[#f35500] hover:shadow-lg transition-all group">
+          <div className="w-12 h-12 rounded-2xl bg-[#f35500] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
             <TrendingUp className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-1">View Reports</h3>
