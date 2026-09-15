@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ClipboardList, Plus, Eye, Printer, Hotel, Car, UserCheck, MapPin, Calendar, CheckCircle } from 'lucide-react';
+import { ClipboardList, Plus, Eye, Printer, Hotel, Car, UserCheck, MapPin, Calendar } from 'lucide-react';
 import { mockVouchers } from '../data/mockData';
 
 const typeConfig: Record<string, { label: string; icon: any; color: string }> = {
@@ -15,15 +15,13 @@ const statusColors: Record<string, string> = {
   cancelled: 'bg-red-100 text-red-700', completed: 'bg-slate-100 text-slate-700',
 };
 
-export default function Vouchers() {
+export default function Operations() {
   const [selectedVoucher, setSelectedVoucher] = useState<any>(null);
-
   const handlePrint = () => { window.print(); };
 
   if (selectedVoucher) {
     const config = typeConfig[selectedVoucher.voucherType];
     const Icon = config.icon;
-
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between no-print">
@@ -34,10 +32,8 @@ export default function Vouchers() {
               <p className="text-sm text-slate-500">{selectedVoucher.voucherNumber}</p>
             </div>
           </div>
-          <button onClick={handlePrint} className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50"><Printer className="w-4 h-4" /> Print Voucher</button>
+          <button onClick={handlePrint} className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50"><Printer className="w-4 h-4" /> Print</button>
         </div>
-
-        {/* Printable Voucher Template */}
         <div className="bg-white rounded-xl border-2 border-slate-300 overflow-hidden print-container">
           <div className={`p-6 ${config.color} border-b-2`}>
             <div className="flex justify-between items-start">
@@ -54,7 +50,6 @@ export default function Vouchers() {
               </div>
             </div>
           </div>
-
           <div className="p-6 space-y-6">
             <div className="grid grid-cols-2 gap-6">
               <div>
@@ -73,22 +68,14 @@ export default function Vouchers() {
                 </div>
               </div>
             </div>
-
             <div className="border-t border-slate-200 pt-4">
               <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Service Dates</h3>
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-slate-400" />
-                  <span className="text-sm text-slate-800">From: <strong>{selectedVoucher.serviceDateFrom}</strong></span>
-                </div>
+                <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400" /><span className="text-sm text-slate-800">From: <strong>{selectedVoucher.serviceDateFrom}</strong></span></div>
                 <span className="text-slate-400">→</span>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-slate-400" />
-                  <span className="text-sm text-slate-800">To: <strong>{selectedVoucher.serviceDateTo}</strong></span>
-                </div>
+                <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400" /><span className="text-sm text-slate-800">To: <strong>{selectedVoucher.serviceDateTo}</strong></span></div>
               </div>
             </div>
-
             {Object.keys(selectedVoucher.details).length > 0 && (
               <div className="border-t border-slate-200 pt-4">
                 <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Service Details</h3>
@@ -102,7 +89,6 @@ export default function Vouchers() {
                 </div>
               </div>
             )}
-
             <div className="border-t border-slate-200 pt-4 flex items-center justify-between">
               <div>
                 <p className="text-xs text-slate-500">Issued Date: {selectedVoucher.issueDate}</p>
@@ -115,7 +101,6 @@ export default function Vouchers() {
               </div>
             </div>
           </div>
-
           <div className="bg-slate-50 p-4 border-t border-slate-200 text-center">
             <p className="text-xs text-slate-500">This voucher serves as confirmation of services. Please present upon arrival.</p>
             <p className="text-xs text-slate-400 mt-1">For inquiries: info@travelops.pro | +1 (555) 123-4567</p>
@@ -129,10 +114,10 @@ export default function Vouchers() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Vouchers</h1>
-          <p className="text-slate-500 mt-1">Generate and manage supplier service vouchers</p>
+          <h1 className="text-2xl font-bold text-slate-800">Operations</h1>
+          <p className="text-slate-500 mt-1">Manage vouchers, service confirmations, and operational documents</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition shadow-sm"><Plus className="w-4 h-4" /> Generate Voucher</button>
+        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition shadow-sm"><Plus className="w-4 h-4" /> New Voucher</button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">

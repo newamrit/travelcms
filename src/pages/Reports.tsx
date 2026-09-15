@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { TrendingUp, DollarSign, BarChart3, ArrowUpRight, Clock, CheckCircle, AlertTriangle, Building2, Download } from 'lucide-react';
+import { TrendingUp, DollarSign, BarChart3, ArrowUpRight, Clock, AlertTriangle, Download } from 'lucide-react';
 
-export default function Profitability() {
+export default function Reports() {
   const [dateRange, setDateRange] = useState('this_month');
 
   const summary = { totalRevenue: 77400, totalCosts: 42800, grossProfit: 34600, profitMargin: 44.7, outstandingReceivables: 15600, outstandingPayables: 8200 };
@@ -35,7 +35,7 @@ export default function Profitability() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Profitability & Reports</h1>
+          <h1 className="text-2xl font-bold text-slate-800">Reports</h1>
           <p className="text-slate-500 mt-1">Financial analytics, margins, and supplier cost tracking</p>
         </div>
         <div className="flex items-center gap-2">

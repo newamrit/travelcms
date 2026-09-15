@@ -3,8 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole } from '../../types';
 import {
-  LayoutDashboard, Users, Map, FileText, Calendar, Building2,
-  ClipboardList, Receipt, TrendingUp, Globe, X, ChevronLeft,
+  LayoutDashboard, Map, Calendar, ClipboardList, Building2,
+  Receipt, Users, TrendingUp, Settings, Globe, X, ChevronLeft,
 } from 'lucide-react';
 
 interface NavItem {
@@ -16,14 +16,14 @@ interface NavItem {
 
 const navigationItems: NavItem[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: ['admin', 'sales_agent', 'operations_manager', 'accountant'] },
-  { name: 'Leads', href: '/leads', icon: Users, roles: ['admin', 'sales_agent'] },
   { name: 'Itineraries', href: '/itineraries', icon: Map, roles: ['admin', 'sales_agent', 'operations_manager'] },
-  { name: 'Quotations', href: '/quotations', icon: FileText, roles: ['admin', 'sales_agent', 'accountant'] },
   { name: 'Bookings', href: '/bookings', icon: Calendar, roles: ['admin', 'operations_manager'] },
-  { name: 'Suppliers', href: '/suppliers', icon: Building2, roles: ['admin', 'operations_manager'] },
-  { name: 'Vouchers', href: '/vouchers', icon: ClipboardList, roles: ['admin', 'operations_manager'] },
+  { name: 'Operations', href: '/operations', icon: ClipboardList, roles: ['admin', 'operations_manager'] },
+  { name: 'Vendors', href: '/vendors', icon: Building2, roles: ['admin', 'operations_manager'] },
   { name: 'Invoices', href: '/invoices', icon: Receipt, roles: ['admin', 'accountant'] },
-  { name: 'Profitability', href: '/profitability', icon: TrendingUp, roles: ['admin', 'accountant'] },
+  { name: 'Customers', href: '/customers', icon: Users, roles: ['admin', 'sales_agent'] },
+  { name: 'Reports', href: '/reports', icon: TrendingUp, roles: ['admin', 'accountant'] },
+  { name: 'Settings', href: '/settings', icon: Settings, roles: ['admin'] },
 ];
 
 interface SidebarProps {

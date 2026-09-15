@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Phone, Mail, MapPin, Star, Edit2, Trash2, Building2 } from 'lucide-react';
+import { Plus, Search, Phone, Mail, MapPin, Star, Edit2, Trash2 } from 'lucide-react';
 import { mockSuppliers } from '../data/mockData';
 
 const typeConfig: Record<string, { label: string; color: string; emoji: string }> = {
@@ -13,7 +13,7 @@ const typeConfig: Record<string, { label: string; color: string; emoji: string }
   other: { label: 'Other', color: 'bg-slate-100 text-slate-700', emoji: '📦' },
 };
 
-export default function Suppliers() {
+export default function Vendors() {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
 
@@ -27,17 +27,17 @@ export default function Suppliers() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Suppliers</h1>
+          <h1 className="text-2xl font-bold text-slate-800">Vendors</h1>
           <p className="text-slate-500 mt-1">Manage your vendor and supplier directory</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition shadow-sm"><Plus className="w-4 h-4" /> Add Supplier</button>
+        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition shadow-sm"><Plus className="w-4 h-4" /> Add Vendor</button>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search suppliers..." className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none" />
+            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search vendors..." className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none" />
           </div>
           <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 focus:ring-2 focus:ring-primary-500 outline-none">
             <option value="all">All Types</option>

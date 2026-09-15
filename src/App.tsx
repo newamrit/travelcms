@@ -5,15 +5,14 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import Leads from './pages/Leads';
-import LeadDetail from './pages/LeadDetail';
 import ItineraryBuilder from './pages/ItineraryBuilder';
-import Quotations from './pages/Quotations';
 import Bookings from './pages/Bookings';
-import Suppliers from './pages/Suppliers';
-import Vouchers from './pages/Vouchers';
+import Operations from './pages/Operations';
+import Vendors from './pages/Vendors';
 import Invoices from './pages/Invoices';
-import Profitability from './pages/Profitability';
+import Customers from './pages/Customers';
+import Reports from './pages/Reports';
+import Settings from './pages/Settings';
 
 function AppRoutes() {
   return (
@@ -21,15 +20,15 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
-        <Route path="leads" element={<ProtectedRoute allowedRoles={['admin', 'sales_agent']}><Leads /></ProtectedRoute>} />
-        <Route path="leads/:id" element={<ProtectedRoute allowedRoles={['admin', 'sales_agent']}><LeadDetail /></ProtectedRoute>} />
         <Route path="itineraries" element={<ProtectedRoute allowedRoles={['admin', 'sales_agent', 'operations_manager']}><ItineraryBuilder /></ProtectedRoute>} />
-        <Route path="quotations" element={<ProtectedRoute allowedRoles={['admin', 'sales_agent', 'accountant']}><Quotations /></ProtectedRoute>} />
         <Route path="bookings" element={<ProtectedRoute allowedRoles={['admin', 'operations_manager']}><Bookings /></ProtectedRoute>} />
-        <Route path="suppliers" element={<ProtectedRoute allowedRoles={['admin', 'operations_manager']}><Suppliers /></ProtectedRoute>} />
-        <Route path="vouchers" element={<ProtectedRoute allowedRoles={['admin', 'operations_manager']}><Vouchers /></ProtectedRoute>} />
+        <Route path="operations" element={<ProtectedRoute allowedRoles={['admin', 'operations_manager']}><Operations /></ProtectedRoute>} />
+        <Route path="vendors" element={<ProtectedRoute allowedRoles={['admin', 'operations_manager']}><Vendors /></ProtectedRoute>} />
         <Route path="invoices" element={<ProtectedRoute allowedRoles={['admin', 'accountant']}><Invoices /></ProtectedRoute>} />
-        <Route path="profitability" element={<ProtectedRoute allowedRoles={['admin', 'accountant']}><Profitability /></ProtectedRoute>} />
+        <Route path="customers" element={<ProtectedRoute allowedRoles={['admin', 'sales_agent']}><Customers /></ProtectedRoute>} />
+        <Route path="customers/:id" element={<ProtectedRoute allowedRoles={['admin', 'sales_agent']}><Customers /></ProtectedRoute>} />
+        <Route path="reports" element={<ProtectedRoute allowedRoles={['admin', 'accountant']}><Reports /></ProtectedRoute>} />
+        <Route path="settings" element={<ProtectedRoute allowedRoles={['admin']}><Settings /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -19,7 +19,7 @@ const priorityColors: Record<string, string> = {
   high: 'bg-orange-100 text-orange-600', urgent: 'bg-red-100 text-red-600',
 };
 
-export default function Leads() {
+export default function Customers() {
   const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -38,11 +38,11 @@ export default function Leads() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Lead Management</h1>
-          <p className="text-slate-500 mt-1">Track and manage your travel leads through the sales pipeline</p>
+          <h1 className="text-2xl font-bold text-slate-800">Customer Management</h1>
+          <p className="text-slate-500 mt-1">Track and manage your customers through the sales pipeline</p>
         </div>
         <button className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition shadow-sm">
-          <Plus className="w-4 h-4" /> New Lead
+          <Plus className="w-4 h-4" /> New Customer
         </button>
       </div>
 
@@ -50,7 +50,7 @@ export default function Leads() {
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search by name, email, or lead number..." className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none" />
+            <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search by name, email, or customer number..." className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none" />
           </div>
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 focus:ring-2 focus:ring-primary-500 outline-none">
             <option value="all">All Statuses</option>
@@ -79,7 +79,7 @@ export default function Leads() {
                   </div>
                   <div className={`bg-slate-50 rounded-b-lg border ${config.borderColor} p-2 space-y-2 min-h-[200px]`}>
                     {statusLeads.map(lead => <LeadCard key={lead.id} lead={lead} />)}
-                    {statusLeads.length === 0 && <div className="text-center py-8 text-sm text-slate-400">No leads</div>}
+                    {statusLeads.length === 0 && <div className="text-center py-8 text-sm text-slate-400">No customers</div>}
                   </div>
                 </div>
               );
@@ -94,7 +94,7 @@ export default function Leads() {
             <table className="w-full">
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Lead</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Customer</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Contact</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Travel</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Budget</th>
@@ -106,7 +106,7 @@ export default function Leads() {
                 {filteredLeads.map(lead => (
                   <tr key={lead.id} className="hover:bg-slate-50">
                     <td className="px-4 py-3">
-                      <Link to={`/leads/${lead.id}`} className="flex items-center gap-3">
+                      <Link to={`/customers/${lead.id}`} className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-600">{lead.clientName.split(' ').map(n => n[0]).join('')}</div>
                         <div>
                           <p className="text-sm font-medium text-slate-800">{lead.clientName}</p>
@@ -144,7 +144,7 @@ export default function Leads() {
 
 function LeadCard({ lead }: { lead: Lead }) {
   return (
-    <Link to={`/leads/${lead.id}`} className="block bg-white rounded-lg border border-slate-200 p-3 hover:shadow-md transition-all hover:border-primary-200">
+    <Link to={`/customers/${lead.id}`} className="block bg-white rounded-lg border border-slate-200 p-3 hover:shadow-md transition-all hover:border-primary-200">
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-600">{lead.clientName.split(' ').map(n => n[0]).join('')}</div>
