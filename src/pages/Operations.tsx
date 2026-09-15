@@ -166,16 +166,9 @@ export default function Operations() {
 
   // Update assignment item
   const updateAssignmentItem = (id: string, field: keyof AssignmentItem, value: any) => {
-    console.log('Updating item:', { id, field, value });
-    setAssignmentItems(prevItems => 
-      prevItems.map(item => {
-        if (item.id === id) {
-          console.log('Found item, updating from', item.type, 'to', field === 'type' ? value : item.type);
-          return { ...item, [field]: value };
-        }
-        return item;
-      })
-    );
+    setAssignmentItems(assignmentItems.map(item => 
+      item.id === id ? { ...item, [field]: value } : item
+    ));
   };
 
   // Remove assignment item
@@ -677,20 +670,12 @@ export default function Operations() {
                           </div>
                           <span className="font-medium text-[#012871]">Service #{index + 1}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => updateAssignmentItem(item.id, 'type', 'vehicle')}
-                            className="px-2 py-1 text-xs bg-[#012871] text-white rounded hover:bg-[#011e5b] transition-colors"
-                          >
-                            Test Vehicle
-                          </button>
-                          <button
-                            onClick={() => removeAssignmentItem(item.id)}
-                            className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-[#f35500] transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => removeAssignmentItem(item.id)}
+                          className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-[#f35500] transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
 
                       <div className="space-y-4">
@@ -710,48 +695,7 @@ export default function Operations() {
                             <option value="permit">Permit</option>
                             <option value="others">Others</option>
                           </select>
-                          <p className="text-xs text-slate-500 mt-1">Current type: {item.type}</p>
                         </div>
-
-                        {/* Vehicle-specific fields - shown only when type is vehicle */}
-                        {item.type === 'vehicle' && (
-                          <div className="p-4 bg-gradient-to-br from-[#012871]/5 to-[#f35500]/5 border-2 border-[#012871]/20 rounded-2xl space-y-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Car className="w-5 h-5 text-[#012871]" />
-                              <h4 className="font-semibold text-[#012871]">Vehicle Details</h4>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number *</label>
-                                <input
-                                  type="text"
-                                  value={item.vehicleNumber || ''}
-                                  onChange={(e) => updateAssignmentItem(item.id, 'vehicleNumber', e.target.value)}
-                                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
-                                  placeholder="e.g., KA01AB1234"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type *</label>
-                                <select
-                                  value={item.vehicleType || ''}
-                                  onChange={(e) => updateAssignmentItem(item.id, 'vehicleType', e.target.value)}
-                                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
-                                >
-                                  <option value="">Select vehicle type</option>
-                                  <option value="Scorpio">🚙 Scorpio</option>
-                                  <option value="Bolero">🚙 Bolero</option>
-                                  <option value="712 Bus">🚌 712 Bus</option>
-                                  <option value="Super">🚌 Super</option>
-                                  <option value="Tourist">🚌 Tourist</option>
-                                  <option value="Hiace">🚐 Hiace</option>
-                                  <option value="EV Micro">🚐 EV Micro</option>
-                                  <option value="MiniBus">🚌 MiniBus</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                        )}
 
                         {/* Common fields for all service types */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

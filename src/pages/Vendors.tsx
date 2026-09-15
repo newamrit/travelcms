@@ -51,6 +51,11 @@ export default function Vendors() {
   const [view, setView] = useState<'menu' | 'directory' | 'add'>('menu');
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  
+  // Vehicle-specific fields for Add Vendor form
+  const [vendorType, setVendorType] = useState('Vehicle');
+  const [vehicleNumber, setVehicleNumber] = useState('');
+  const [vehicleType, setVehicleType] = useState('');
 
   if (view === 'menu') {
     return (
@@ -412,16 +417,55 @@ export default function Vendors() {
             </div>
             <div>
               <label className="block text-sm font-medium text-[#012871] mb-1">Vendor Type</label>
-              <select className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all">
-                <option>Vehicle</option>
-                <option>Guide</option>
-                <option>Hotel</option>
-                <option>Restaurant</option>
-                <option>Activity</option>
-                <option>Permit</option>
-                <option>Others</option>
+              <select 
+                value={vendorType}
+                onChange={(e) => setVendorType(e.target.value)}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+              >
+                <option value="Vehicle">Vehicle</option>
+                <option value="Guide">Guide</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Activity">Activity</option>
+                <option value="Permit">Permit</option>
+                <option value="Others">Others</option>
               </select>
             </div>
+            
+            {/* Vehicle-specific fields - only shown when vendor type is Vehicle */}
+            {vendorType === 'Vehicle' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number</label>
+                  <input 
+                    type="text" 
+                    value={vehicleNumber}
+                    onChange={(e) => setVehicleNumber(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                    placeholder="e.g., KA01AB1234" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type</label>
+                  <select 
+                    value={vehicleType}
+                    onChange={(e) => setVehicleType(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                  >
+                    <option value="">Select vehicle type</option>
+                    <option value="Scorpio">Scorpio</option>
+                    <option value="Bolero">Bolero</option>
+                    <option value="712 Bus">712 Bus</option>
+                    <option value="Super">Super</option>
+                    <option value="Tourist">Tourist</option>
+                    <option value="Hiace">Hiace</option>
+                    <option value="EV Micro">EV Micro</option>
+                    <option value="MiniBus">MiniBus</option>
+                  </select>
+                </div>
+              </>
+            )}
+            
             <div>
               <label className="block text-sm font-medium text-[#012871] mb-1">Contact Person</label>
               <input type="text" className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" placeholder="Contact name" />
