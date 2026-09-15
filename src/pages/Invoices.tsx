@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Receipt, Plus, DollarSign, Clock, CheckCircle, AlertTriangle, ArrowLeft, FileText, CreditCard } from 'lucide-react';
+import { formatNepaliCurrency } from '../utils/currency';
 
 interface Invoice {
   id: string;
@@ -56,11 +57,11 @@ export default function Invoices() {
               </div>
               <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
                 <div className="text-center p-3 bg-green-50 rounded-lg">
-                  <p className="text-lg font-bold text-green-600">${(totalRevenue / 1000).toFixed(1)}K</p>
+                  <p className="text-lg font-bold text-green-600">{formatNepaliCurrency(totalRevenue)}</p>
                   <p className="text-xs text-green-600">Paid</p>
                 </div>
                 <div className="text-center p-3 bg-amber-50 rounded-lg">
-                  <p className="text-lg font-bold text-amber-600">${(pendingAmount / 1000).toFixed(1)}K</p>
+                  <p className="text-lg font-bold text-amber-600">{formatNepaliCurrency(pendingAmount)}</p>
                   <p className="text-xs text-amber-600">Pending</p>
                 </div>
               </div>
@@ -150,7 +151,7 @@ export default function Invoices() {
                     <p className="text-xs text-slate-400">Issued: {invoice.issueDate}</p>
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-600">{invoice.clientName}</td>
-                  <td className="px-4 py-3 text-sm text-right font-semibold text-slate-800">${invoice.amount.toLocaleString()}</td>
+                  <td className="px-4 py-3 text-sm text-right font-semibold text-slate-800">{formatNepaliCurrency(invoice.amount)}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusColors[invoice.status]}`}>
                       {invoice.status.toUpperCase()}

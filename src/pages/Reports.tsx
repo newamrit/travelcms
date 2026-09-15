@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TrendingUp, DollarSign, BarChart3, ArrowUpRight, Clock, AlertTriangle, ArrowLeft, FileBarChart, PieChart } from 'lucide-react';
+import { formatNepaliCurrency } from '../utils/currency';
 
 export default function Reports() {
   const [view, setView] = useState<'menu' | 'financial' | 'operational'>('menu');
@@ -30,7 +31,7 @@ export default function Reports() {
               </div>
               <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
                 <div className="text-center p-3 bg-green-50 rounded-lg">
-                  <p className="text-lg font-bold text-green-600">${(summary.totalRevenue / 1000).toFixed(1)}K</p>
+                  <p className="text-lg font-bold text-green-600">{formatNepaliCurrency(summary.totalRevenue)}</p>
                   <p className="text-xs text-green-600">Revenue</p>
                 </div>
                 <div className="text-center p-3 bg-primary-50 rounded-lg">
@@ -106,7 +107,7 @@ export default function Reports() {
               <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center"><DollarSign className="w-5 h-5 text-green-600" /></div>
               <span className="flex items-center gap-0.5 text-xs font-medium text-green-600"><ArrowUpRight className="w-3 h-3" /> +23%</span>
             </div>
-            <p className="text-2xl font-bold text-slate-800">${summary.totalRevenue.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-slate-800">{formatNepaliCurrency(summary.totalRevenue)}</p>
             <p className="text-sm text-slate-500 mt-1">Total Revenue</p>
           </div>
           <div className="bg-white rounded-3xl border border-slate-200 p-5">
@@ -114,7 +115,7 @@ export default function Reports() {
               <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center"><TrendingUp className="w-5 h-5 text-red-600" /></div>
               <span className="flex items-center gap-0.5 text-xs font-medium text-red-600"><ArrowUpRight className="w-3 h-3" /> +18%</span>
             </div>
-            <p className="text-2xl font-bold text-slate-800">${summary.totalCosts.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-slate-800">{formatNepaliCurrency(summary.totalCosts)}</p>
             <p className="text-sm text-slate-500 mt-1">Total Costs</p>
           </div>
           <div className="bg-white rounded-3xl border border-slate-200 p-5">
@@ -122,7 +123,7 @@ export default function Reports() {
               <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center"><BarChart3 className="w-5 h-5 text-primary-600" /></div>
               <span className="flex items-center gap-0.5 text-xs font-medium text-green-600"><ArrowUpRight className="w-3 h-3" /> +28%</span>
             </div>
-            <p className="text-2xl font-bold text-[#012871]">${summary.grossProfit.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-[#012871]">{formatNepaliCurrency(summary.grossProfit)}</p>
             <p className="text-sm text-slate-500 mt-1">Gross Profit ({summary.profitMargin}%)</p>
           </div>
         </div>

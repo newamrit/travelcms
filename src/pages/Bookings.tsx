@@ -4,6 +4,7 @@ import {
   Eye, ArrowLeft, CalendarCheck, GraduationCap, Building2, Palmtree,
   Search, Filter, Printer, ChevronLeft, ChevronRight, MoreVertical
 } from 'lucide-react';
+import { formatNepaliCurrency } from '../utils/currency';
 
 interface Booking {
   id: string;
@@ -129,7 +130,7 @@ export default function Bookings() {
           <div class="info"><span class="label">End Date:</span><span class="value">${booking.endDate}</span></div>
           <div class="info"><span class="label">Passengers:</span><span class="value">${booking.paxCount}</span></div>
           <div class="info"><span class="label">Status:</span><span class="value">${booking.status.replace('_', ' ').toUpperCase()}</span></div>
-          <div class="info"><span class="label">Total Amount:</span><span class="value">$${booking.totalAmount.toLocaleString()}</span></div>
+          <div class="info"><span class="label">Total Amount:</span><span class="value">{formatNepaliCurrency(booking.totalAmount)}</span></div>
           <div class="info"><span class="label">Category:</span><span class="value">${getCategoryLabel(booking.category)}</span></div>
         </body>
       </html>
@@ -301,7 +302,7 @@ export default function Bookings() {
                     </div>
                   </div>
                   <div className="pt-2 border-t border-slate-100">
-                    <p className="text-lg font-bold text-[#012871]">${booking.totalAmount.toLocaleString()}</p>
+                    <p className="text-lg font-bold text-[#012871]">{formatNepaliCurrency(booking.totalAmount)}</p>
                     <p className="text-xs text-slate-400">{booking.startDate} → {booking.endDate}</p>
                   </div>
                 </div>

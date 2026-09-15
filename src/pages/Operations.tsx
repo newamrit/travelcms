@@ -4,6 +4,7 @@ import {
   MapPin, Calendar, ArrowLeft, Utensils, Ticket, MoreHorizontal,
   CheckCircle, Clock, AlertCircle, Trash2, X
 } from 'lucide-react';
+import { formatNepaliCurrency } from '../utils/currency';
 
 interface Booking {
   id: string;
@@ -271,7 +272,7 @@ export default function Operations() {
                   )}
                 </div>
                 <div className="pt-2 border-t border-slate-100">
-                  <p className="text-lg font-bold text-[#012871]">${assignment.totalAmount.toLocaleString()}</p>
+                  <p className="text-lg font-bold text-[#012871]">{formatNepaliCurrency(assignment.totalAmount)}</p>
                   <p className="text-xs text-slate-400">Created {assignment.createdAt}</p>
                 </div>
               </div>
@@ -595,7 +596,7 @@ export default function Operations() {
                     </p>
                   </div>
                   <div className="mt-3 pt-3 border-t border-slate-100">
-                    <p className="text-lg font-bold text-[#012871]">${booking.totalAmount.toLocaleString()}</p>
+                    <p className="text-lg font-bold text-[#012871]">{formatNepaliCurrency(booking.totalAmount)}</p>
                   </div>
                 </button>
               ))}
@@ -620,7 +621,7 @@ export default function Operations() {
                       {selectedBooking.paxCount} pax
                     </p>
                   </div>
-                  <p className="mt-3 text-xl font-bold text-[#012871]">${selectedBooking.totalAmount.toLocaleString()}</p>
+                  <p className="mt-3 text-xl font-bold text-[#012871]">{formatNepaliCurrency(selectedBooking.totalAmount)}</p>
                 </div>
                 <button
                   onClick={() => setSelectedBooking(null)}
@@ -753,7 +754,7 @@ export default function Operations() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-white/80">Total Amount</p>
-                      <p className="text-2xl font-bold">${calculateTotal().toLocaleString()}</p>
+                      <p className="text-2xl font-bold">{formatNepaliCurrency(calculateTotal())}</p>
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t border-white/20">

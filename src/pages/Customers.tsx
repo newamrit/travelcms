@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Plus, Mail, Phone, MapPin, Calendar, ArrowLeft, UserPlus, UserCheck } from 'lucide-react';
+import { formatNepaliCurrency } from '../utils/currency';
 
 interface Customer {
   id: string;
@@ -144,7 +145,7 @@ export default function Customers() {
                 </div>
                 <div>
                   <p className="text-xs text-slate-400">Total Spent</p>
-                  <p className="text-sm font-semibold text-[#f35500]">${(customer.totalSpent / 1000).toFixed(1)}K</p>
+                  <p className="text-sm font-semibold text-[#f35500]">{formatNepaliCurrency(customer.totalSpent)}</p>
                 </div>
               </div>
             </div>

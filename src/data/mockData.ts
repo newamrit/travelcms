@@ -12,7 +12,7 @@ export const mockLeads: Lead[] = [
     id: '1', leadNumber: 'LD-2024-0001', clientName: 'James Wilson', clientEmail: 'james.wilson@email.com',
     clientPhone: '+44 7911 123456', clientWhatsapp: '+44 7911 123456', clientCountry: 'United Kingdom',
     paxAdults: 2, paxChildren: 1, travelDateFrom: '2024-06-15', travelDateTo: '2024-06-25',
-    budgetMin: 5000, budgetMax: 8000, currency: 'USD', leadSource: 'website', status: 'quoting',
+    budgetMin: 5000, budgetMax: 8000, currency: 'NPR', leadSource: 'website', status: 'quoting',
     assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'high', notes: 'Interested in Serengeti safari + Zanzibar beach combo',
     createdAt: '2024-03-01T10:30:00Z', updatedAt: '2024-03-05T14:20:00Z'
   },
@@ -20,7 +20,7 @@ export const mockLeads: Lead[] = [
     id: '2', leadNumber: 'LD-2024-0002', clientName: 'Maria Garcia', clientEmail: 'maria.g@email.com',
     clientPhone: '+34 612 345 678', clientWhatsapp: '+34 612 345 678', clientCountry: 'Spain',
     paxAdults: 4, paxChildren: 0, travelDateFrom: '2024-07-01', travelDateTo: '2024-07-10',
-    budgetMin: 12000, budgetMax: 18000, currency: 'USD', leadSource: 'referral', status: 'negotiation',
+    budgetMin: 12000, budgetMax: 18000, currency: 'NPR', leadSource: 'referral', status: 'negotiation',
     assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'urgent', notes: 'Luxury safari - premium lodges only. Anniversary trip.',
     createdAt: '2024-02-28T09:15:00Z', updatedAt: '2024-03-06T11:00:00Z'
   },
@@ -28,7 +28,7 @@ export const mockLeads: Lead[] = [
     id: '3', leadNumber: 'LD-2024-0003', clientName: 'Robert Chen', clientEmail: 'r.chen@corp.com',
     clientPhone: '+1 555 987 6543', clientWhatsapp: '+1 555 987 6543', clientCountry: 'United States',
     paxAdults: 6, paxChildren: 2, travelDateFrom: '2024-08-10', travelDateTo: '2024-08-20',
-    budgetMin: 20000, budgetMax: 35000, currency: 'USD', leadSource: 'social_media', status: 'requirements_gathered',
+    budgetMin: 20000, budgetMax: 35000, currency: 'NPR', leadSource: 'social_media', status: 'requirements_gathered',
     assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'high', notes: 'Family group trip. Need kid-friendly activities. Photography focus.',
     createdAt: '2024-03-02T16:45:00Z', updatedAt: '2024-03-04T09:30:00Z'
   },
@@ -36,7 +36,7 @@ export const mockLeads: Lead[] = [
     id: '4', leadNumber: 'LD-2024-0004', clientName: 'Emma Thompson', clientEmail: 'emma.t@email.co.uk',
     clientPhone: '+44 7700 900123', clientWhatsapp: '+44 7700 900123', clientCountry: 'United Kingdom',
     paxAdults: 2, paxChildren: 0, travelDateFrom: '2024-05-20', travelDateTo: '2024-05-28',
-    budgetMin: 4000, budgetMax: 6000, currency: 'USD', leadSource: 'direct', status: 'won',
+    budgetMin: 4000, budgetMax: 6000, currency: 'NPR', leadSource: 'direct', status: 'won',
     assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'medium', notes: 'Honeymoon package - Ngorongoro + Serengeti',
     createdAt: '2024-02-15T08:00:00Z', updatedAt: '2024-03-01T16:00:00Z'
   },
@@ -44,7 +44,7 @@ export const mockLeads: Lead[] = [
     id: '5', leadNumber: 'LD-2024-0005', clientName: 'Ahmed Al-Rashid', clientEmail: 'ahmed@business.ae',
     clientPhone: '+971 50 123 4567', clientWhatsapp: '+971 50 123 4567', clientCountry: 'UAE',
     paxAdults: 8, paxChildren: 3, travelDateFrom: '2024-09-01', travelDateTo: '2024-09-14',
-    budgetMin: 40000, budgetMax: 60000, currency: 'USD', leadSource: 'referral', status: 'contacted',
+    budgetMin: 40000, budgetMax: 60000, currency: 'NPR', leadSource: 'referral', status: 'contacted',
     assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'urgent', notes: 'VIP group - Royal standard. Private vehicle, chef, security detail.',
     createdAt: '2024-03-05T12:00:00Z', updatedAt: '2024-03-05T15:30:00Z'
   },
