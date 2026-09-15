@@ -1,0 +1,108 @@
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { User, UserRole } from '../types';
+import { authAPI } from '../services/api';
+
+interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  hasRole: (roles: UserRole | UserRole[]) => boolean;
+  isAdmin: () => boolean;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('travelops_token');
+    const storedUser = localStorage.getItem('travelops_user');
+    
+    if (storedToken && storedUser) {
+      try {
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        localStorage.removeItem('travelops_token');
+        localStorage.removeItem('travelops_user');
+      }
+    }
+    setIsLoading(false);
+  }, []);
+
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      setIsLoading(true);
+      const response = await authAPI.login(email, password);
+      
+      if (response.data?.success && response.data?.data) {
+        const { token: newToken, user: userData } = response.data.data;
+        setToken(newToken);
+        setUser(userData);
+        localStorage.setItem('travelops_token', newToken);
+        localStorage.setItem('travelops_user', JSON.stringify(userData));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      // Mock login for demo
+      const mockUsers: Record<string, User> = {
+        'admin@travelops.pro': { id: '1', firstName: 'System', lastName: 'Admin', email: 'admin@travelops.pro', role: 'admin' },
+        'sarah@travelops.pro': { id: '2', firstName: 'Sarah', lastName: 'Johnson', email: 'sarah@travelops.pro', role: 'sales_agent' },
+        'michael@travelops.pro': { id: '3', firstName: 'Michael', lastName: 'Chen', email: 'michael@travelops.pro', role: 'operations_manager' },
+        'emily@travelops.pro': { id: '4', firstName: 'Emily', lastName: 'Davis', email: 'emily@travelops.pro', role: 'accountant' },
+      };
+
+      const foundUser = mockUsers[email];
+      if (foundUser) {
+        const mockToken = 'mock-jwt-token-' + Date.now();
+        setToken(mockToken);
+        setUser(foundUser);
+        localStorage.setItem('travelops_token', mockToken);
+        localStorage.setItem('travelops_user', JSON.stringify(foundUser));
+        return true;
+      }
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = useCallback(() => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('travelops_token');
+    localStorage.removeItem('travelops_user');
+  }, []);
+
+  const hasRole = useCallback((roles: UserRole | UserRole[]): boolean => {
+    if (!user) return false;
+    if (user.role === 'admin') return true;
+    const requiredRoles = Array.isArray(roles) ? roles : [roles];
+    return requiredRoles.includes(user.role);
+  }, [user]);
+
+  const isAdmin = useCallback((): boolean => {
+    return user?.role === 'admin';
+  }, [user]);
+
+  return (
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!user && !!token, isLoading, login, logout, hasRole, isAdmin }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth(): AuthContextType {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+}
