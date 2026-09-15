@@ -9,6 +9,8 @@ import { useAuth } from '../context/AuthContext';
 import { useSound } from '../context/SoundContext';
 import { formatNepaliCurrency } from '../utils/currency';
 import { db, COLLECTIONS } from '../services/database';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import { StatCardSkeleton, CardSkeleton } from '../components/common/SkeletonLoader';
 
 export default function Dashboard() {
   const { play } = useSound();
@@ -20,15 +22,20 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      setAllLeads(db.findAll(COLLECTIONS.LEADS));
-      setAllBookings(db.findAll(COLLECTIONS.BOOKINGS));
-      setAllInvoices(db.findAll(COLLECTIONS.INVOICES));
-    } catch (error) {
-      console.error('Failed to load dashboard data:', error);
-    } finally {
-      setLoading(false);
-    }
+    // Simulate loading delay for better UX
+    const timer = setTimeout(() => {
+      try {
+        setAllLeads(db.findAll(COLLECTIONS.LEADS));
+        setAllBookings(db.findAll(COLLECTIONS.BOOKINGS));
+        setAllInvoices(db.findAll(COLLECTIONS.INVOICES));
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
   }, []);
   
   const totalLeads = allLeads.length;
@@ -44,8 +51,30 @@ export default function Dashboard() {
   };
 
   if (view === 'menu') {
+    if (loading) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
+            <p className="text-slate-500 mt-1">Welcome back, {user?.firstName}!</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <StatCardSkeleton key={i} />
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <CardSkeleton />
+            <CardSkeleton />
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 fade-in-up">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
           <p className="text-slate-500 mt-1">Welcome back, {user?.firstName}!</p>

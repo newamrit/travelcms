@@ -7,6 +7,9 @@ import {
 import { formatNepaliCurrency } from '../utils/currency';
 import { db, COLLECTIONS } from '../services/database';
 import { useSound } from '../context/SoundContext';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import { CardSkeleton, StatCardSkeleton } from '../components/common/SkeletonLoader';
+import Button from '../components/common/Button';
 
 export default function Bookings() {
   const { play } = useSound();
@@ -21,7 +24,8 @@ export default function Bookings() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadBookings = () => {
+    // Simulate loading delay for better UX
+    const timer = setTimeout(() => {
       try {
         const bookingsData = db.findAll(COLLECTIONS.BOOKINGS);
         setBookings(bookingsData);
@@ -30,8 +34,9 @@ export default function Bookings() {
       } finally {
         setLoading(false);
       }
-    };
-    loadBookings();
+    }, 600);
+
+    return () => clearTimeout(timer);
   }, []);
   
   const ITEMS_PER_PAGE = 12; // 4 rows × 3 columns
@@ -537,8 +542,33 @@ export default function Bookings() {
 
   // Main Menu
   if (view === 'menu') {
+    if (loading) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">Bookings</h1>
+            <p className="text-slate-500 mt-1">Manage your trip bookings</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <CardSkeleton />
+            <CardSkeleton />
+          </div>
+
+          <div className="mt-12">
+            <h2 className="text-xl font-bold text-slate-800 mb-6">Bookings by Category</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 fade-in-up">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Bookings</h1>
           <p className="text-slate-500 mt-1">Manage your trip bookings</p>

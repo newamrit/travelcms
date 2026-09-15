@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Building2, Plus, Phone, Mail, MapPin, Star, Edit2, Trash2, ArrowLeft, Users, Car, UserCheck, Utensils, Ticket, MoreHorizontal } from 'lucide-react';
 import { db, COLLECTIONS } from '../services/database';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import { CardSkeleton } from '../components/common/SkeletonLoader';
 
 const typeColors: Record<string, string> = {
   Vehicle: 'bg-green-100 text-green-700',
@@ -30,7 +32,7 @@ export default function Vendors() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadVendors = () => {
+    const timer = setTimeout(() => {
       try {
         const vendorsData = db.findAll(COLLECTIONS.VENDORS);
         setVendors(vendorsData);
@@ -39,8 +41,9 @@ export default function Vendors() {
       } finally {
         setLoading(false);
       }
-    };
-    loadVendors();
+    }, 600);
+
+    return () => clearTimeout(timer);
   }, []);
   
   // Vehicle-specific fields for Add Vendor form
@@ -49,8 +52,39 @@ export default function Vendors() {
   const [vehicleType, setVehicleType] = useState('');
 
   if (view === 'menu') {
+    if (loading) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#012871] to-[#f35500] bg-clip-text text-transparent">Vendors</h1>
+            <p className="text-slate-600 mt-1">Manage your supplier and vendor relationships</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <CardSkeleton />
+            <CardSkeleton />
+          </div>
+
+          <div className="mt-12">
+            <h2 className="text-xl font-bold text-slate-800 mb-6">Vendors by Category</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-3xl border-2 border-slate-200 p-6 animate-pulse">
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-200" />
+                    <div className="w-20 h-5 bg-slate-200 rounded" />
+                    <div className="w-8 h-8 bg-slate-200 rounded-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 fade-in-up">
         <div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-[#012871] to-[#f35500] bg-clip-text text-transparent">Vendors</h1>
           <p className="text-slate-600 mt-1">Manage your supplier and vendor relationships</p>
