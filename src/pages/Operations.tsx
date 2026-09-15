@@ -166,9 +166,16 @@ export default function Operations() {
 
   // Update assignment item
   const updateAssignmentItem = (id: string, field: keyof AssignmentItem, value: any) => {
-    setAssignmentItems(assignmentItems.map(item => 
-      item.id === id ? { ...item, [field]: value } : item
-    ));
+    console.log('Updating item:', { id, field, value });
+    setAssignmentItems(prevItems => 
+      prevItems.map(item => {
+        if (item.id === id) {
+          console.log('Found item, updating from', item.type, 'to', field === 'type' ? value : item.type);
+          return { ...item, [field]: value };
+        }
+        return item;
+      })
+    );
   };
 
   // Remove assignment item
@@ -670,12 +677,20 @@ export default function Operations() {
                           </div>
                           <span className="font-medium text-[#012871]">Service #{index + 1}</span>
                         </div>
-                        <button
-                          onClick={() => removeAssignmentItem(item.id)}
-                          className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-[#f35500] transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => updateAssignmentItem(item.id, 'type', 'vehicle')}
+                            className="px-2 py-1 text-xs bg-[#012871] text-white rounded hover:bg-[#011e5b] transition-colors"
+                          >
+                            Test Vehicle
+                          </button>
+                          <button
+                            onClick={() => removeAssignmentItem(item.id)}
+                            className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-[#f35500] transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
 
                       <div className="space-y-4">
@@ -695,6 +710,7 @@ export default function Operations() {
                             <option value="permit">Permit</option>
                             <option value="others">Others</option>
                           </select>
+                          <p className="text-xs text-slate-500 mt-1">Current type: {item.type}</p>
                         </div>
 
                         {/* Vehicle-specific fields - shown only when type is vehicle */}
