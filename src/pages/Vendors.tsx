@@ -1,31 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Building2, Plus, Phone, Mail, MapPin, Star, Edit2, Trash2, ArrowLeft, Users, Car, UserCheck, Utensils, Ticket, MoreHorizontal } from 'lucide-react';
-
-interface Vendor {
-  id: string;
-  name: string;
-  type: 'Vehicle' | 'Guide' | 'Hotel' | 'Restaurant' | 'Activity' | 'Permit' | 'Others';
-  contactPerson: string;
-  email: string;
-  phone: string;
-  location: string;
-  rating: number;
-}
-
-const mockVendors: Vendor[] = [
-  { id: '1', name: 'Serengeti Luxury Lodge', type: 'Hotel', contactPerson: 'John Mwangi', email: 'info@serengeti.com', phone: '+255 712 345678', location: 'Arusha, Tanzania', rating: 5 },
-  { id: '2', name: 'Safari Wheels Ltd', type: 'Vehicle', contactPerson: 'Peter Ochieng', email: 'book@safariwheels.com', phone: '+255 754 321987', location: 'Nairobi, Kenya', rating: 4 },
-  { id: '3', name: 'Expert Guides Tanzania', type: 'Guide', contactPerson: 'Samuel Kimaro', email: 'sam@expertguides.com', phone: '+255 688 111222', location: 'Arusha, Tanzania', rating: 5 },
-  { id: '4', name: 'Zanzibar Beach Resort', type: 'Hotel', contactPerson: 'Amina Hassan', email: 'info@zanzibarbeach.com', phone: '+255 777 654321', location: 'Zanzibar, Tanzania', rating: 4 },
-  { id: '5', name: 'Adventure Tours Kenya', type: 'Activity', contactPerson: 'David Kamau', email: 'info@adventuretours.co.ke', phone: '+254 722 987654', location: 'Nairobi, Kenya', rating: 4 },
-  { id: '6', name: 'National Parks Authority', type: 'Permit', contactPerson: 'Permits Office', email: 'permits@nca.go.tz', phone: '+255 22 2152300', location: 'Dar es Salaam, Tanzania', rating: 4 },
-  { id: '7', name: 'The Safari Kitchen', type: 'Restaurant', contactPerson: 'Chef Maria', email: 'info@safarikitchen.com', phone: '+255 712 999888', location: 'Arusha, Tanzania', rating: 5 },
-  { id: '8', name: 'Luxury Transfers', type: 'Vehicle', contactPerson: 'James Mwangi', email: 'info@luxurytransfers.com', phone: '+255 754 111222', location: 'Nairobi, Kenya', rating: 4 },
-  { id: '9', name: 'Cultural Tours Inc', type: 'Guide', contactPerson: 'Sarah Johnson', email: 'info@culturaltours.com', phone: '+255 688 333444', location: 'Arusha, Tanzania', rating: 5 },
-  { id: '10', name: 'Water Sports Center', type: 'Activity', contactPerson: 'Mike Davis', email: 'info@watersports.com', phone: '+255 777 555666', location: 'Zanzibar, Tanzania', rating: 4 },
-  { id: '11', name: 'Insurance Provider Ltd', type: 'Others', contactPerson: 'Claims Dept', email: 'claims@insurance.com', phone: '+255 22 111222', location: 'Dar es Salaam, Tanzania', rating: 3 },
-  { id: '12', name: 'Fine Dining Experience', type: 'Restaurant', contactPerson: 'Chef Robert', email: 'info@finedining.com', phone: '+255 712 777888', location: 'Arusha, Tanzania', rating: 5 },
-];
+import { suppliersAPI } from '../services/api';
 
 const typeColors: Record<string, string> = {
   Vehicle: 'bg-green-100 text-green-700',
@@ -51,6 +26,22 @@ export default function Vendors() {
   const [view, setView] = useState<'menu' | 'directory' | 'add'>('menu');
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [vendors, setVendors] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadVendors = async () => {
+      try {
+        const response = await suppliersAPI.getAll();
+        setVendors(response.data?.data || []);
+      } catch (error) {
+        console.error('Failed to load vendors:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadVendors();
+  }, []);
   
   // Vehicle-specific fields for Add Vendor form
   const [vendorType, setVendorType] = useState('Vehicle');
@@ -80,7 +71,7 @@ export default function Vendors() {
                 <p className="text-slate-500 text-sm">Browse and manage existing vendors</p>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-[#012871]/10 rounded-full">
-                <span className="text-2xl font-bold text-[#012871]">{mockVendors.length}</span>
+                <span className="text-2xl font-bold text-[#012871]">{vendors.length}</span>
                 <span className="text-sm text-[#012871]/70">vendors</span>
               </div>
               <div className="flex items-center gap-2 text-[#012871] font-medium text-sm group-hover:gap-3 transition-all">
@@ -144,7 +135,7 @@ export default function Vendors() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-800 mb-1">Vehicle</h3>
-                  <p className="text-2xl font-bold text-[#012871]">{mockVendors.filter(v => v.type === 'Vehicle').length}</p>
+                  <p className="text-2xl font-bold text-[#012871]">{vendors.filter((v: any) => v.type === 'Vehicle').length}</p>
                 </div>
               </div>
             </button>
@@ -160,7 +151,7 @@ export default function Vendors() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-800 mb-1">Guide</h3>
-                  <p className="text-2xl font-bold text-[#f35500]">{mockVendors.filter(v => v.type === 'Guide').length}</p>
+                  <p className="text-2xl font-bold text-[#f35500]">{vendors.filter((v: any) => v.type === 'Guide').length}</p>
                 </div>
               </div>
             </button>

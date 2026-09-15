@@ -1,28 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   LayoutDashboard, BarChart3, Users, Calendar, DollarSign, 
   TrendingUp, ArrowUpRight, ArrowDownRight, Clock, AlertTriangle, 
   Building2, ArrowLeft, Activity, Zap
 } from 'lucide-react';
-import { db, COLLECTIONS } from '../services/database';
-import type { DBLead, DBBooking, DBInvoice } from '../services/database';
+import { leadsAPI, bookingsAPI, invoicesAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { formatNepaliCurrency } from '../utils/currency';
 
 export default function Dashboard() {
   const [view, setView] = useState<'menu' | 'overview' | 'actions'>('menu');
   const { user } = useAuth();
-  
-  const allLeads = db.findAll<DBLead>(COLLECTIONS.LEADS);
-  const allBookings = db.findAll<DBBooking>(COLLECTIONS.BOOKINGS);
-  const allInvoices = db.findAll<DBInvoice>(COLLECTIONS.INVOICES);
+  const [allLeads, setAllLeads] = useState<any[]>([]);
+  const [allBookings, setAllBookings] = useState<any[]>([]);
+  const [allInvoices, setAllInvoices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [leadsRes, bookingsRes, invoicesRes] = await Promise.all([
+          leadsAPI.getAll(),
+          bookingsAPI.getAll(),
+          invoicesAPI.getAll()
+        ]);
+        setAllLeads(leadsRes.data?.data || []);
+        setAllBookings(bookingsRes.data?.data || []);
+        setAllInvoices(invoicesRes.data?.data || []);
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
   
   const totalLeads = allLeads.length;
-  const activeLeads = allLeads.filter(l => !['won', 'lost'].includes(l.status)).length;
-  const wonLeads = allLeads.filter(l => l.status === 'won').length;
-  const totalRevenue = allInvoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.totalAmount, 0);
-  const pendingPayments = allInvoices.filter(i => ['sent', 'partial'].includes(i.status)).reduce((sum, i) => sum + i.totalAmount - i.payments.reduce((s, p) => s + p.amount, 0), 0);
+  const activeLeads = allLeads.filter((l: any) => !['won', 'lost'].includes(l.status)).length;
+  const wonLeads = allLeads.filter((l: any) => l.status === 'won').length;
+  const totalRevenue = allInvoices.filter((i: any) => i.status === 'paid').reduce((sum: number, i: any) => sum + i.totalAmount, 0);
+  const pendingPayments = allInvoices.filter((i: any) => ['sent', 'partial'].includes(i.status)).reduce((sum: number, i: any) => sum + i.totalAmount - (i.payments || []).reduce((s: number, p: any) => s + p.amount, 0), 0);
 
   const statusColors: Record<string, string> = {
     new: 'bg-blue-100 text-blue-700', contacted: 'bg-yellow-100 text-yellow-700',
@@ -173,7 +192,7 @@ export default function Dashboard() {
               <Link to="/customers" className="text-sm text-[#012871] hover:underline font-medium">View All →</Link>
             </div>
             <div className="px-6 pb-6 space-y-3">
-              {allLeads.slice(0, 5).map((lead: DBLead) => (
+              {allLeads.slice(0, 5).map((lead: any) => (
                 <div key={lead.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-sm font-medium text-slate-600">{lead.clientName.split(' ').map((n: string) => n[0]).join('')}</div>
@@ -194,7 +213,7 @@ export default function Dashboard() {
               <Link to="/bookings" className="text-sm text-[#012871] hover:underline font-medium">View All →</Link>
             </div>
             <div className="px-6 pb-6 space-y-3">
-              {allBookings.map((booking: DBBooking) => (
+              {allBookings.map((booking: any) => (
                 <div key={booking.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center"><Calendar className="w-4 h-4 text-green-600" /></div>

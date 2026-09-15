@@ -1,29 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Plus, Mail, Phone, MapPin, Calendar, ArrowLeft, UserPlus, UserCheck } from 'lucide-react';
 import { formatNepaliCurrency } from '../utils/currency';
-
-interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  country: string;
-  totalBookings: number;
-  totalSpent: number;
-  lastBooking: string;
-}
-
-const mockCustomers: Customer[] = [
-  { id: '1', name: 'John Smith', email: 'john.smith@email.com', phone: '+44 7911 123456', country: 'United Kingdom', totalBookings: 3, totalSpent: 28500, lastBooking: '2024-03-15' },
-  { id: '2', name: 'Sarah Johnson', email: 'sarah.j@email.com', phone: '+1 555 987654', country: 'United States', totalBookings: 2, totalSpent: 18900, lastBooking: '2024-03-10' },
-  { id: '3', name: 'Michael Brown', email: 'michael.b@email.com', phone: '+49 170 1234567', country: 'Germany', totalBookings: 5, totalSpent: 67200, lastBooking: '2024-02-28' },
-  { id: '4', name: 'Emily Davis', email: 'emily.d@email.com', phone: '+33 6 12 34 56 78', country: 'France', totalBookings: 1, totalSpent: 12800, lastBooking: '2024-03-20' },
-  { id: '5', name: 'David Wilson', email: 'david.w@email.com', phone: '+61 4 1234 5678', country: 'Australia', totalBookings: 4, totalSpent: 45600, lastBooking: '2024-03-05' },
-  { id: '6', name: 'Lisa Anderson', email: 'lisa.a@email.com', phone: '+81 90 1234 5678', country: 'Japan', totalBookings: 2, totalSpent: 22400, lastBooking: '2024-01-15' },
-];
+import { leadsAPI } from '../services/api';
 
 export default function Customers() {
   const [view, setView] = useState<'menu' | 'directory' | 'add'>('menu');
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCustomers = async () => {
+      try {
+        const response = await leadsAPI.getAll();
+        setCustomers(response.data?.data || []);
+      } catch (error) {
+        console.error('Failed to load customers:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadCustomers();
+  }, []);
 
   if (view === 'menu') {
     return (
@@ -48,7 +45,7 @@ export default function Customers() {
                 <p className="text-slate-500 text-sm">View and manage all customers</p>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full">
-                <span className="text-2xl font-bold text-primary-600">{mockCustomers.length}</span>
+                <span className="text-2xl font-bold text-primary-600">{customers.length}</span>
                 <span className="text-sm text-primary-500">customers</span>
               </div>
               <div className="flex items-center gap-2 text-primary-600 font-medium text-sm group-hover:gap-3 transition-all">
@@ -119,33 +116,33 @@ export default function Customers() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockCustomers.map(customer => (
+          {customers.map((customer: any) => (
             <div key={customer.id} className="bg-white rounded-3xl border border-slate-200 p-5 hover:shadow-lg transition-all">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center text-white font-bold">
-                    {customer.name.split(' ').map(n => n[0]).join('')}
+                    {customer.clientName.split(' ').map((n: string) => n[0]).join('')}
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-800">{customer.name}</h3>
+                    <h3 className="text-sm font-semibold text-slate-800">{customer.clientName}</h3>
                     <p className="text-xs text-slate-500 flex items-center gap-1">
-                      <MapPin className="w-3 h-3" /> {customer.country}
+                      <MapPin className="w-3 h-3" /> {customer.clientCountry}
                     </p>
                   </div>
                 </div>
               </div>
               <div className="space-y-2 text-sm text-slate-600">
-                <div className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-slate-400" /><span className="truncate">{customer.email}</span></div>
-                <div className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-slate-400" /><span>{customer.phone}</span></div>
+                <div className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-slate-400" /><span className="truncate">{customer.clientEmail}</span></div>
+                <div className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-slate-400" /><span>{customer.clientPhone}</span></div>
               </div>
               <div className="mt-3 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
                 <div>
-                  <p className="text-xs text-slate-400">Bookings</p>
-                  <p className="text-sm font-semibold text-[#012871]">{customer.totalBookings}</p>
+                  <p className="text-xs text-slate-400">Status</p>
+                  <p className="text-sm font-semibold text-[#012871]">{customer.status}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Total Spent</p>
-                  <p className="text-sm font-semibold text-[#f35500]">{formatNepaliCurrency(customer.totalSpent)}</p>
+                  <p className="text-xs text-slate-400">Budget</p>
+                  <p className="text-sm font-semibold text-[#f35500]">{formatNepaliCurrency(customer.budgetMax || 0)}</p>
                 </div>
               </div>
             </div>

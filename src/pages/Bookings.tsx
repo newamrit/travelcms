@@ -1,12 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Calendar, Plus, MapPin, Users, Edit2, Trash2, Copy, 
   Eye, ArrowLeft, CalendarCheck, GraduationCap, Building2, Palmtree,
   Search, Filter, Printer, ChevronLeft, ChevronRight, MoreVertical
 } from 'lucide-react';
 import { formatNepaliCurrency } from '../utils/currency';
-import { db, COLLECTIONS } from '../services/database';
-import type { DBBooking } from '../services/database';
+import { bookingsAPI } from '../services/api';
 
 export default function Bookings() {
   const [view, setView] = useState<'menu' | 'all' | 'create' | 'school_college' | 'corporate_retreat' | 'vacation_family'>('menu');
@@ -14,9 +13,24 @@ export default function Bookings() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [bookings, setBookings] = useState<DBBooking[]>(db.findAll<DBBooking>(COLLECTIONS.BOOKINGS));
-  const [editingBooking, setEditingBooking] = useState<DBBooking | null>(null);
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [editingBooking, setEditingBooking] = useState<any | null>(null);
   const [statusDropdownOpen, setStatusDropdownOpen] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadBookings = async () => {
+      try {
+        const response = await bookingsAPI.getAll();
+        setBookings(response.data?.data || []);
+      } catch (error) {
+        console.error('Failed to load bookings:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadBookings();
+  }, []);
   
   const ITEMS_PER_PAGE = 12; // 4 rows × 3 columns
 
@@ -64,20 +78,30 @@ export default function Bookings() {
   const paginatedBookings = filteredBookings.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   // Handlers
-  const handleStatusChange = (bookingId: string, newStatus: DBBooking['status']) => {
-    setBookings(bookings.map(b => 
-      b.id === bookingId ? { ...b, status: newStatus } : b
-    ));
-    setStatusDropdownOpen(null);
-  };
-
-  const handleDelete = (bookingId: string) => {
-    if (confirm('Are you sure you want to delete this booking?')) {
-      setBookings(bookings.filter(b => b.id !== bookingId));
+  const handleStatusChange = async (bookingId: string, newStatus: string) => {
+    try {
+      await bookingsAPI.update(bookingId, { status: newStatus });
+      setBookings(bookings.map(b => 
+        b.id === bookingId ? { ...b, status: newStatus } : b
+      ));
+      setStatusDropdownOpen(null);
+    } catch (error) {
+      console.error('Failed to update booking status:', error);
     }
   };
 
-  const handlePrint = (booking: DBBooking) => {
+  const handleDelete = async (bookingId: string) => {
+    if (confirm('Are you sure you want to delete this booking?')) {
+      try {
+        await bookingsAPI.delete(bookingId);
+        setBookings(bookings.filter(b => b.id !== bookingId));
+      } catch (error) {
+        console.error('Failed to delete booking:', error);
+      }
+    }
+  };
+
+  const handlePrint = (booking: any) => {
     const printContent = `
       <html>
         <head>
@@ -117,16 +141,21 @@ export default function Bookings() {
     }
   };
 
-  const handleEdit = (booking: DBBooking) => {
+  const handleEdit = (booking: any) => {
     setEditingBooking(booking);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (editingBooking) {
-      setBookings(bookings.map(b => 
-        b.id === editingBooking.id ? editingBooking : b
-      ));
-      setEditingBooking(null);
+      try {
+        await bookingsAPI.update(editingBooking.id, editingBooking);
+        setBookings(bookings.map(b => 
+          b.id === editingBooking.id ? editingBooking : b
+        ));
+        setEditingBooking(null);
+      } catch (error) {
+        console.error('Failed to save booking:', error);
+      }
     }
   };
 
@@ -138,7 +167,7 @@ export default function Bookings() {
   };
 
   // Enhanced Booking List Component
-  const renderBookingList = (title: string, onBack: () => void, preFilteredBookings?: DBBooking[]) => {
+  const renderBookingList = (title: string, onBack: () => void, preFilteredBookings?: any[]) => {
     const displayBookings = preFilteredBookings || filteredBookings;
     const displayPaginated = preFilteredBookings 
       ? displayBookings.slice(startIndex, startIndex + ITEMS_PER_PAGE)
@@ -453,7 +482,7 @@ export default function Bookings() {
                     <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
                     <select
                       value={editingBooking.status}
-                      onChange={(e) => setEditingBooking({ ...editingBooking, status: e.target.value as DBBooking['status'] })}
+                      onChange={(e) => setEditingBooking({ ...editingBooking, status: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
                     >
                       <option value="confirmed">Confirmed</option>
@@ -466,7 +495,7 @@ export default function Bookings() {
                     <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
                     <select
                       value={editingBooking.category}
-                      onChange={(e) => setEditingBooking({ ...editingBooking, category: e.target.value as DBBooking['category'] })}
+                      onChange={(e) => setEditingBooking({ ...editingBooking, category: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
                     >
                       <option value="school_college">School/College</option>

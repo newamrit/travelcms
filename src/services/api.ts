@@ -79,6 +79,7 @@ export const bookingsAPI = {
   getById: (id: string | number) => api.get(`/bookings/${id}`),
   create: (data: any) => api.post('/bookings', data),
   update: (id: string | number, data: any) => api.put(`/bookings/${id}`, data),
+  delete: (id: string | number) => api.delete(`/bookings/${id}`),
 };
 
 export const suppliersAPI = {
