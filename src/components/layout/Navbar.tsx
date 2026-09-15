@@ -63,7 +63,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
 
           <div className="relative" ref={profileRef}>
             <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-100">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-sm font-semibold">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center text-white text-sm font-semibold">
                 {user?.firstName?.[0]}{user?.lastName?.[0]}
               </div>
               <div className="hidden md:block text-left">

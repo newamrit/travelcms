@@ -2,16 +2,30 @@
 
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  
+  /* Primary Brand Color - Deep Navy Blue #012871 */
+  --color-primary-50: #e6eaf3;
+  --color-primary-100: #b3bcd9;
+  --color-primary-200: #808fbf;
+  --color-primary-300: #4d61a6;
+  --color-primary-400: #1a348c;
+  --color-primary-500: #012871;
+  --color-primary-600: #012366;
+  --color-primary-700: #011e5b;
+  --color-primary-800: #011950;
+  --color-primary-900: #011445;
+  
+  /* Accent Brand Color - Vibrant Orange #f35500 */
+  --color-accent-50: #fef0e6;
+  --color-accent-100: #fdd1b3;
+  --color-accent-200: #fcb280;
+  --color-accent-300: #fb934d;
+  --color-accent-400: #fa741a;
+  --color-accent-500: #f35500;
+  --color-accent-600: #dc4c00;
+  --color-accent-700: #c54300;
+  --color-accent-800: #ae3a00;
+  --color-accent-900: #973100;
 }
 
 body {

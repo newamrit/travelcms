@@ -58,7 +58,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
       `}>
         <div className="flex items-center justify-between h-16 px-4 border-b border-slate-200 flex-shrink-0">
           <Link to="/" className="flex items-center gap-2.5 overflow-hidden" onClick={onClose}>
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center flex-shrink-0 shadow-sm">
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center flex-shrink-0 shadow-sm">
               <Globe className="w-5 h-5 text-white" />
             </div>
             {!isCollapsed && (
@@ -110,7 +110,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
 
         <div className="border-t border-slate-200 p-3 flex-shrink-0">
           <div className={`flex items-center gap-3 p-2 rounded-lg bg-slate-50 ${isCollapsed ? 'justify-center' : ''}`}>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               {user?.firstName?.[0]}{user?.lastName?.[0]}
             </div>
             {!isCollapsed && (

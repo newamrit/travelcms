@@ -32,14 +32,14 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#012871] via-[#011e5b] to-[#011445] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-300 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-[#f35500] rounded-full blur-3xl" />
         </div>
         <div className="relative z-10 flex flex-col justify-center px-12 text-white">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-[#f35500] backdrop-blur flex items-center justify-center">
               <Globe className="w-7 h-7" />
             </div>
             <h1 className="text-3xl font-bold">TravelOps Pro</h1>
@@ -50,9 +50,9 @@ export default function Login() {
           </p>
           <div className="mt-12 grid grid-cols-2 gap-4">
             {[{ label: 'Leads Managed', value: '2,400+' }, { label: 'Trips Booked', value: '850+' }, { label: 'Revenue Tracked', value: '$4.2M' }, { label: 'Happy Clients', value: '1,200+' }].map(stat => (
-              <div key={stat.label} className="bg-white/10 backdrop-blur rounded-lg p-4">
-                <p className="text-2xl font-bold">{stat.value}</p>
-                <p className="text-sm text-primary-200">{stat.label}</p>
+              <div key={stat.label} className="bg-white/10 backdrop-blur rounded-lg p-4 border border-white/10">
+                <p className="text-2xl font-bold text-[#f35500]">{stat.value}</p>
+                <p className="text-sm text-white/70">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -62,7 +62,7 @@ export default function Login() {
       <div className="flex-1 flex items-center justify-center p-8 bg-slate-50">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-[#012871] flex items-center justify-center">
               <Globe className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold text-slate-800">TravelOps Pro</span>
@@ -97,7 +97,7 @@ export default function Login() {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="w-full py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 transition disabled:opacity-50">
+            <button type="submit" disabled={loading} className="w-full py-2.5 bg-[#012871] text-white rounded-lg font-medium hover:bg-[#011e5b] focus:ring-4 focus:ring-primary-200 transition disabled:opacity-50">
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>

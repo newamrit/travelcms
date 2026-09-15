@@ -182,7 +182,7 @@ export default function Itineraries() {
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
               {/* Large Icon */}
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <FolderOpen className="w-16 h-16 text-white" />
               </div>
 
@@ -194,8 +194,8 @@ export default function Itineraries() {
 
               {/* Stats */}
               <div className="flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full">
-                <span className="text-2xl font-bold text-primary-700">{mockSavedItineraries.length}</span>
-                <span className="text-sm text-primary-600">itineraries</span>
+                <span className="text-2xl font-bold text-primary-600">{mockSavedItineraries.length}</span>
+                <span className="text-sm text-primary-500">itineraries</span>
               </div>
 
               {/* Action Hint */}
@@ -211,12 +211,12 @@ export default function Itineraries() {
           {/* Itinerary Builder Card */}
           <button
             onClick={() => setView('builder')}
-            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-green-500 hover:shadow-2xl hover:-translate-y-1"
+            className="group bg-white rounded-xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-accent-500 hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
             <div className="flex flex-col items-center justify-center h-full space-y-6">
               {/* Large Icon */}
-              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <PenTool className="w-16 h-16 text-white" />
               </div>
 
@@ -229,21 +229,21 @@ export default function Itineraries() {
               {/* Feature List */}
               <div className="space-y-2 text-sm text-slate-600">
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent-500"></div>
                   <span>Day-by-day planning</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent-500"></div>
                   <span>Meal & transport tracking</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent-500"></div>
                   <span>Drag & drop reordering</span>
                 </div>
               </div>
 
               {/* Action Hint */}
-              <div className="flex items-center gap-2 text-green-600 font-medium text-sm group-hover:gap-3 transition-all">
+              <div className="flex items-center gap-2 text-accent-600 font-medium text-sm group-hover:gap-3 transition-all">
                 <span>Start Building</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
