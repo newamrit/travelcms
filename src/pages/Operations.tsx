@@ -544,18 +544,21 @@ export default function Operations() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <button onClick={() => { setView('menu'); resetCreateForm(); }} className="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
+          <button onClick={() => { setView('menu'); resetCreateForm(); }} className="p-2 rounded-lg hover:bg-[#012871]/10 text-[#012871] transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">New Assignment</h1>
-            <p className="text-slate-500 mt-1">Assign services to confirmed bookings</p>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#012871] to-[#f35500] bg-clip-text text-transparent">New Assignment</h1>
+            <p className="text-slate-600 mt-1">Assign services to confirmed bookings</p>
           </div>
         </div>
 
         {/* Step 1: Select Booking */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6">
-          <h2 className="text-lg font-semibold text-slate-800 mb-4">Step 1: Select Confirmed Booking</h2>
+        <div className="bg-white rounded-3xl border-2 border-[#012871]/20 p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-full bg-[#012871] flex items-center justify-center text-white font-bold">1</div>
+            <h2 className="text-lg font-semibold text-[#012871]">Select Confirmed Booking</h2>
+          </div>
           
           {!selectedBooking ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -563,28 +566,28 @@ export default function Operations() {
                 <button
                   key={booking.id}
                   onClick={() => setSelectedBooking(booking)}
-                  className="p-4 border-2 border-slate-200 rounded-2xl hover:border-[#012871] hover:shadow-md transition-all text-left"
+                  className="p-4 border-2 border-slate-200 rounded-2xl hover:border-[#012871] hover:shadow-lg hover:-translate-y-1 transition-all text-left group"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h3 className="font-semibold text-slate-800">{booking.clientName}</h3>
+                      <h3 className="font-semibold text-slate-800 group-hover:text-[#012871] transition-colors">{booking.clientName}</h3>
                       <p className="text-sm text-slate-500">{booking.bookingNumber}</p>
                     </div>
-                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                    <span className="px-2 py-1 bg-[#012871]/10 text-[#012871] rounded-full text-xs font-medium border border-[#012871]/20">
                       Confirmed
                     </span>
                   </div>
                   <div className="space-y-1 text-sm text-slate-600">
                     <p className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      <MapPin className="w-3.5 h-3.5 text-[#f35500]" />
                       {booking.destination}
                     </p>
                     <p className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      <Calendar className="w-3.5 h-3.5 text-[#f35500]" />
                       {booking.startDate} → {booking.endDate}
                     </p>
                     <p className="flex items-center gap-2">
-                      <span className="text-slate-400">👥</span>
+                      <span className="text-[#f35500]">👥</span>
                       {booking.paxCount} pax
                     </p>
                   </div>
@@ -595,21 +598,30 @@ export default function Operations() {
               ))}
             </div>
           ) : (
-            <div className="p-4 border-2 border-[#012871] rounded-2xl bg-primary-50">
+            <div className="p-4 border-2 border-[#012871] rounded-2xl bg-gradient-to-br from-[#012871]/5 to-[#f35500]/5">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-semibold text-slate-800">{selectedBooking.clientName}</h3>
-                  <p className="text-sm text-slate-500">{selectedBooking.bookingNumber}</p>
+                  <h3 className="font-semibold text-[#012871] text-lg">{selectedBooking.clientName}</h3>
+                  <p className="text-sm text-slate-600 font-medium">{selectedBooking.bookingNumber}</p>
                   <div className="mt-2 space-y-1 text-sm text-slate-600">
-                    <p>📍 {selectedBooking.destination}</p>
-                    <p>📅 {selectedBooking.startDate} → {selectedBooking.endDate}</p>
-                    <p>👥 {selectedBooking.paxCount} pax</p>
+                    <p className="flex items-center gap-2">
+                      <MapPin className="w-3.5 h-3.5 text-[#f35500]" />
+                      {selectedBooking.destination}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-[#f35500]" />
+                      {selectedBooking.startDate} → {selectedBooking.endDate}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="text-[#f35500]">👥</span>
+                      {selectedBooking.paxCount} pax
+                    </p>
                   </div>
-                  <p className="mt-2 text-lg font-bold text-[#012871]">${selectedBooking.totalAmount.toLocaleString()}</p>
+                  <p className="mt-3 text-xl font-bold text-[#012871]">${selectedBooking.totalAmount.toLocaleString()}</p>
                 </div>
                 <button
                   onClick={() => setSelectedBooking(null)}
-                  className="p-2 rounded-lg hover:bg-white text-slate-600"
+                  className="p-2 rounded-lg hover:bg-white text-slate-600 hover:text-[#f35500] transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -620,39 +632,44 @@ export default function Operations() {
 
         {/* Step 2: Add Assignment Items */}
         {selectedBooking && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6">
+          <div className="bg-white rounded-3xl border-2 border-[#f35500]/20 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-slate-800">Step 2: Add Services</h2>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#f35500] flex items-center justify-center text-white font-bold">2</div>
+                <h2 className="text-lg font-semibold text-[#f35500]">Add Services</h2>
+              </div>
               <button
                 onClick={addAssignmentItem}
-                className="flex items-center gap-2 px-4 py-2 bg-[#f35500] text-white rounded-lg font-medium hover:bg-[#c54300]"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#f35500] to-[#c54300] text-white rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all"
               >
                 <Plus className="w-4 h-4" /> Add Service
               </button>
             </div>
 
             {assignmentItems.length === 0 ? (
-              <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl">
-                <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500 mb-2">No services added yet</p>
-                <p className="text-sm text-slate-400">Click "Add Service" to assign hotels, vehicles, guides, etc.</p>
+              <div className="text-center py-12 border-2 border-dashed border-[#f35500]/30 rounded-2xl bg-gradient-to-br from-[#f35500]/5 to-transparent">
+                <div className="w-16 h-16 rounded-full bg-[#f35500]/10 flex items-center justify-center mx-auto mb-3">
+                  <FileText className="w-8 h-8 text-[#f35500]" />
+                </div>
+                <p className="text-slate-700 font-medium mb-2">No services added yet</p>
+                <p className="text-sm text-slate-500">Click "Add Service" to assign hotels, vehicles, guides, etc.</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {assignmentItems.map((item, index) => {
                   const Icon = typeIcons[item.type] || FileText;
                   return (
-                    <div key={item.id} className="p-4 border border-slate-200 rounded-2xl">
+                    <div key={item.id} className="p-4 border-2 border-[#012871]/10 rounded-2xl hover:border-[#012871]/30 transition-colors bg-gradient-to-br from-white to-[#012871]/5">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${typeColors[item.type]}`}>
                             <Icon className="w-4 h-4" />
                           </div>
-                          <span className="font-medium text-slate-800">Service #{index + 1}</span>
+                          <span className="font-medium text-[#012871]">Service #{index + 1}</span>
                         </div>
                         <button
                           onClick={() => removeAssignmentItem(item.id)}
-                          className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600"
+                          className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-[#f35500] transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -660,11 +677,11 @@ export default function Operations() {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-1">Service Type</label>
+                          <label className="block text-sm font-medium text-[#012871] mb-1">Service Type</label>
                           <select
                             value={item.type}
                             onChange={(e) => updateAssignmentItem(item.id, 'type', e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
                           >
                             <option value="hotel">Hotel</option>
                             <option value="vehicle">Vehicle</option>
@@ -676,41 +693,41 @@ export default function Operations() {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-1">Supplier Name</label>
+                          <label className="block text-sm font-medium text-[#012871] mb-1">Supplier Name</label>
                           <input
                             type="text"
                             value={item.supplierName}
                             onChange={(e) => updateAssignmentItem(item.id, 'supplierName', e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
                             placeholder="Enter supplier name"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-1">Service Date</label>
+                          <label className="block text-sm font-medium text-[#012871] mb-1">Service Date</label>
                           <input
                             type="date"
                             value={item.serviceDate}
                             onChange={(e) => updateAssignmentItem(item.id, 'serviceDate', e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-1">Amount ($)</label>
+                          <label className="block text-sm font-medium text-[#012871] mb-1">Amount ($)</label>
                           <input
                             type="number"
                             value={item.amount}
                             onChange={(e) => updateAssignmentItem(item.id, 'amount', parseFloat(e.target.value) || 0)}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
                             placeholder="0.00"
                           />
                         </div>
                         <div className="md:col-span-2">
-                          <label className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
+                          <label className="block text-sm font-medium text-[#012871] mb-1">Notes</label>
                           <input
                             type="text"
                             value={item.notes}
                             onChange={(e) => updateAssignmentItem(item.id, 'notes', e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
                             placeholder="Additional notes (optional)"
                           />
                         </div>
@@ -720,17 +737,23 @@ export default function Operations() {
                 })}
 
                 {/* Total Summary */}
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                <div className="p-5 bg-gradient-to-r from-[#012871] to-[#011950] rounded-2xl text-white shadow-lg">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-slate-600">Total Services: {assignmentItems.length}</p>
-                      <p className="text-lg font-bold text-[#012871]">Total Amount: ${calculateTotal().toLocaleString()}</p>
+                      <p className="text-sm text-white/80">Total Services</p>
+                      <p className="text-2xl font-bold">{assignmentItems.length}</p>
                     </div>
+                    <div className="text-right">
+                      <p className="text-sm text-white/80">Total Amount</p>
+                      <p className="text-2xl font-bold">${calculateTotal().toLocaleString()}</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-white/20">
                     <button
                       onClick={addAssignmentItem}
-                      className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg font-medium hover:bg-slate-50"
+                      className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors w-full justify-center"
                     >
-                      <Plus className="w-4 h-4" /> Add Another
+                      <Plus className="w-4 h-4" /> Add Another Service
                     </button>
                   </div>
                 </div>
@@ -739,16 +762,16 @@ export default function Operations() {
 
             {/* Action Buttons */}
             {assignmentItems.length > 0 && (
-              <div className="flex justify-end gap-3 pt-6 border-t border-slate-200 mt-6">
+              <div className="flex justify-end gap-3 pt-6 border-t-2 border-slate-200 mt-6">
                 <button
                   onClick={() => { setView('menu'); resetCreateForm(); }}
-                  className="px-4 py-2 text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50"
+                  className="px-6 py-2.5 text-[#012871] bg-white border-2 border-[#012871] rounded-lg font-medium hover:bg-[#012871]/5 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSaveAssignment}
-                  className="px-4 py-2 text-white bg-[#012871] rounded-lg hover:bg-[#011e5b]"
+                  className="px-6 py-2.5 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all"
                 >
                   Save Assignment
                 </button>
