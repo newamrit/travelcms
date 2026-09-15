@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Plus, Mail, Phone, MapPin, Calendar, ArrowLeft, UserPlus, UserCheck } from 'lucide-react';
 import { formatNepaliCurrency } from '../utils/currency';
-import { leadsAPI } from '../services/api';
+import { db, COLLECTIONS } from '../services/database';
+import type { DBLead } from '../services/database';
 
 export default function Customers() {
   const [view, setView] = useState<'menu' | 'directory' | 'add'>('menu');
-  const [customers, setCustomers] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<DBLead[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadCustomers = async () => {
+    const loadCustomers = () => {
       try {
-        const response = await leadsAPI.getAll();
-        setCustomers(response.data?.data || []);
+        const leads = db.findAll<DBLead>(COLLECTIONS.LEADS);
+        setCustomers(leads);
       } catch (error) {
         console.error('Failed to load customers:', error);
       } finally {

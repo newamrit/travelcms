@@ -1,37 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Receipt, Plus, DollarSign, Clock, CheckCircle, AlertTriangle, ArrowLeft, FileText, CreditCard } from 'lucide-react';
 import { formatNepaliCurrency } from '../utils/currency';
-
-interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  clientName: string;
-  amount: number;
-  status: 'draft' | 'sent' | 'paid' | 'overdue';
-  issueDate: string;
-  dueDate: string;
-}
-
-const mockInvoices: Invoice[] = [
-  { id: '1', invoiceNumber: 'INV-2024-001', clientName: 'John Smith', amount: 12500, status: 'paid', issueDate: '2024-03-01', dueDate: '2024-03-31' },
-  { id: '2', invoiceNumber: 'INV-2024-002', clientName: 'Sarah Johnson', amount: 8900, status: 'sent', issueDate: '2024-03-15', dueDate: '2024-04-15' },
-  { id: '3', invoiceNumber: 'INV-2024-003', clientName: 'Michael Brown', amount: 15200, status: 'overdue', issueDate: '2024-02-01', dueDate: '2024-03-01' },
-  { id: '4', invoiceNumber: 'INV-2024-004', clientName: 'Emily Davis', amount: 22800, status: 'paid', issueDate: '2024-03-10', dueDate: '2024-04-10' },
-  { id: '5', invoiceNumber: 'INV-2024-005', clientName: 'David Wilson', amount: 9500, status: 'draft', issueDate: '2024-03-20', dueDate: '2024-04-20' },
-];
+import { db, COLLECTIONS } from '../services/database';
+import type { DBInvoice } from '../services/database';
 
 const statusColors: Record<string, string> = {
   draft: 'bg-slate-100 text-slate-700 border-slate-200',
   sent: 'bg-blue-100 text-blue-700 border-blue-200',
   paid: 'bg-green-100 text-green-700 border-green-200',
   overdue: 'bg-red-100 text-red-700 border-red-200',
+  partial: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+  cancelled: 'bg-slate-100 text-slate-500 border-slate-200',
 };
 
 export default function Invoices() {
   const [view, setView] = useState<'menu' | 'issued' | 'create'>('menu');
+  const [invoices, setInvoices] = useState<DBInvoice[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const totalRevenue = mockInvoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.amount, 0);
-  const pendingAmount = mockInvoices.filter(i => ['sent', 'overdue'].includes(i.status)).reduce((sum, i) => sum + i.amount, 0);
+  useEffect(() => {
+    const loadInvoices = () => {
+      try {
+        const data = db.findAll<DBInvoice>(COLLECTIONS.INVOICES);
+        setInvoices(data);
+      } catch (error) {
+        console.error('Failed to load invoices:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadInvoices();
+  }, []);
+
+  const totalRevenue = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.totalAmount, 0);
+  const pendingAmount = invoices.filter(i => ['sent', 'overdue', 'partial'].includes(i.status)).reduce((sum, i) => sum + i.totalAmount, 0);
 
   if (view === 'menu') {
     return (
@@ -144,14 +146,14 @@ export default function Invoices() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {mockInvoices.map(invoice => (
+              {invoices.map((invoice: DBInvoice) => (
                 <tr key={invoice.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">
                     <p className="text-sm font-medium text-slate-800">{invoice.invoiceNumber}</p>
-                    <p className="text-xs text-slate-400">Issued: {invoice.issueDate}</p>
+                    <p className="text-xs text-slate-400">Issued: {invoice.invoiceDate}</p>
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-600">{invoice.clientName}</td>
-                  <td className="px-4 py-3 text-sm text-right font-semibold text-slate-800">{formatNepaliCurrency(invoice.amount)}</td>
+                  <td className="px-4 py-3 text-sm text-right font-semibold text-slate-800">{formatNepaliCurrency(invoice.totalAmount)}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusColors[invoice.status]}`}>
                       {invoice.status.toUpperCase()}

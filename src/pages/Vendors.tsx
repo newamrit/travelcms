@@ -167,7 +167,7 @@ export default function Vendors() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-800 mb-1">Hotel</h3>
-                  <p className="text-2xl font-bold text-[#012871]">{mockVendors.filter(v => v.type === 'Hotel').length}</p>
+                  <p className="text-2xl font-bold text-[#012871]">{vendors.filter((v: any) => v.type === 'Hotel').length}</p>
                 </div>
               </div>
             </button>
@@ -183,7 +183,7 @@ export default function Vendors() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-800 mb-1">Restaurant</h3>
-                  <p className="text-2xl font-bold text-[#f35500]">{mockVendors.filter(v => v.type === 'Restaurant').length}</p>
+                  <p className="text-2xl font-bold text-[#f35500]">{vendors.filter((v: any) => v.type === 'Restaurant').length}</p>
                 </div>
               </div>
             </button>
@@ -199,7 +199,7 @@ export default function Vendors() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-800 mb-1">Activity</h3>
-                  <p className="text-2xl font-bold text-[#012871]">{mockVendors.filter(v => v.type === 'Activity').length}</p>
+                  <p className="text-2xl font-bold text-[#012871]">{vendors.filter((v: any) => v.type === 'Activity').length}</p>
                 </div>
               </div>
             </button>
@@ -215,7 +215,7 @@ export default function Vendors() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-800 mb-1">Permit</h3>
-                  <p className="text-2xl font-bold text-[#f35500]">{mockVendors.filter(v => v.type === 'Permit').length}</p>
+                  <p className="text-2xl font-bold text-[#f35500]">{vendors.filter((v: any) => v.type === 'Permit').length}</p>
                 </div>
               </div>
             </button>
@@ -231,7 +231,7 @@ export default function Vendors() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-800 mb-1">Others</h3>
-                  <p className="text-2xl font-bold text-[#012871]">{mockVendors.filter(v => v.type === 'Others').length}</p>
+                  <p className="text-2xl font-bold text-[#012871]">{vendors.filter((v: any) => v.type === 'Others').length}</p>
                 </div>
               </div>
             </button>
@@ -242,7 +242,7 @@ export default function Vendors() {
   }
 
   // Filter vendors based on search and category
-  const filteredVendors = mockVendors.filter(vendor => {
+  const filteredVendors = vendors.filter((vendor: any) => {
     const matchesSearch = searchTerm === '' || 
       vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vendor.contactPerson.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -312,7 +312,7 @@ export default function Vendors() {
           {(searchTerm || categoryFilter !== 'all') && (
             <div className="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
               <p className="text-sm text-slate-600">
-                Showing <span className="font-semibold text-[#012871]">{filteredVendors.length}</span> of <span className="font-semibold">{mockVendors.length}</span> vendors
+                Showing <span className="font-semibold text-[#012871]">{filteredVendors.length}</span> of <span className="font-semibold">{vendors.length}</span> vendors
               </p>
               <button
                 onClick={() => { setSearchTerm(''); setCategoryFilter('all'); }}
