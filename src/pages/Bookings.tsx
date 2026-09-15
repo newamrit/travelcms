@@ -5,7 +5,7 @@ import {
   Search, Filter, Printer, ChevronLeft, ChevronRight, MoreVertical
 } from 'lucide-react';
 import { formatNepaliCurrency } from '../utils/currency';
-import { bookingsAPI } from '../services/api';
+import { db, COLLECTIONS } from '../services/database';
 
 export default function Bookings() {
   const [view, setView] = useState<'menu' | 'all' | 'create' | 'school_college' | 'corporate_retreat' | 'vacation_family'>('menu');
@@ -19,10 +19,10 @@ export default function Bookings() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadBookings = async () => {
+    const loadBookings = () => {
       try {
-        const response = await bookingsAPI.getAll();
-        setBookings(response.data?.data || []);
+        const bookingsData = db.findAll(COLLECTIONS.BOOKINGS);
+        setBookings(bookingsData);
       } catch (error) {
         console.error('Failed to load bookings:', error);
       } finally {
@@ -78,9 +78,9 @@ export default function Bookings() {
   const paginatedBookings = filteredBookings.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   // Handlers
-  const handleStatusChange = async (bookingId: string, newStatus: string) => {
+  const handleStatusChange = (bookingId: string, newStatus: string) => {
     try {
-      await bookingsAPI.update(bookingId, { status: newStatus });
+      db.update(COLLECTIONS.BOOKINGS, bookingId, { status: newStatus } as any);
       setBookings(bookings.map(b => 
         b.id === bookingId ? { ...b, status: newStatus } : b
       ));
@@ -90,10 +90,10 @@ export default function Bookings() {
     }
   };
 
-  const handleDelete = async (bookingId: string) => {
+  const handleDelete = (bookingId: string) => {
     if (confirm('Are you sure you want to delete this booking?')) {
       try {
-        await bookingsAPI.delete(bookingId);
+        db.delete(COLLECTIONS.BOOKINGS, bookingId);
         setBookings(bookings.filter(b => b.id !== bookingId));
       } catch (error) {
         console.error('Failed to delete booking:', error);
@@ -145,10 +145,10 @@ export default function Bookings() {
     setEditingBooking(booking);
   };
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = () => {
     if (editingBooking) {
       try {
-        await bookingsAPI.update(editingBooking.id, editingBooking);
+        db.update(COLLECTIONS.BOOKINGS, editingBooking.id, editingBooking as any);
         setBookings(bookings.map(b => 
           b.id === editingBooking.id ? editingBooking : b
         ));

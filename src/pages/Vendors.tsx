@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Building2, Plus, Phone, Mail, MapPin, Star, Edit2, Trash2, ArrowLeft, Users, Car, UserCheck, Utensils, Ticket, MoreHorizontal } from 'lucide-react';
-import { suppliersAPI } from '../services/api';
+import { db, COLLECTIONS } from '../services/database';
 
 const typeColors: Record<string, string> = {
   Vehicle: 'bg-green-100 text-green-700',
@@ -30,10 +30,10 @@ export default function Vendors() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadVendors = async () => {
+    const loadVendors = () => {
       try {
-        const response = await suppliersAPI.getAll();
-        setVendors(response.data?.data || []);
+        const vendorsData = db.findAll(COLLECTIONS.VENDORS);
+        setVendors(vendorsData);
       } catch (error) {
         console.error('Failed to load vendors:', error);
       } finally {

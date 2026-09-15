@@ -23,7 +23,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only clear auth on actual 401 from backend, not network errors
+    if (error.response?.status === 401 && error.response?.data?.message?.includes('Authentication')) {
       localStorage.removeItem('travelops_token');
       localStorage.removeItem('travelops_user');
       if (window.location.pathname !== '/login') {

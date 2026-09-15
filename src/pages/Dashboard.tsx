@@ -5,9 +5,9 @@ import {
   TrendingUp, ArrowUpRight, ArrowDownRight, Clock, AlertTriangle, 
   Building2, ArrowLeft, Activity, Zap
 } from 'lucide-react';
-import { leadsAPI, bookingsAPI, invoicesAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { formatNepaliCurrency } from '../utils/currency';
+import { db, COLLECTIONS } from '../services/database';
 
 export default function Dashboard() {
   const [view, setView] = useState<'menu' | 'overview' | 'actions'>('menu');
@@ -18,23 +18,15 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [leadsRes, bookingsRes, invoicesRes] = await Promise.all([
-          leadsAPI.getAll(),
-          bookingsAPI.getAll(),
-          invoicesAPI.getAll()
-        ]);
-        setAllLeads(leadsRes.data?.data || []);
-        setAllBookings(bookingsRes.data?.data || []);
-        setAllInvoices(invoicesRes.data?.data || []);
-      } catch (error) {
-        console.error('Failed to load dashboard data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
+    try {
+      setAllLeads(db.findAll(COLLECTIONS.LEADS));
+      setAllBookings(db.findAll(COLLECTIONS.BOOKINGS));
+      setAllInvoices(db.findAll(COLLECTIONS.INVOICES));
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
   
   const totalLeads = allLeads.length;
