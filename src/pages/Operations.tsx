@@ -2,34 +2,86 @@ import React, { useState } from 'react';
 import { 
   FileText, Plus, Eye, Printer, Hotel, Car, UserCheck, 
   MapPin, Calendar, ArrowLeft, Utensils, Ticket, MoreHorizontal,
-  CheckCircle, Clock, AlertCircle
+  CheckCircle, Clock, AlertCircle, Trash2, X
 } from 'lucide-react';
+
+interface Booking {
+  id: string;
+  bookingNumber: string;
+  clientName: string;
+  destination: string;
+  startDate: string;
+  endDate: string;
+  paxCount: number;
+  status: 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
+  totalAmount: number;
+  category: 'school_college' | 'corporate_retreat' | 'vacation_family';
+}
+
+interface AssignmentItem {
+  id: string;
+  type: 'vehicle' | 'guide' | 'hotel' | 'restaurant' | 'activity' | 'permit' | 'others';
+  supplierName: string;
+  serviceDate: string;
+  amount: number;
+  notes: string;
+}
 
 interface Assignment {
   id: string;
   assignmentNumber: string;
-  type: 'vehicle' | 'guide' | 'hotel' | 'restaurant' | 'activity' | 'permit' | 'others';
-  supplierName: string;
-  clientName: string;
+  bookingId: string;
   bookingNumber: string;
-  serviceDate: string;
+  clientName: string;
+  items: AssignmentItem[];
+  totalAmount: number;
   status: 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
-  amount: number;
+  createdAt: string;
 }
 
+// Mock confirmed bookings
+const mockConfirmedBookings: Booking[] = [
+  { id: '1', bookingNumber: 'BK-2024-001', clientName: 'John Smith', destination: 'Tanzania Safari', startDate: '2024-06-15', endDate: '2024-06-22', paxCount: 4, status: 'confirmed', totalAmount: 12500, category: 'vacation_family' },
+  { id: '4', bookingNumber: 'BK-2024-004', clientName: 'Emily Davis', destination: 'South Africa Tour', startDate: '2024-08-05', endDate: '2024-08-12', paxCount: 6, status: 'confirmed', totalAmount: 22800, category: 'school_college' },
+  { id: '5', bookingNumber: 'BK-2024-005', clientName: 'David Wilson', destination: 'Zanzibar Beach', startDate: '2024-09-01', endDate: '2024-09-08', paxCount: 2, status: 'confirmed', totalAmount: 9500, category: 'vacation_family' },
+  { id: '6', bookingNumber: 'BK-2024-006', clientName: 'Tech Corp Ltd', destination: 'Team Building Kenya', startDate: '2024-10-15', endDate: '2024-10-18', paxCount: 25, status: 'confirmed', totalAmount: 45000, category: 'corporate_retreat' },
+  { id: '8', bookingNumber: 'BK-2024-008', clientName: 'Harvard University', destination: 'Biology Field Trip', startDate: '2024-12-10', endDate: '2024-12-17', paxCount: 30, status: 'confirmed', totalAmount: 52000, category: 'school_college' },
+  { id: '9', bookingNumber: 'BK-2024-009', clientName: 'Google Inc', destination: 'Annual Retreat Bali', startDate: '2025-01-15', endDate: '2025-01-22', paxCount: 50, status: 'confirmed', totalAmount: 125000, category: 'corporate_retreat' },
+  { id: '11', bookingNumber: 'BK-2024-011', clientName: 'Stanford University', destination: 'Archaeology Expedition', startDate: '2025-03-05', endDate: '2025-03-12', paxCount: 20, status: 'confirmed', totalAmount: 38000, category: 'school_college' },
+  { id: '12', bookingNumber: 'BK-2024-012', clientName: 'Microsoft Corp', destination: 'Leadership Retreat', startDate: '2025-04-10', endDate: '2025-04-15', paxCount: 35, status: 'confirmed', totalAmount: 89000, category: 'corporate_retreat' },
+];
+
+// Mock existing assignments
 const mockAssignments: Assignment[] = [
-  { id: '1', assignmentNumber: 'ASN-2024-001', type: 'hotel', supplierName: 'Serengeti Lodge', clientName: 'John Smith', bookingNumber: 'BK-2024-001', serviceDate: '2024-06-15', status: 'confirmed', amount: 4500 },
-  { id: '2', assignmentNumber: 'ASN-2024-002', type: 'vehicle', supplierName: 'Safari Wheels', clientName: 'Sarah Johnson', bookingNumber: 'BK-2024-002', serviceDate: '2024-07-10', status: 'pending', amount: 1200 },
-  { id: '3', assignmentNumber: 'ASN-2024-003', type: 'guide', supplierName: 'Expert Guides Ltd', clientName: 'Michael Brown', bookingNumber: 'BK-2024-003', serviceDate: '2024-05-20', status: 'in_progress', amount: 800 },
-  { id: '4', assignmentNumber: 'ASN-2024-004', type: 'activity', supplierName: 'Adventure Tours', clientName: 'Emily Davis', bookingNumber: 'BK-2024-004', serviceDate: '2024-08-05', status: 'confirmed', amount: 2500 },
-  { id: '5', assignmentNumber: 'ASN-2024-005', type: 'restaurant', supplierName: 'The Safari Kitchen', clientName: 'David Wilson', bookingNumber: 'BK-2024-005', serviceDate: '2024-09-01', status: 'pending', amount: 650 },
-  { id: '6', assignmentNumber: 'ASN-2024-006', type: 'permit', supplierName: 'National Parks Authority', clientName: 'Tech Corp Ltd', bookingNumber: 'BK-2024-006', serviceDate: '2024-10-15', status: 'confirmed', amount: 1800 },
-  { id: '7', assignmentNumber: 'ASN-2024-007', type: 'vehicle', supplierName: 'Luxury Transfers', clientName: 'Lisa Anderson', bookingNumber: 'BK-2024-007', serviceDate: '2024-11-01', status: 'in_progress', amount: 950 },
-  { id: '8', assignmentNumber: 'ASN-2024-008', type: 'hotel', supplierName: 'Zanzibar Beach Resort', clientName: 'Harvard University', bookingNumber: 'BK-2024-008', serviceDate: '2024-12-10', status: 'pending', amount: 8500 },
-  { id: '9', assignmentNumber: 'ASN-2024-009', type: 'guide', supplierName: 'Cultural Tours Inc', clientName: 'Google Inc', bookingNumber: 'BK-2024-009', serviceDate: '2025-01-15', status: 'confirmed', amount: 2200 },
-  { id: '10', assignmentNumber: 'ASN-2024-010', type: 'activity', supplierName: 'Water Sports Center', clientName: 'Robert Taylor', bookingNumber: 'BK-2024-010', serviceDate: '2025-02-01', status: 'pending', amount: 1500 },
-  { id: '11', assignmentNumber: 'ASN-2024-011', type: 'others', supplierName: 'Insurance Provider', clientName: 'Stanford University', bookingNumber: 'BK-2024-011', serviceDate: '2025-03-05', status: 'confirmed', amount: 3200 },
-  { id: '12', assignmentNumber: 'ASN-2024-012', type: 'restaurant', supplierName: 'Fine Dining Experience', clientName: 'Microsoft Corp', bookingNumber: 'BK-2024-012', serviceDate: '2025-04-10', status: 'in_progress', amount: 1800 },
+  { 
+    id: '1', 
+    assignmentNumber: 'ASN-2024-001', 
+    bookingId: '1',
+    bookingNumber: 'BK-2024-001',
+    clientName: 'John Smith',
+    items: [
+      { id: '1', type: 'hotel', supplierName: 'Serengeti Lodge', serviceDate: '2024-06-15', amount: 4500, notes: '3 nights accommodation' },
+      { id: '2', type: 'vehicle', supplierName: 'Safari Wheels', serviceDate: '2024-06-15', amount: 1200, notes: '4x4 vehicle for 7 days' },
+    ],
+    totalAmount: 5700,
+    status: 'confirmed',
+    createdAt: '2024-03-01'
+  },
+  { 
+    id: '2', 
+    assignmentNumber: 'ASN-2024-002', 
+    bookingId: '4',
+    bookingNumber: 'BK-2024-004',
+    clientName: 'Emily Davis',
+    items: [
+      { id: '3', type: 'hotel', supplierName: 'Cape Town Hotel', serviceDate: '2024-08-05', amount: 8500, notes: '7 nights for 6 pax' },
+      { id: '4', type: 'guide', supplierName: 'Expert Guides Ltd', serviceDate: '2024-08-05', amount: 2200, notes: 'Professional guide for 7 days' },
+      { id: '5', type: 'activity', supplierName: 'Adventure Tours', serviceDate: '2024-08-07', amount: 3500, notes: 'Table Mountain tour' },
+    ],
+    totalAmount: 14200,
+    status: 'pending',
+    createdAt: '2024-03-05'
+  },
 ];
 
 const typeIcons: Record<string, any> = {
@@ -60,17 +112,14 @@ const statusColors: Record<string, string> = {
   cancelled: 'bg-red-100 text-red-700 border-red-200',
 };
 
-const statusIcons: Record<string, any> = {
-  pending: Clock,
-  confirmed: CheckCircle,
-  in_progress: AlertCircle,
-  completed: CheckCircle,
-  cancelled: AlertCircle,
-};
-
 export default function Operations() {
   const [view, setView] = useState<'menu' | 'all' | 'create' | 'vehicle' | 'guide' | 'hotel' | 'restaurant' | 'activity' | 'permit' | 'others'>('menu');
+  const [assignments, setAssignments] = useState<Assignment[]>(mockAssignments);
   const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null);
+  
+  // New assignment state
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [assignmentItems, setAssignmentItems] = useState<AssignmentItem[]>([]);
 
   const getTypeLabel = (type: string) => {
     return type.charAt(0).toUpperCase() + type.slice(1);
@@ -82,25 +131,88 @@ export default function Operations() {
 
   // Count assignments by type
   const assignmentsByType = {
-    vehicle: mockAssignments.filter(a => a.type === 'vehicle').length,
-    guide: mockAssignments.filter(a => a.type === 'guide').length,
-    hotel: mockAssignments.filter(a => a.type === 'hotel').length,
-    restaurant: mockAssignments.filter(a => a.type === 'restaurant').length,
-    activity: mockAssignments.filter(a => a.type === 'activity').length,
-    permit: mockAssignments.filter(a => a.type === 'permit').length,
-    others: mockAssignments.filter(a => a.type === 'others').length,
+    vehicle: assignments.reduce((sum, a) => sum + a.items.filter(i => i.type === 'vehicle').length, 0),
+    guide: assignments.reduce((sum, a) => sum + a.items.filter(i => i.type === 'guide').length, 0),
+    hotel: assignments.reduce((sum, a) => sum + a.items.filter(i => i.type === 'hotel').length, 0),
+    restaurant: assignments.reduce((sum, a) => sum + a.items.filter(i => i.type === 'restaurant').length, 0),
+    activity: assignments.reduce((sum, a) => sum + a.items.filter(i => i.type === 'activity').length, 0),
+    permit: assignments.reduce((sum, a) => sum + a.items.filter(i => i.type === 'permit').length, 0),
+    others: assignments.reduce((sum, a) => sum + a.items.filter(i => i.type === 'others').length, 0),
   };
 
   // Count assignments by status
   const statusCounts = {
-    pending: mockAssignments.filter(a => a.status === 'pending').length,
-    confirmed: mockAssignments.filter(a => a.status === 'confirmed').length,
-    in_progress: mockAssignments.filter(a => a.status === 'in_progress').length,
-    total: mockAssignments.length,
+    pending: assignments.filter(a => a.status === 'pending').length,
+    confirmed: assignments.filter(a => a.status === 'confirmed').length,
+    in_progress: assignments.filter(a => a.status === 'in_progress').length,
+    total: assignments.length,
+  };
+
+  // Add new assignment item
+  const addAssignmentItem = () => {
+    const newItem: AssignmentItem = {
+      id: String(Date.now()),
+      type: 'hotel',
+      supplierName: '',
+      serviceDate: '',
+      amount: 0,
+      notes: '',
+    };
+    setAssignmentItems([...assignmentItems, newItem]);
+  };
+
+  // Update assignment item
+  const updateAssignmentItem = (id: string, field: keyof AssignmentItem, value: any) => {
+    setAssignmentItems(assignmentItems.map(item => 
+      item.id === id ? { ...item, [field]: value } : item
+    ));
+  };
+
+  // Remove assignment item
+  const removeAssignmentItem = (id: string) => {
+    setAssignmentItems(assignmentItems.filter(item => item.id !== id));
+  };
+
+  // Calculate total amount
+  const calculateTotal = () => {
+    return assignmentItems.reduce((sum, item) => sum + item.amount, 0);
+  };
+
+  // Save assignment
+  const handleSaveAssignment = () => {
+    if (!selectedBooking || assignmentItems.length === 0) {
+      alert('Please select a booking and add at least one assignment item');
+      return;
+    }
+
+    const newAssignment: Assignment = {
+      id: String(Date.now()),
+      assignmentNumber: `ASN-2024-${String(assignments.length + 1).padStart(3, '0')}`,
+      bookingId: selectedBooking.id,
+      bookingNumber: selectedBooking.bookingNumber,
+      clientName: selectedBooking.clientName,
+      items: assignmentItems,
+      totalAmount: calculateTotal(),
+      status: 'pending',
+      createdAt: new Date().toISOString().split('T')[0],
+    };
+
+    setAssignments([...assignments, newAssignment]);
+    
+    // Reset form
+    setSelectedBooking(null);
+    setAssignmentItems([]);
+    setView('all');
+  };
+
+  // Reset create form
+  const resetCreateForm = () => {
+    setSelectedBooking(null);
+    setAssignmentItems([]);
   };
 
   const renderAssignmentList = (title: string, onBack: () => void, preFilteredAssignments?: Assignment[]) => {
-    const displayAssignments = preFilteredAssignments || mockAssignments;
+    const displayAssignments = preFilteredAssignments || assignments;
 
     return (
       <div className="space-y-6">
@@ -120,60 +232,56 @@ export default function Operations() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayAssignments.map((assignment) => {
-            const Icon = typeIcons[assignment.type] || FileText;
-            const StatusIcon = statusIcons[assignment.status] || Clock;
-            
-            return (
-              <div key={assignment.id} onClick={() => setSelectedAssignment(assignment)} className="bg-white rounded-3xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer">
-                <div className="p-5 border-b border-slate-100">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${typeColors[assignment.type]}`}>
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h3 className="text-base font-semibold text-slate-800">{assignment.supplierName}</h3>
-                        <p className="text-sm text-slate-500">{assignment.clientName}</p>
-                      </div>
-                    </div>
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${statusColors[assignment.status]} flex items-center gap-1`}>
-                      <StatusIcon className="w-3 h-3" />
-                      {getStatusLabel(assignment.status)}
-                    </span>
+          {displayAssignments.map((assignment) => (
+            <div key={assignment.id} onClick={() => setSelectedAssignment(assignment)} className="bg-white rounded-3xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer">
+              <div className="p-5 border-b border-slate-100">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h3 className="text-base font-semibold text-slate-800">{assignment.clientName}</h3>
+                    <p className="text-sm text-slate-500">{assignment.bookingNumber}</p>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <span className="px-2 py-0.5 bg-slate-100 rounded">{getTypeLabel(assignment.type)}</span>
-                    <span>•</span>
-                    <span>{assignment.assignmentNumber}</span>
-                  </div>
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${statusColors[assignment.status]}`}>
+                    {getStatusLabel(assignment.status)}
+                  </span>
                 </div>
-                <div className="p-5 space-y-3">
-                  <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-1.5 text-slate-600">
-                      <Calendar className="w-4 h-4 text-slate-400" />
-                      <span>{new Date(assignment.serviceDate).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-slate-600">
-                      <FileText className="w-4 h-4 text-slate-400" />
-                      <span>{assignment.bookingNumber}</span>
-                    </div>
-                  </div>
-                  <div className="pt-2 border-t border-slate-100">
-                    <p className="text-lg font-bold text-[#012871]">${assignment.amount.toLocaleString()}</p>
-                  </div>
-                </div>
-                <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                  <button className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-[#012871]">
-                    <Eye className="w-4 h-4" />
-                  </button>
-                  <button className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-[#012871]">
-                    <Printer className="w-4 h-4" />
-                  </button>
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <span>{assignment.items.length} items</span>
+                  <span>•</span>
+                  <span>{assignment.assignmentNumber}</span>
                 </div>
               </div>
-            );
-          })}
+              <div className="p-5 space-y-3">
+                <div className="flex flex-wrap gap-1">
+                  {assignment.items.slice(0, 4).map((item, idx) => {
+                    const Icon = typeIcons[item.type] || FileText;
+                    return (
+                      <div key={idx} className={`px-2 py-1 rounded ${typeColors[item.type]} text-xs flex items-center gap-1`}>
+                        <Icon className="w-3 h-3" />
+                        <span>{getTypeLabel(item.type)}</span>
+                      </div>
+                    );
+                  })}
+                  {assignment.items.length > 4 && (
+                    <span className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs">
+                      +{assignment.items.length - 4} more
+                    </span>
+                  )}
+                </div>
+                <div className="pt-2 border-t border-slate-100">
+                  <p className="text-lg font-bold text-[#012871]">${assignment.totalAmount.toLocaleString()}</p>
+                  <p className="text-xs text-slate-400">Created {assignment.createdAt}</p>
+                </div>
+              </div>
+              <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                <button className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-[#012871]">
+                  <Eye className="w-4 h-4" />
+                </button>
+                <button className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-[#012871]">
+                  <Printer className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -205,7 +313,7 @@ export default function Operations() {
                 <p className="text-slate-500 text-sm">View and manage all service assignments</p>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full">
-                <span className="text-2xl font-bold text-primary-600">{mockAssignments.length}</span>
+                <span className="text-2xl font-bold text-primary-600">{assignments.length}</span>
                 <span className="text-sm text-primary-500">assignments</span>
               </div>
               <div className="flex items-center gap-2 text-primary-600 font-medium text-sm group-hover:gap-3 transition-all">
@@ -229,20 +337,20 @@ export default function Operations() {
               </div>
               <div className="text-center">
                 <h2 className="text-2xl font-bold text-slate-800 mb-2">New Assignment</h2>
-                <p className="text-slate-500 text-sm">Create a new service assignment</p>
+                <p className="text-slate-500 text-sm">Assign services to confirmed bookings</p>
               </div>
               <div className="space-y-2 text-sm text-slate-600">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent-500"></div>
-                  <span>Quick assignment creation</span>
+                  <span>Select confirmed booking</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent-500"></div>
-                  <span>Auto-link to bookings</span>
+                  <span>Add multiple services</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent-500"></div>
-                  <span>Instant confirmation</span>
+                  <span>Hotels, vehicles, guides & more</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-accent-600 font-medium text-sm group-hover:gap-3 transition-all">
@@ -431,99 +539,260 @@ export default function Operations() {
     return renderAssignmentList('All Assignments', () => setView('menu'));
   }
 
-  // Create Assignment View
+  // Create Assignment View - Enhanced with multi-item support
   if (view === 'create') {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <button onClick={() => setView('menu')} className="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
+          <button onClick={() => { setView('menu'); resetCreateForm(); }} className="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
             <h1 className="text-2xl font-bold text-slate-800">New Assignment</h1>
-            <p className="text-slate-500 mt-1">Create a new service assignment</p>
+            <p className="text-slate-500 mt-1">Assign services to confirmed bookings</p>
           </div>
         </div>
 
+        {/* Step 1: Select Booking */}
         <div className="bg-white rounded-3xl border border-slate-200 p-6">
-          <form className="space-y-6">
+          <h2 className="text-lg font-semibold text-slate-800 mb-4">Step 1: Select Confirmed Booking</h2>
+          
+          {!selectedBooking ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Assignment Type</label>
-                <select className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none">
-                  <option value="vehicle">Vehicle</option>
-                  <option value="guide">Guide</option>
-                  <option value="hotel">Hotel</option>
-                  <option value="restaurant">Restaurant</option>
-                  <option value="activity">Activity</option>
-                  <option value="permit">Permit</option>
-                  <option value="others">Others</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Supplier Name</label>
-                <input type="text" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" placeholder="Enter supplier name" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Client Name</label>
-                <input type="text" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" placeholder="Enter client name" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Booking Number</label>
-                <input type="text" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" placeholder="BK-2024-XXX" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Service Date</label>
-                <input type="date" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Amount</label>
-                <input type="number" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" placeholder="0.00" />
+              {mockConfirmedBookings.map((booking) => (
+                <button
+                  key={booking.id}
+                  onClick={() => setSelectedBooking(booking)}
+                  className="p-4 border-2 border-slate-200 rounded-2xl hover:border-[#012871] hover:shadow-md transition-all text-left"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h3 className="font-semibold text-slate-800">{booking.clientName}</h3>
+                      <p className="text-sm text-slate-500">{booking.bookingNumber}</p>
+                    </div>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                      Confirmed
+                    </span>
+                  </div>
+                  <div className="space-y-1 text-sm text-slate-600">
+                    <p className="flex items-center gap-2">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      {booking.destination}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      {booking.startDate} → {booking.endDate}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="text-slate-400">👥</span>
+                      {booking.paxCount} pax
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-slate-100">
+                    <p className="text-lg font-bold text-[#012871]">${booking.totalAmount.toLocaleString()}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="p-4 border-2 border-[#012871] rounded-2xl bg-primary-50">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-semibold text-slate-800">{selectedBooking.clientName}</h3>
+                  <p className="text-sm text-slate-500">{selectedBooking.bookingNumber}</p>
+                  <div className="mt-2 space-y-1 text-sm text-slate-600">
+                    <p>📍 {selectedBooking.destination}</p>
+                    <p>📅 {selectedBooking.startDate} → {selectedBooking.endDate}</p>
+                    <p>👥 {selectedBooking.paxCount} pax</p>
+                  </div>
+                  <p className="mt-2 text-lg font-bold text-[#012871]">${selectedBooking.totalAmount.toLocaleString()}</p>
+                </div>
+                <button
+                  onClick={() => setSelectedBooking(null)}
+                  className="p-2 rounded-lg hover:bg-white text-slate-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
             </div>
-            <div className="flex justify-end gap-3 pt-4">
-              <button type="button" onClick={() => setView('menu')} className="px-4 py-2 text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50">Cancel</button>
-              <button type="button" onClick={() => setView('all')} className="px-4 py-2 text-white bg-[#f35500] rounded-lg hover:bg-[#c54300]">Create Assignment</button>
-            </div>
-          </form>
+          )}
         </div>
+
+        {/* Step 2: Add Assignment Items */}
+        {selectedBooking && (
+          <div className="bg-white rounded-3xl border border-slate-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-slate-800">Step 2: Add Services</h2>
+              <button
+                onClick={addAssignmentItem}
+                className="flex items-center gap-2 px-4 py-2 bg-[#f35500] text-white rounded-lg font-medium hover:bg-[#c54300]"
+              >
+                <Plus className="w-4 h-4" /> Add Service
+              </button>
+            </div>
+
+            {assignmentItems.length === 0 ? (
+              <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl">
+                <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                <p className="text-slate-500 mb-2">No services added yet</p>
+                <p className="text-sm text-slate-400">Click "Add Service" to assign hotels, vehicles, guides, etc.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {assignmentItems.map((item, index) => {
+                  const Icon = typeIcons[item.type] || FileText;
+                  return (
+                    <div key={item.id} className="p-4 border border-slate-200 rounded-2xl">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${typeColors[item.type]}`}>
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <span className="font-medium text-slate-800">Service #{index + 1}</span>
+                        </div>
+                        <button
+                          onClick={() => removeAssignmentItem(item.id)}
+                          className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">Service Type</label>
+                          <select
+                            value={item.type}
+                            onChange={(e) => updateAssignmentItem(item.id, 'type', e.target.value)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                          >
+                            <option value="hotel">Hotel</option>
+                            <option value="vehicle">Vehicle</option>
+                            <option value="guide">Guide</option>
+                            <option value="restaurant">Restaurant</option>
+                            <option value="activity">Activity</option>
+                            <option value="permit">Permit</option>
+                            <option value="others">Others</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">Supplier Name</label>
+                          <input
+                            type="text"
+                            value={item.supplierName}
+                            onChange={(e) => updateAssignmentItem(item.id, 'supplierName', e.target.value)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                            placeholder="Enter supplier name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">Service Date</label>
+                          <input
+                            type="date"
+                            value={item.serviceDate}
+                            onChange={(e) => updateAssignmentItem(item.id, 'serviceDate', e.target.value)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">Amount ($)</label>
+                          <input
+                            type="number"
+                            value={item.amount}
+                            onChange={(e) => updateAssignmentItem(item.id, 'amount', parseFloat(e.target.value) || 0)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                            placeholder="0.00"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
+                          <input
+                            type="text"
+                            value={item.notes}
+                            onChange={(e) => updateAssignmentItem(item.id, 'notes', e.target.value)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                            placeholder="Additional notes (optional)"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Total Summary */}
+                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-slate-600">Total Services: {assignmentItems.length}</p>
+                      <p className="text-lg font-bold text-[#012871]">Total Amount: ${calculateTotal().toLocaleString()}</p>
+                    </div>
+                    <button
+                      onClick={addAssignmentItem}
+                      className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg font-medium hover:bg-slate-50"
+                    >
+                      <Plus className="w-4 h-4" /> Add Another
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            {assignmentItems.length > 0 && (
+              <div className="flex justify-end gap-3 pt-6 border-t border-slate-200 mt-6">
+                <button
+                  onClick={() => { setView('menu'); resetCreateForm(); }}
+                  className="px-4 py-2 text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveAssignment}
+                  className="px-4 py-2 text-white bg-[#012871] rounded-lg hover:bg-[#011e5b]"
+                >
+                  Save Assignment
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }
 
   // Type-specific views
   if (view === 'vehicle') {
-    const vehicleAssignments = mockAssignments.filter(a => a.type === 'vehicle');
+    const vehicleAssignments = assignments.filter(a => a.items.some(i => i.type === 'vehicle'));
     return renderAssignmentList('Vehicle Assignments', () => setView('menu'), vehicleAssignments);
   }
 
   if (view === 'guide') {
-    const guideAssignments = mockAssignments.filter(a => a.type === 'guide');
+    const guideAssignments = assignments.filter(a => a.items.some(i => i.type === 'guide'));
     return renderAssignmentList('Guide Assignments', () => setView('menu'), guideAssignments);
   }
 
   if (view === 'hotel') {
-    const hotelAssignments = mockAssignments.filter(a => a.type === 'hotel');
+    const hotelAssignments = assignments.filter(a => a.items.some(i => i.type === 'hotel'));
     return renderAssignmentList('Hotel Assignments', () => setView('menu'), hotelAssignments);
   }
 
   if (view === 'restaurant') {
-    const restaurantAssignments = mockAssignments.filter(a => a.type === 'restaurant');
+    const restaurantAssignments = assignments.filter(a => a.items.some(i => i.type === 'restaurant'));
     return renderAssignmentList('Restaurant Assignments', () => setView('menu'), restaurantAssignments);
   }
 
   if (view === 'activity') {
-    const activityAssignments = mockAssignments.filter(a => a.type === 'activity');
+    const activityAssignments = assignments.filter(a => a.items.some(i => i.type === 'activity'));
     return renderAssignmentList('Activity Assignments', () => setView('menu'), activityAssignments);
   }
 
   if (view === 'permit') {
-    const permitAssignments = mockAssignments.filter(a => a.type === 'permit');
+    const permitAssignments = assignments.filter(a => a.items.some(i => i.type === 'permit'));
     return renderAssignmentList('Permit Assignments', () => setView('menu'), permitAssignments);
   }
 
   if (view === 'others') {
-    const othersAssignments = mockAssignments.filter(a => a.type === 'others');
+    const othersAssignments = assignments.filter(a => a.items.some(i => i.type === 'others'));
     return renderAssignmentList('Other Assignments', () => setView('menu'), othersAssignments);
   }
 
