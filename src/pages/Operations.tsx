@@ -678,7 +678,8 @@ export default function Operations() {
                         </button>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-4">
+                        {/* Service Type Selection */}
                         <div>
                           <label className="block text-sm font-medium text-[#012871] mb-1">Service Type</label>
                           <select
@@ -696,78 +697,87 @@ export default function Operations() {
                           </select>
                         </div>
 
-                        {/* Vehicle-specific fields */}
+                        {/* Vehicle-specific fields - shown only when type is vehicle */}
                         {item.type === 'vehicle' && (
-                          <>
-                            <div>
-                              <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number</label>
-                              <input
-                                type="text"
-                                value={item.vehicleNumber || ''}
-                                onChange={(e) => updateAssignmentItem(item.id, 'vehicleNumber', e.target.value)}
-                                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
-                                placeholder="e.g., KA01AB1234"
-                              />
+                          <div className="p-4 bg-gradient-to-br from-[#012871]/5 to-[#f35500]/5 border-2 border-[#012871]/20 rounded-2xl space-y-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Car className="w-5 h-5 text-[#012871]" />
+                              <h4 className="font-semibold text-[#012871]">Vehicle Details</h4>
                             </div>
-                            <div>
-                              <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type</label>
-                              <select
-                                value={item.vehicleType || ''}
-                                onChange={(e) => updateAssignmentItem(item.id, 'vehicleType', e.target.value)}
-                                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
-                              >
-                                <option value="">Select vehicle type</option>
-                                <option value="Scorpio">Scorpio</option>
-                                <option value="Bolero">Bolero</option>
-                                <option value="712 Bus">712 Bus</option>
-                                <option value="Super">Super</option>
-                                <option value="Tourist">Tourist</option>
-                                <option value="Hiace">Hiace</option>
-                                <option value="EV Micro">EV Micro</option>
-                                <option value="MiniBus">MiniBus</option>
-                              </select>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number *</label>
+                                <input
+                                  type="text"
+                                  value={item.vehicleNumber || ''}
+                                  onChange={(e) => updateAssignmentItem(item.id, 'vehicleNumber', e.target.value)}
+                                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                                  placeholder="e.g., KA01AB1234"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type *</label>
+                                <select
+                                  value={item.vehicleType || ''}
+                                  onChange={(e) => updateAssignmentItem(item.id, 'vehicleType', e.target.value)}
+                                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                                >
+                                  <option value="">Select vehicle type</option>
+                                  <option value="Scorpio">🚙 Scorpio</option>
+                                  <option value="Bolero">🚙 Bolero</option>
+                                  <option value="712 Bus">🚌 712 Bus</option>
+                                  <option value="Super">🚌 Super</option>
+                                  <option value="Tourist">🚌 Tourist</option>
+                                  <option value="Hiace">🚐 Hiace</option>
+                                  <option value="EV Micro">🚐 EV Micro</option>
+                                  <option value="MiniBus">🚌 MiniBus</option>
+                                </select>
+                              </div>
                             </div>
-                          </>
+                          </div>
                         )}
 
-                        <div>
-                          <label className="block text-sm font-medium text-[#012871] mb-1">Supplier Name</label>
-                          <input
-                            type="text"
-                            value={item.supplierName}
-                            onChange={(e) => updateAssignmentItem(item.id, 'supplierName', e.target.value)}
-                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
-                            placeholder="Enter supplier name"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-[#012871] mb-1">Service Date</label>
-                          <input
-                            type="date"
-                            value={item.serviceDate}
-                            onChange={(e) => updateAssignmentItem(item.id, 'serviceDate', e.target.value)}
-                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-[#012871] mb-1">Amount ($)</label>
-                          <input
-                            type="number"
-                            value={item.amount}
-                            onChange={(e) => updateAssignmentItem(item.id, 'amount', parseFloat(e.target.value) || 0)}
-                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
-                            placeholder="0.00"
-                          />
-                        </div>
-                        <div className="md:col-span-2">
-                          <label className="block text-sm font-medium text-[#012871] mb-1">Notes</label>
-                          <input
-                            type="text"
-                            value={item.notes}
-                            onChange={(e) => updateAssignmentItem(item.id, 'notes', e.target.value)}
-                            className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
-                            placeholder="Additional notes (optional)"
-                          />
+                        {/* Common fields for all service types */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-[#012871] mb-1">Supplier Name</label>
+                            <input
+                              type="text"
+                              value={item.supplierName}
+                              onChange={(e) => updateAssignmentItem(item.id, 'supplierName', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                              placeholder="Enter supplier name"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#012871] mb-1">Service Date</label>
+                            <input
+                              type="date"
+                              value={item.serviceDate}
+                              onChange={(e) => updateAssignmentItem(item.id, 'serviceDate', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#012871] mb-1">Amount ($)</label>
+                            <input
+                              type="number"
+                              value={item.amount}
+                              onChange={(e) => updateAssignmentItem(item.id, 'amount', parseFloat(e.target.value) || 0)}
+                              className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                              placeholder="0.00"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#012871] mb-1">Notes</label>
+                            <input
+                              type="text"
+                              value={item.notes}
+                              onChange={(e) => updateAssignmentItem(item.id, 'notes', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                              placeholder="Additional notes (optional)"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
