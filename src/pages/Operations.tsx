@@ -25,6 +25,9 @@ interface AssignmentItem {
   serviceDate: string;
   amount: number;
   notes: string;
+  // Vehicle-specific fields
+  vehicleNumber?: string;
+  vehicleType?: 'Scorpio' | 'Bolero' | '712 Bus' | 'Super' | 'Tourist' | 'Hiace' | 'EV Micro' | 'MiniBus';
 }
 
 interface Assignment {
@@ -692,6 +695,41 @@ export default function Operations() {
                             <option value="others">Others</option>
                           </select>
                         </div>
+
+                        {/* Vehicle-specific fields */}
+                        {item.type === 'vehicle' && (
+                          <>
+                            <div>
+                              <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number</label>
+                              <input
+                                type="text"
+                                value={item.vehicleNumber || ''}
+                                onChange={(e) => updateAssignmentItem(item.id, 'vehicleNumber', e.target.value)}
+                                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                                placeholder="e.g., KA01AB1234"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type</label>
+                              <select
+                                value={item.vehicleType || ''}
+                                onChange={(e) => updateAssignmentItem(item.id, 'vehicleType', e.target.value)}
+                                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                              >
+                                <option value="">Select vehicle type</option>
+                                <option value="Scorpio">Scorpio</option>
+                                <option value="Bolero">Bolero</option>
+                                <option value="712 Bus">712 Bus</option>
+                                <option value="Super">Super</option>
+                                <option value="Tourist">Tourist</option>
+                                <option value="Hiace">Hiace</option>
+                                <option value="EV Micro">EV Micro</option>
+                                <option value="MiniBus">MiniBus</option>
+                              </select>
+                            </div>
+                          </>
+                        )}
+
                         <div>
                           <label className="block text-sm font-medium text-[#012871] mb-1">Supplier Name</label>
                           <input
