@@ -5,7 +5,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import ItineraryBuilder from './pages/ItineraryBuilder';
+import Itineraries from './pages/Itineraries';
 import Bookings from './pages/Bookings';
 import Operations from './pages/Operations';
 import Vendors from './pages/Vendors';
@@ -20,7 +20,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
-        <Route path="itineraries" element={<ProtectedRoute allowedRoles={['admin', 'sales_agent', 'operations_manager']}><ItineraryBuilder /></ProtectedRoute>} />
+        <Route path="itineraries" element={<ProtectedRoute allowedRoles={['admin', 'sales_agent', 'operations_manager']}><Itineraries /></ProtectedRoute>} />
         <Route path="bookings" element={<ProtectedRoute allowedRoles={['admin', 'operations_manager']}><Bookings /></ProtectedRoute>} />
         <Route path="operations" element={<ProtectedRoute allowedRoles={['admin', 'operations_manager']}><Operations /></ProtectedRoute>} />
         <Route path="vendors" element={<ProtectedRoute allowedRoles={['admin', 'operations_manager']}><Vendors /></ProtectedRoute>} />
