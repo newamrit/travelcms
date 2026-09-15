@@ -5,39 +5,8 @@ import {
   Search, Filter, Printer, ChevronLeft, ChevronRight, MoreVertical
 } from 'lucide-react';
 import { formatNepaliCurrency } from '../utils/currency';
-
-interface Booking {
-  id: string;
-  bookingNumber: string;
-  clientName: string;
-  destination: string;
-  startDate: string;
-  endDate: string;
-  paxCount: number;
-  status: 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
-  totalAmount: number;
-  category: 'school_college' | 'corporate_retreat' | 'vacation_family';
-}
-
-// Extended mock data for pagination demo
-const mockBookings: Booking[] = [
-  { id: '1', bookingNumber: 'BK-2024-001', clientName: 'John Smith', destination: 'Tanzania Safari', startDate: '2024-06-15', endDate: '2024-06-22', paxCount: 4, status: 'confirmed', totalAmount: 12500, category: 'vacation_family' },
-  { id: '2', bookingNumber: 'BK-2024-002', clientName: 'Sarah Johnson', destination: 'Kenya Adventure', startDate: '2024-07-10', endDate: '2024-07-15', paxCount: 2, status: 'in_progress', totalAmount: 8900, category: 'vacation_family' },
-  { id: '3', bookingNumber: 'BK-2024-003', clientName: 'Michael Brown', destination: 'Uganda Gorilla Trek', startDate: '2024-05-20', endDate: '2024-05-25', paxCount: 3, status: 'completed', totalAmount: 15200, category: 'corporate_retreat' },
-  { id: '4', bookingNumber: 'BK-2024-004', clientName: 'Emily Davis', destination: 'South Africa Tour', startDate: '2024-08-05', endDate: '2024-08-12', paxCount: 6, status: 'confirmed', totalAmount: 22800, category: 'school_college' },
-  { id: '5', bookingNumber: 'BK-2024-005', clientName: 'David Wilson', destination: 'Zanzibar Beach', startDate: '2024-09-01', endDate: '2024-09-08', paxCount: 2, status: 'confirmed', totalAmount: 9500, category: 'vacation_family' },
-  { id: '6', bookingNumber: 'BK-2024-006', clientName: 'Tech Corp Ltd', destination: 'Team Building Kenya', startDate: '2024-10-15', endDate: '2024-10-18', paxCount: 25, status: 'confirmed', totalAmount: 45000, category: 'corporate_retreat' },
-  { id: '7', bookingNumber: 'BK-2024-007', clientName: 'Lisa Anderson', destination: 'Morocco Desert Tour', startDate: '2024-11-01', endDate: '2024-11-07', paxCount: 4, status: 'in_progress', totalAmount: 11200, category: 'vacation_family' },
-  { id: '8', bookingNumber: 'BK-2024-008', clientName: 'Harvard University', destination: 'Biology Field Trip', startDate: '2024-12-10', endDate: '2024-12-17', paxCount: 30, status: 'confirmed', totalAmount: 52000, category: 'school_college' },
-  { id: '9', bookingNumber: 'BK-2024-009', clientName: 'Google Inc', destination: 'Annual Retreat Bali', startDate: '2025-01-15', endDate: '2025-01-22', paxCount: 50, status: 'confirmed', totalAmount: 125000, category: 'corporate_retreat' },
-  { id: '10', bookingNumber: 'BK-2024-010', clientName: 'Robert Taylor', destination: 'Egypt Pyramids Tour', startDate: '2025-02-01', endDate: '2025-02-08', paxCount: 3, status: 'in_progress', totalAmount: 14500, category: 'vacation_family' },
-  { id: '11', bookingNumber: 'BK-2024-011', clientName: 'Stanford University', destination: 'Archaeology Expedition', startDate: '2025-03-05', endDate: '2025-03-12', paxCount: 20, status: 'confirmed', totalAmount: 38000, category: 'school_college' },
-  { id: '12', bookingNumber: 'BK-2024-012', clientName: 'Microsoft Corp', destination: 'Leadership Retreat', startDate: '2025-04-10', endDate: '2025-04-15', paxCount: 35, status: 'confirmed', totalAmount: 89000, category: 'corporate_retreat' },
-  { id: '13', bookingNumber: 'BK-2024-013', clientName: 'Jennifer Martinez', destination: 'Maldives Honeymoon', startDate: '2025-05-01', endDate: '2025-05-08', paxCount: 2, status: 'confirmed', totalAmount: 18500, category: 'vacation_family' },
-  { id: '14', bookingNumber: 'BK-2024-014', clientName: 'Yale University', destination: 'Marine Biology Study', startDate: '2025-06-15', endDate: '2025-06-22', paxCount: 25, status: 'in_progress', totalAmount: 42000, category: 'school_college' },
-  { id: '15', bookingNumber: 'BK-2024-015', clientName: 'Amazon Ltd', destination: 'Innovation Summit', startDate: '2025-07-20', endDate: '2025-07-25', paxCount: 40, status: 'confirmed', totalAmount: 95000, category: 'corporate_retreat' },
-  { id: '16', bookingNumber: 'BK-2024-016', clientName: 'Thomas Lee', destination: 'Iceland Northern Lights', startDate: '2025-08-10', endDate: '2025-08-17', paxCount: 4, status: 'cancelled', totalAmount: 16800, category: 'vacation_family' },
-];
+import { db, COLLECTIONS } from '../services/database';
+import type { DBBooking } from '../services/database';
 
 export default function Bookings() {
   const [view, setView] = useState<'menu' | 'all' | 'create' | 'school_college' | 'corporate_retreat' | 'vacation_family'>('menu');
@@ -45,8 +14,8 @@ export default function Bookings() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [bookings, setBookings] = useState<Booking[]>(mockBookings);
-  const [editingBooking, setEditingBooking] = useState<Booking | null>(null);
+  const [bookings, setBookings] = useState<DBBooking[]>(db.findAll<DBBooking>(COLLECTIONS.BOOKINGS));
+  const [editingBooking, setEditingBooking] = useState<DBBooking | null>(null);
   const [statusDropdownOpen, setStatusDropdownOpen] = useState<string | null>(null);
   
   const ITEMS_PER_PAGE = 12; // 4 rows × 3 columns
@@ -95,7 +64,7 @@ export default function Bookings() {
   const paginatedBookings = filteredBookings.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   // Handlers
-  const handleStatusChange = (bookingId: string, newStatus: Booking['status']) => {
+  const handleStatusChange = (bookingId: string, newStatus: DBBooking['status']) => {
     setBookings(bookings.map(b => 
       b.id === bookingId ? { ...b, status: newStatus } : b
     ));
@@ -108,7 +77,7 @@ export default function Bookings() {
     }
   };
 
-  const handlePrint = (booking: Booking) => {
+  const handlePrint = (booking: DBBooking) => {
     const printContent = `
       <html>
         <head>
@@ -128,7 +97,7 @@ export default function Bookings() {
           <div class="info"><span class="label">Destination:</span><span class="value">${booking.destination}</span></div>
           <div class="info"><span class="label">Start Date:</span><span class="value">${booking.startDate}</span></div>
           <div class="info"><span class="label">End Date:</span><span class="value">${booking.endDate}</span></div>
-          <div class="info"><span class="label">Passengers:</span><span class="value">${booking.paxCount}</span></div>
+          <div class="info"><span class="label">Passengers:</span><span class="value">{booking.paxAdults + booking.paxChildren}</span></div>
           <div class="info"><span class="label">Status:</span><span class="value">${booking.status.replace('_', ' ').toUpperCase()}</span></div>
           <div class="info"><span class="label">Total Amount:</span><span class="value">{formatNepaliCurrency(booking.totalAmount)}</span></div>
           <div class="info"><span class="label">Category:</span><span class="value">${getCategoryLabel(booking.category)}</span></div>
@@ -148,7 +117,7 @@ export default function Bookings() {
     }
   };
 
-  const handleEdit = (booking: Booking) => {
+  const handleEdit = (booking: DBBooking) => {
     setEditingBooking(booking);
   };
 
@@ -169,7 +138,7 @@ export default function Bookings() {
   };
 
   // Enhanced Booking List Component
-  const renderBookingList = (title: string, onBack: () => void, preFilteredBookings?: Booking[]) => {
+  const renderBookingList = (title: string, onBack: () => void, preFilteredBookings?: DBBooking[]) => {
     const displayBookings = preFilteredBookings || filteredBookings;
     const displayPaginated = preFilteredBookings 
       ? displayBookings.slice(startIndex, startIndex + ITEMS_PER_PAGE)
@@ -298,7 +267,7 @@ export default function Bookings() {
                     </div>
                     <div className="flex items-center gap-1.5 text-slate-600">
                       <Users className="w-4 h-4 text-slate-400" />
-                      <span>{booking.paxCount} pax</span>
+                      <span>{booking.paxAdults + booking.paxChildren} pax</span>
                     </div>
                   </div>
                   <div className="pt-2 border-t border-slate-100">
@@ -466,8 +435,8 @@ export default function Bookings() {
                     <label className="block text-sm font-medium text-slate-700 mb-1">Passengers</label>
                     <input
                       type="number"
-                      value={editingBooking.paxCount}
-                      onChange={(e) => setEditingBooking({ ...editingBooking, paxCount: parseInt(e.target.value) })}
+                      value={editingBooking.paxAdults}
+                      onChange={(e) => setEditingBooking({ ...editingBooking, paxAdults: parseInt(e.target.value) })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
                     />
                   </div>
@@ -484,7 +453,7 @@ export default function Bookings() {
                     <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
                     <select
                       value={editingBooking.status}
-                      onChange={(e) => setEditingBooking({ ...editingBooking, status: e.target.value as Booking['status'] })}
+                      onChange={(e) => setEditingBooking({ ...editingBooking, status: e.target.value as DBBooking['status'] })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
                     >
                       <option value="confirmed">Confirmed</option>
@@ -497,7 +466,7 @@ export default function Bookings() {
                     <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
                     <select
                       value={editingBooking.category}
-                      onChange={(e) => setEditingBooking({ ...editingBooking, category: e.target.value as Booking['category'] })}
+                      onChange={(e) => setEditingBooking({ ...editingBooking, category: e.target.value as DBBooking['category'] })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
                     >
                       <option value="school_college">School/College</option>

@@ -5,7 +5,8 @@ import {
   TrendingUp, ArrowUpRight, ArrowDownRight, Clock, AlertTriangle, 
   Building2, ArrowLeft, Activity, Zap
 } from 'lucide-react';
-import { mockLeads, mockBookings, mockInvoices, mockSuppliers } from '../data/mockData';
+import { db, COLLECTIONS } from '../services/database';
+import type { DBLead, DBBooking, DBInvoice } from '../services/database';
 import { useAuth } from '../context/AuthContext';
 import { formatNepaliCurrency } from '../utils/currency';
 
@@ -13,11 +14,15 @@ export default function Dashboard() {
   const [view, setView] = useState<'menu' | 'overview' | 'actions'>('menu');
   const { user } = useAuth();
   
-  const totalLeads = mockLeads.length;
-  const activeLeads = mockLeads.filter(l => !['won', 'lost'].includes(l.status)).length;
-  const wonLeads = mockLeads.filter(l => l.status === 'won').length;
-  const totalRevenue = mockInvoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.totalAmount, 0);
-  const pendingPayments = mockInvoices.filter(i => ['sent', 'partial'].includes(i.status)).reduce((sum, i) => sum + i.totalAmount - i.payments.reduce((s, p) => s + p.amount, 0), 0);
+  const allLeads = db.findAll<DBLead>(COLLECTIONS.LEADS);
+  const allBookings = db.findAll<DBBooking>(COLLECTIONS.BOOKINGS);
+  const allInvoices = db.findAll<DBInvoice>(COLLECTIONS.INVOICES);
+  
+  const totalLeads = allLeads.length;
+  const activeLeads = allLeads.filter(l => !['won', 'lost'].includes(l.status)).length;
+  const wonLeads = allLeads.filter(l => l.status === 'won').length;
+  const totalRevenue = allInvoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.totalAmount, 0);
+  const pendingPayments = allInvoices.filter(i => ['sent', 'partial'].includes(i.status)).reduce((sum, i) => sum + i.totalAmount - i.payments.reduce((s, p) => s + p.amount, 0), 0);
 
   const statusColors: Record<string, string> = {
     new: 'bg-blue-100 text-blue-700', contacted: 'bg-yellow-100 text-yellow-700',
@@ -135,9 +140,9 @@ export default function Dashboard() {
               <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center"><Calendar className="w-5 h-5 text-green-600" /></div>
               <span className="flex items-center gap-0.5 text-xs font-medium text-green-600"><ArrowUpRight className="w-3 h-3" /> +8%</span>
             </div>
-            <p className="text-2xl font-bold text-slate-800 mt-3">{mockBookings.length}</p>
+            <p className="text-2xl font-bold text-slate-800 mt-3">{allBookings.length}</p>
             <p className="text-sm text-slate-500">Active Bookings</p>
-            <p className="text-xs text-slate-400 mt-2">2 confirmed, 1 in progress</p>
+            <p className="text-xs text-slate-400 mt-2">{allBookings.filter(b => b.status === 'confirmed').length} confirmed, {allBookings.filter(b => b.status === 'in_progress').length} in progress</p>
           </div>
 
           <div className="bg-white rounded-xl border border-slate-200 p-5">
@@ -168,10 +173,10 @@ export default function Dashboard() {
               <Link to="/customers" className="text-sm text-[#012871] hover:underline font-medium">View All →</Link>
             </div>
             <div className="px-6 pb-6 space-y-3">
-              {mockLeads.slice(0, 5).map(lead => (
+              {allLeads.slice(0, 5).map((lead: DBLead) => (
                 <div key={lead.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-sm font-medium text-slate-600">{lead.clientName.split(' ').map(n => n[0]).join('')}</div>
+                    <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-sm font-medium text-slate-600">{lead.clientName.split(' ').map((n: string) => n[0]).join('')}</div>
                     <div>
                       <p className="text-sm font-medium text-slate-800">{lead.clientName}</p>
                       <p className="text-xs text-slate-500">{lead.clientCountry} • {lead.paxAdults + lead.paxChildren} pax</p>
@@ -189,7 +194,7 @@ export default function Dashboard() {
               <Link to="/bookings" className="text-sm text-[#012871] hover:underline font-medium">View All →</Link>
             </div>
             <div className="px-6 pb-6 space-y-3">
-              {mockBookings.map(booking => (
+              {allBookings.map((booking: DBBooking) => (
                 <div key={booking.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center"><Calendar className="w-4 h-4 text-green-600" /></div>
