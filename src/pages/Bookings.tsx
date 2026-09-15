@@ -6,8 +6,10 @@ import {
 } from 'lucide-react';
 import { formatNepaliCurrency } from '../utils/currency';
 import { db, COLLECTIONS } from '../services/database';
+import { useSound } from '../context/SoundContext';
 
 export default function Bookings() {
+  const { play } = useSound();
   const [view, setView] = useState<'menu' | 'all' | 'create' | 'school_college' | 'corporate_retreat' | 'vacation_family'>('menu');
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -85,7 +87,9 @@ export default function Bookings() {
         b.id === bookingId ? { ...b, status: newStatus } : b
       ));
       setStatusDropdownOpen(null);
+      play('success');
     } catch (error) {
+      play('error');
       console.error('Failed to update booking status:', error);
     }
   };
@@ -95,7 +99,9 @@ export default function Bookings() {
       try {
         db.delete(COLLECTIONS.BOOKINGS, bookingId);
         setBookings(bookings.filter(b => b.id !== bookingId));
+        play('delete');
       } catch (error) {
+        play('error');
         console.error('Failed to delete booking:', error);
       }
     }
@@ -143,6 +149,7 @@ export default function Bookings() {
 
   const handleEdit = (booking: any) => {
     setEditingBooking(booking);
+    play('click');
   };
 
   const handleSaveEdit = () => {
@@ -153,7 +160,9 @@ export default function Bookings() {
           b.id === editingBooking.id ? editingBooking : b
         ));
         setEditingBooking(null);
+        play('save');
       } catch (error) {
+        play('error');
         console.error('Failed to save booking:', error);
       }
     }

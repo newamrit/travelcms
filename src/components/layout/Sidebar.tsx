@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useSound } from '../../context/SoundContext';
 import { UserRole } from '../../types';
 import {
   LayoutDashboard, Map, Calendar, ClipboardList, Building2,
@@ -36,12 +37,17 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }: SidebarProps) {
   const location = useLocation();
   const { user, hasRole } = useAuth();
+  const { play } = useSound();
 
   const visibleItems = navigationItems.filter(item => hasRole(item.roles));
 
   const isActive = (href: string) => {
     if (href === '/') return location.pathname === '/';
     return location.pathname.startsWith(href);
+  };
+
+  const handleNavClick = () => {
+    play('navigate');
   };
 
   return (
@@ -85,7 +91,10 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
                 <li key={item.name}>
                   <Link
                     to={item.href}
-                    onClick={onClose}
+                    onClick={() => {
+                      handleNavClick();
+                      onClose();
+                    }}
                     title={isCollapsed ? item.name : undefined}
                     className={`
                       flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium

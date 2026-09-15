@@ -6,10 +6,12 @@ import {
   Building2, ArrowLeft, Activity, Zap
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useSound } from '../context/SoundContext';
 import { formatNepaliCurrency } from '../utils/currency';
 import { db, COLLECTIONS } from '../services/database';
 
 export default function Dashboard() {
+  const { play } = useSound();
   const [view, setView] = useState<'menu' | 'overview' | 'actions'>('menu');
   const { user } = useAuth();
   const [allLeads, setAllLeads] = useState<any[]>([]);
@@ -51,7 +53,7 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           <button
-            onClick={() => setView('overview')}
+            onClick={() => { play('tabSwitch'); setView('overview'); }}
             className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
@@ -83,7 +85,7 @@ export default function Dashboard() {
           </button>
 
           <button
-            onClick={() => setView('actions')}
+            onClick={() => { play('tabSwitch'); setView('actions'); }}
             className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
             style={{ minHeight: '400px' }}
           >
@@ -126,7 +128,7 @@ export default function Dashboard() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <button onClick={() => setView('menu')} className="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
+          <button onClick={() => { play('click'); setView('menu'); }} className="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
@@ -231,7 +233,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <button onClick={() => setView('menu')} className="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
+        <button onClick={() => { play('click'); setView('menu'); }} className="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>

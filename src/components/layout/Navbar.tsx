@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Menu, Bell, Search, LogOut, User, Settings, ChevronDown } from 'lucide-react';
+import { useSound } from '../../context/SoundContext';
+import { Menu, Bell, Search, LogOut, User, Settings, ChevronDown, Volume2, VolumeX } from 'lucide-react';
 
 interface NavbarProps {
   onMenuClick: () => void;
@@ -23,6 +24,7 @@ const roleLabels: Record<string, string> = {
 
 export default function Navbar({ onMenuClick }: NavbarProps) {
   const { user, logout } = useAuth();
+  const { enabled: soundEnabled, toggleSound, play } = useSound();
   const navigate = useNavigate();
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -38,8 +40,11 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
   }, []);
 
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    play('logout');
+    setTimeout(() => {
+      logout();
+      navigate('/login');
+    }, 300);
   };
 
   return (
@@ -56,13 +61,25 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <button className="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100">
+          {/* Sound Toggle */}
+          <button 
+            onClick={() => { toggleSound(); play('toggle'); }}
+            className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+            title={soundEnabled ? 'Mute sounds' : 'Enable sounds'}
+          >
+            {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+          </button>
+
+          <button 
+            onClick={() => play('notification')}
+            className="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100"
+          >
             <Bell className="w-5 h-5" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
           </button>
 
           <div className="relative" ref={profileRef}>
-            <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-100">
+            <button onClick={() => { setProfileOpen(!profileOpen); play('dropdown'); }} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-100">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center text-white text-sm font-semibold">
                 {user?.firstName?.[0]}{user?.lastName?.[0]}
               </div>
