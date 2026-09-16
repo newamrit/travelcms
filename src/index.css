@@ -641,43 +641,14 @@ body {
     margin: 0;
   }
   
-  /* Itinerary Print Styles - Multi-page letterhead support */
+  /* Itinerary Print Styles */
   .print-view {
     background: white !important;
-    padding: 0 !important;
+    padding: 20px !important;
     max-width: 100% !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    position: relative;
-    min-height: 100vh;
-  }
-  
-  /* Itinerary Print Styles - Preserve Branding */
-  .print-view {
-    background: white !important;
-    padding: 0 !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  
-  /* Prevent page breaks inside important sections */
-  .print-content h1,
-  .print-content h2,
-  .print-content h3 {
-    page-break-after: avoid;
-    page-break-inside: avoid;
-  }
-  
-  .print-content .no-break {
-    page-break-inside: avoid;
-  }
-  
-  /* Force page break before certain sections if needed */
-  .print-content .page-break-before {
-    page-break-before: always;
   }
   
   /* Preserve gradient backgrounds */
@@ -700,17 +671,6 @@ body {
     print-color-adjust: exact !important;
   }
   
-  .print-view h1,
-  .print-view h2,
-  .print-view h3 {
-    page-break-after: avoid;
-  }
-  
-  .print-view p,
-  .print-view li {
-    page-break-inside: avoid;
-  }
-  
   /* Hide navigation and UI elements when printing */
   .no-print,
   nav,
@@ -718,17 +678,6 @@ body {
   footer:not(.print-view footer),
   .sidebar {
     display: none !important;
-  }
-  
-  /* Ensure proper page breaks */
-  @page {
-    margin: 2cm;
-    size: A4;
-  }
-  
-  /* Avoid page breaks inside important elements */
-  .print-view > div {
-    page-break-inside: avoid;
   }
   
   /* Ensure images and backgrounds print */

@@ -1191,44 +1191,6 @@ export default function Itineraries() {
             minHeight: '100vh'
           }}
         >
-          {/* Header with Gradient */}
-          <div 
-            className="relative overflow-hidden mb-6"
-            style={{ 
-              background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
-              borderRadius: '16px'
-            }}
-          >
-            {/* Decorative Shapes */}
-            <div className="absolute top-0 right-0 w-32 h-32 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(-30%, 30%)' }}></div>
-            
-            <div className="relative z-10 p-6 text-white">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div 
-                    className="w-12 h-12 flex items-center justify-center text-white font-bold text-xl"
-                    style={{ background: '#f35500', borderRadius: '12px' }}
-                  >
-                    T
-                  </div>
-                  <div>
-                    <h1 className="text-xl font-bold">TravelOps Pro</h1>
-                    <p className="text-sm opacity-90">Tour & Travel Management</p>
-                  </div>
-                </div>
-                <div className="text-right text-sm opacity-90">
-                  <div className="flex items-center gap-2 justify-end">
-                    <span>📞 +977-1-4567890</span>
-                  </div>
-                  <div className="flex items-center gap-2 justify-end mt-1">
-                    <span>✉️ info@travelops.pro</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
           {/* Content Area */}
           <div className="relative z-10">
           
@@ -1299,7 +1261,7 @@ export default function Itineraries() {
           <div className="p-4">
             {/* Overview & Description */}
             <div 
-              className="mb-6 p-4 no-break"
+              className="mb-6 p-4"
               style={{ background: '#f8fafc', borderRadius: '16px' }}
             >
               <h2 
@@ -1323,7 +1285,7 @@ export default function Itineraries() {
 
             {/* Trip Highlights */}
             <div 
-              className="mb-6 p-4 no-break"
+              className="mb-6 p-4"
               style={{ background: '#fffbeb', borderRadius: '16px', border: '1.5px solid #fef3c7' }}
             >
               <h2 
@@ -1355,7 +1317,7 @@ export default function Itineraries() {
             {/* Daily Itinerary */}
             <div className="mb-6">
               <h2 
-                className="text-xl font-bold mb-3 flex items-center gap-2 no-break"
+                className="text-xl font-bold mb-3 flex items-center gap-2"
                 style={{ color: '#012871' }}
               >
                 <div className="w-1 h-6" style={{ background: '#f35500', borderRadius: '2px' }}></div>
@@ -1365,7 +1327,7 @@ export default function Itineraries() {
                 {days.map((day) => (
                   <div 
                     key={day.id} 
-                    className="p-3 no-break"
+                    className="p-3"
                     style={{ 
                       background: 'white', 
                       borderRadius: '12px',
@@ -1438,7 +1400,7 @@ export default function Itineraries() {
             </div>
 
             {/* Included & Excluded - Side by Side */}
-            <div className="grid grid-cols-2 gap-4 mb-6 page-break-before">
+            <div className="grid grid-cols-2 gap-4 mb-6">
               {/* Included in Package */}
               <div 
                 className="p-4"
@@ -1497,7 +1459,7 @@ export default function Itineraries() {
             {/* Price Summary (if showPrice is true) */}
             {showPrice && (
               <div 
-                className="mb-2 p-1 no-break"
+                className="mb-2 p-1"
                 style={{ 
                   background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
                   borderRadius: '8px'
