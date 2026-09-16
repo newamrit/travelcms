@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Building2, DollarSign, Shield, Database, ArrowLeft, Save,
-  Palette, Globe, Users, HardDrive, Image, FileText, Plus, Edit2, Trash2, Check, X, Download, Upload, AlertCircle
+  Palette, Globe, Users, HardDrive, Image, FileText, Plus, Edit2, 
+  Trash2, Check, X, Download, Upload, AlertCircle
 } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 
@@ -855,37 +856,49 @@ export default function Settings() {
               <div className="border-t border-slate-200 pt-6">
                 <h3 className="text-lg font-semibold text-slate-800 mb-4">Backup Actions</h3>
                 <div className="space-y-3">
-                  <button className="w-full p-4 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg font-medium hover:shadow-lg transition-all flex items-center justify-between">
+                  <button 
+                    onClick={handleBackup}
+                    className="w-full p-4 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg font-medium hover:shadow-lg transition-all flex items-center justify-between"
+                  >
                     <div className="flex items-center gap-3">
-                      <Database className="w-5 h-5" />
+                      <Download className="w-5 h-5" />
                       <div className="text-left">
                         <p className="font-semibold">Create Backup Now</p>
-                        <p className="text-sm opacity-90">Backup all data to secure storage</p>
+                        <p className="text-sm opacity-90">Download a backup of all your data</p>
                       </div>
                     </div>
                     <ArrowLeft className="w-5 h-5 rotate-180" />
                   </button>
 
-                  <button className="w-full p-4 bg-white border-2 border-slate-200 rounded-lg font-medium hover:border-[#012871] transition-all flex items-center justify-between">
+                  <label className="w-full p-4 bg-white border-2 border-slate-200 rounded-lg font-medium hover:border-[#012871] transition-all flex items-center justify-between cursor-pointer">
                     <div className="flex items-center gap-3">
-                      <HardDrive className="w-5 h-5 text-slate-600" />
-                      <div className="text-left">
-                        <p className="font-semibold text-slate-800">Download Latest Backup</p>
-                        <p className="text-sm text-slate-500">Download backup file to your computer</p>
-                      </div>
-                    </div>
-                    <ArrowLeft className="w-5 h-5 rotate-180 text-slate-400" />
-                  </button>
-
-                  <button className="w-full p-4 bg-white border-2 border-slate-200 rounded-lg font-medium hover:border-[#f35500] transition-all flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Globe className="w-5 h-5 text-slate-600" />
+                      <Upload className="w-5 h-5 text-slate-600" />
                       <div className="text-left">
                         <p className="font-semibold text-slate-800">Restore from Backup</p>
-                        <p className="text-sm text-slate-500">Restore data from a previous backup</p>
+                        <p className="text-sm text-slate-500">Restore data from a backup file</p>
                       </div>
                     </div>
                     <ArrowLeft className="w-5 h-5 rotate-180 text-slate-400" />
+                    <input 
+                      type="file" 
+                      accept=".json"
+                      onChange={handleRestore}
+                      className="hidden"
+                    />
+                  </label>
+
+                  <button 
+                    onClick={handleClearData}
+                    className="w-full p-4 bg-red-50 border-2 border-red-200 rounded-lg font-medium hover:bg-red-100 transition-all flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Trash2 className="w-5 h-5 text-red-600" />
+                      <div className="text-left">
+                        <p className="font-semibold text-red-900">Clear All Data</p>
+                        <p className="text-sm text-red-700">Permanently delete all data</p>
+                      </div>
+                    </div>
+                    <ArrowLeft className="w-5 h-5 rotate-180 text-red-400" />
                   </button>
                 </div>
               </div>
