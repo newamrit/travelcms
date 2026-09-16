@@ -1185,8 +1185,20 @@ export default function Itineraries() {
 
         {/* Print Document */}
         <div className="print-view bg-white max-w-4xl mx-auto" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-          {/* Letterhead Space - Space reserved for uploaded letterhead */}
-          <div className="h-32 print:h-40"></div>
+          {/* Letterhead - Use uploaded letterhead if available */}
+          {localStorage.getItem('company_letterhead') ? (
+            <div className="mb-4">
+              <img 
+                src={localStorage.getItem('company_letterhead')!} 
+                alt="Company Letterhead"
+                className="w-full h-auto"
+                style={{ maxHeight: '200px', objectFit: 'contain' }}
+              />
+            </div>
+          ) : (
+            /* Fallback: Letterhead Space - Space reserved for uploaded letterhead */
+            <div className="h-32 print:h-40"></div>
+          )}
           
           {/* Branded Header with Gradient */}
           <div 

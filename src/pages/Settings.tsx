@@ -139,6 +139,62 @@ export default function Settings() {
               </div>
 
               <div className="border-t border-slate-200 pt-6">
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">Letterhead for PDF Documents</h3>
+                <p className="text-sm text-slate-600 mb-4">Upload your company letterhead to be used as the header for all PDF documents (itineraries, quotations, etc.)</p>
+                <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center bg-slate-50">
+                  <Image className="w-16 h-16 text-slate-400 mx-auto mb-3" />
+                  <p className="text-base text-slate-700 font-medium mb-2">Click to upload letterhead</p>
+                  <p className="text-sm text-slate-500 mb-4">PNG, JPG up to 10MB • Recommended: 2480x3508px (A4 at 300dpi)</p>
+                  <input 
+                    type="file" 
+                    accept="image/png,image/jpeg,image/jpg"
+                    className="hidden"
+                    id="letterhead-upload"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                          const result = e.target?.result as string;
+                          localStorage.setItem('company_letterhead', result);
+                          alert('Letterhead uploaded successfully! It will be used in all PDF documents.');
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                  <label 
+                    htmlFor="letterhead-upload"
+                    className="inline-block px-6 py-2 bg-[#012871] text-white rounded-lg font-medium hover:bg-[#011950] cursor-pointer transition-colors"
+                  >
+                    Choose Letterhead
+                  </label>
+                </div>
+                {localStorage.getItem('company_letterhead') && (
+                  <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-medium text-green-800">✓ Letterhead uploaded</p>
+                      <button
+                        onClick={() => {
+                          localStorage.removeItem('company_letterhead');
+                          alert('Letterhead removed');
+                          window.location.reload();
+                        }}
+                        className="text-sm text-red-600 hover:text-red-700 font-medium"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <img 
+                      src={localStorage.getItem('company_letterhead')!} 
+                      alt="Letterhead Preview"
+                      className="w-full max-h-64 object-contain border border-green-200 rounded"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="border-t border-slate-200 pt-6">
                 <h3 className="text-lg font-semibold text-slate-800 mb-4">Brand Colors</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
