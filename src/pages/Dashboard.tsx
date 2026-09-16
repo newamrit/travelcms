@@ -78,7 +78,7 @@ export default function Dashboard() {
     if (loading) {
       return (
         <div className="space-y-6">
-          <div>
+          <div className="bg-white rounded-3xl border-2 border-slate-200 p-6">
             <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
             <p className="text-slate-500 mt-1">{greeting}, {user?.firstName}!</p>
           </div>
@@ -99,7 +99,7 @@ export default function Dashboard() {
 
     return (
       <div className="space-y-6 fade-in-up">
-        <div>
+        <div className="bg-white rounded-3xl border-2 border-slate-200 p-6">
           <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
           <p className="text-slate-500 mt-1">{greeting}, {user?.firstName}!</p>
         </div>
