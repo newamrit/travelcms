@@ -20,6 +20,30 @@ export default function Dashboard() {
   const [allBookings, setAllBookings] = useState<any[]>([]);
   const [allInvoices, setAllInvoices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update time every minute for greeting
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Get greeting based on time of day
+  const getGreeting = () => {
+    const hour = currentTime.getHours();
+    if (hour >= 5 && hour < 12) {
+      return 'Good Morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  };
+
+  const greeting = getGreeting();
 
   useEffect(() => {
     // Simulate loading delay for better UX
@@ -56,7 +80,7 @@ export default function Dashboard() {
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
-            <p className="text-slate-500 mt-1">Welcome back, {user?.firstName}!</p>
+            <p className="text-slate-500 mt-1">{greeting}, {user?.firstName}!</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -77,7 +101,7 @@ export default function Dashboard() {
       <div className="space-y-6 fade-in-up">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
-          <p className="text-slate-500 mt-1">Welcome back, {user?.firstName}!</p>
+          <p className="text-slate-500 mt-1">{greeting}, {user?.firstName}!</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
