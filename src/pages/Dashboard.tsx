@@ -76,7 +76,7 @@ export default function Dashboard() {
   const revenueReceived = allInvoices.filter((i: any) => i.status === 'paid').reduce((sum: number, i: any) => sum + i.totalAmount, 0);
   const vendorPayable = allExpenses.filter((e: any) => e.paymentStatus !== 'paid').reduce((sum: number, e: any) => sum + e.actualAmount, 0);
 
-  // Pie Chart 1: Financial Breakdown - Settled vs Pending
+  // Pie Chart: Financial Breakdown - Settled vs Pending
   const financialBreakdownData = [
     {
       name: 'Settled Revenue',
@@ -89,33 +89,6 @@ export default function Dashboard() {
       color: '#ef4444' // Red
     }
   ];
-
-  // Pie Chart 2: Active Supplier Service Allocation
-  const supplierAllocations = allExpenses.reduce((acc: any, expense: any) => {
-    const vendorName = expense.vendorName || 'Unknown Vendor';
-    if (!acc[vendorName]) {
-      acc[vendorName] = {
-        name: vendorName,
-        value: 0,
-        assignments: 0
-      };
-    }
-    acc[vendorName].value += expense.actualAmount;
-    acc[vendorName].assignments += 1;
-    return acc;
-  }, {});
-
-  const supplierAllocationData = Object.values(supplierAllocations).map((supplier: any, index: number) => ({
-    ...supplier,
-    color: [
-      '#3b82f6', // Blue
-      '#8b5cf6', // Purple
-      '#ec4899', // Pink
-      '#f59e0b', // Amber
-      '#06b6d4', // Cyan
-      '#84cc16', // Lime
-    ][index % 6]
-  }));
 
   const statusColors: Record<string, string> = {
     new: 'bg-blue-100 text-blue-700', contacted: 'bg-yellow-100 text-yellow-700',
@@ -145,18 +118,11 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Pie Charts Skeleton */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 animate-pulse">
-              <div className="w-48 h-6 bg-slate-200 rounded mb-2"></div>
-              <div className="w-32 h-4 bg-slate-200 rounded mb-4"></div>
-              <div className="w-full h-[300px] bg-slate-100 rounded-xl"></div>
-            </div>
-            <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 animate-pulse">
-              <div className="w-48 h-6 bg-slate-200 rounded mb-2"></div>
-              <div className="w-32 h-4 bg-slate-200 rounded mb-4"></div>
-              <div className="w-full h-[300px] bg-slate-100 rounded-xl"></div>
-            </div>
+          {/* Pie Chart Skeleton */}
+          <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 animate-pulse">
+            <div className="w-48 h-6 bg-slate-200 rounded mb-2"></div>
+            <div className="w-32 h-4 bg-slate-200 rounded mb-4"></div>
+            <div className="w-full h-[400px] bg-slate-100 rounded-xl"></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
@@ -229,93 +195,47 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Pie Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Pie Chart 1: Financial Breakdown */}
-          <div className="bg-white rounded-3xl border-2 border-slate-200 p-6">
-            <div className="mb-4">
-              <h3 className="text-lg font-bold text-slate-800">Financial Breakdown</h3>
-              <p className="text-sm text-slate-500">Settled vs Pending (NPR)</p>
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={financialBreakdownData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {financialBreakdownData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value: number) => formatNepaliCurrency(value)}
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px'
-                  }}
-                />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              <div className="text-center p-3 bg-green-50 rounded-xl">
-                <p className="text-xs text-slate-600 mb-1">Settled Revenue</p>
-                <p className="text-lg font-bold text-green-600">{formatNepaliCurrency(revenueReceived)}</p>
-              </div>
-              <div className="text-center p-3 bg-red-50 rounded-xl">
-                <p className="text-xs text-slate-600 mb-1">Pending Dues</p>
-                <p className="text-lg font-bold text-red-600">{formatNepaliCurrency(pendingPayments)}</p>
-              </div>
-            </div>
+        {/* Pie Chart Section */}
+        <div className="bg-white rounded-3xl border-2 border-slate-200 p-6">
+          <div className="mb-4">
+            <h3 className="text-lg font-bold text-slate-800">Financial Breakdown</h3>
+            <p className="text-sm text-slate-500">Settled vs Pending (NPR)</p>
           </div>
-
-          {/* Pie Chart 2: Supplier Allocation */}
-          <div className="bg-white rounded-3xl border-2 border-slate-200 p-6">
-            <div className="mb-4">
-              <h3 className="text-lg font-bold text-slate-800">Active Supplier Allocation</h3>
-              <p className="text-sm text-slate-500">Service Distribution & Capacity</p>
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+              <Pie
+                data={financialBreakdownData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                outerRadius={150}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {financialBreakdownData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip 
+                formatter={(value: number) => formatNepaliCurrency(value)}
+                contentStyle={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px'
+                }}
+              />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="text-center p-4 bg-green-50 rounded-xl">
+              <p className="text-xs text-slate-600 mb-1">Settled Revenue</p>
+              <p className="text-xl font-bold text-green-600">{formatNepaliCurrency(revenueReceived)}</p>
             </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={supplierAllocationData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {supplierAllocationData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value: number, name: string, props: any) => [
-                    formatNepaliCurrency(value),
-                    `${props.payload.name} (${props.payload.assignments} assignments)`
-                  ]}
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px'
-                  }}
-                />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="mt-4">
-              <p className="text-xs text-slate-500 text-center">
-                Total Active Suppliers: <span className="font-bold text-slate-700">{supplierAllocationData.length}</span>
-              </p>
+            <div className="text-center p-4 bg-red-50 rounded-xl">
+              <p className="text-xs text-slate-600 mb-1">Pending Dues</p>
+              <p className="text-xl font-bold text-red-600">{formatNepaliCurrency(pendingPayments)}</p>
             </div>
           </div>
         </div>
