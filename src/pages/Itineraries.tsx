@@ -14,6 +14,7 @@ interface SavedItinerary {
   endDate: string;
   status: 'draft' | 'confirmed' | 'completed';
   paxCount: number;
+  category: 'trekking' | 'cultural' | 'expedition' | 'adventure' | 'safari';
   createdAt: string;
 }
 
@@ -30,118 +31,131 @@ interface Day {
 }
 
 const mockSavedItineraries: SavedItinerary[] = [
-  // School/College Itineraries (3)
+  // Trekking Itineraries (2)
   {
     id: '1',
-    title: '5-Day Educational Tour: Kathmandu Valley Heritage',
-    destination: 'Kathmandu, Bhaktapur, Patan',
-    duration: '5 Days / 4 Nights',
-    days: 5,
-    startDate: '2026-04-10',
-    endDate: '2026-04-14',
+    title: '6-Day Annapurna Base Camp Trek',
+    destination: 'Pokhara, Annapurna Region',
+    duration: '6 Days / 5 Nights',
+    days: 6,
+    startDate: '2026-04-15',
+    endDate: '2026-04-20',
     status: 'confirmed',
-    paxCount: 35,
+    paxCount: 8,
+    category: 'trekking',
     createdAt: '2026-02-15'
   },
   {
     id: '2',
-    title: '4-Day Chitwan Wildlife & Conservation Study',
-    destination: 'Chitwan National Park',
-    duration: '4 Days / 3 Nights',
-    days: 4,
-    startDate: '2026-05-20',
-    endDate: '2026-05-23',
+    title: '8-Day Everest View Trek',
+    destination: 'Lukla, Namche Bazaar, Tengboche',
+    duration: '8 Days / 7 Nights',
+    days: 8,
+    startDate: '2026-10-10',
+    endDate: '2026-10-17',
     status: 'confirmed',
-    paxCount: 40,
-    createdAt: '2026-03-01'
-  },
-  {
-    id: '3',
-    title: '6-Day Annapurna Base Camp Trek - Student Adventure',
-    destination: 'Pokhara, Annapurna Region',
-    duration: '6 Days / 5 Nights',
-    days: 6,
-    startDate: '2026-07-15',
-    endDate: '2026-07-20',
-    status: 'draft',
-    paxCount: 25,
+    paxCount: 6,
+    category: 'trekking',
     createdAt: '2026-03-10'
   },
 
-  // Corporate Retreat Itineraries (3)
+  // Cultural Itineraries (3)
+  {
+    id: '3',
+    title: '5-Day Kathmandu Valley Heritage Tour',
+    destination: 'Kathmandu, Bhaktapur, Patan',
+    duration: '5 Days / 4 Nights',
+    days: 5,
+    startDate: '2026-05-01',
+    endDate: '2026-05-05',
+    status: 'confirmed',
+    paxCount: 12,
+    category: 'cultural',
+    createdAt: '2026-02-20'
+  },
   {
     id: '4',
-    title: '3-Day Corporate Retreat: Pokhara Lakeside',
-    destination: 'Pokhara',
-    duration: '3 Days / 2 Nights',
-    days: 3,
-    startDate: '2026-06-05',
-    endDate: '2026-06-07',
+    title: '4-Day Nagarkot & Dhulikhel Cultural Tour',
+    destination: 'Nagarkot, Dhulikhel, Changunarayan',
+    duration: '4 Days / 3 Nights',
+    days: 4,
+    startDate: '2026-06-12',
+    endDate: '2026-06-15',
     status: 'confirmed',
-    paxCount: 20,
+    paxCount: 10,
+    category: 'cultural',
     createdAt: '2026-03-05'
   },
   {
     id: '5',
-    title: '4-Day Team Building: Nagarkot & Dhulikhel',
-    destination: 'Nagarkot, Dhulikhel',
-    duration: '4 Days / 3 Nights',
-    days: 4,
-    startDate: '2026-08-12',
-    endDate: '2026-08-15',
-    status: 'confirmed',
-    paxCount: 30,
-    createdAt: '2026-03-08'
-  },
-  {
-    id: '6',
-    title: '2-Day Executive Retreat: Kurintar & Mugling',
-    destination: 'Kurintar, Mugling',
-    duration: '2 Days / 1 Night',
-    days: 2,
-    startDate: '2026-09-20',
-    endDate: '2026-09-21',
+    title: '3-Day Pokhara Lakeside Cultural Experience',
+    destination: 'Pokhara, World Peace Pagoda, Davis Falls',
+    duration: '3 Days / 2 Nights',
+    days: 3,
+    startDate: '2026-07-20',
+    endDate: '2026-07-22',
     status: 'draft',
     paxCount: 15,
-    createdAt: '2026-03-12'
+    category: 'cultural',
+    createdAt: '2026-03-15'
   },
 
-  // Family & Holidays Itineraries (3)
+  // Expedition Itineraries (1)
+  {
+    id: '6',
+    title: '14-Day Everest Base Camp Expedition',
+    destination: 'Lukla, Namche, Gorak Shep, EBC',
+    duration: '14 Days / 13 Nights',
+    days: 14,
+    startDate: '2026-09-01',
+    endDate: '2026-09-14',
+    status: 'confirmed',
+    paxCount: 4,
+    category: 'expedition',
+    createdAt: '2026-01-10'
+  },
+
+  // Adventure Itineraries (2)
   {
     id: '7',
-    title: '7-Day Family Tour: Kathmandu-Pokhara-Chitwan',
-    destination: 'Kathmandu, Pokhara, Chitwan',
-    duration: '7 Days / 6 Nights',
-    days: 7,
-    startDate: '2026-10-01',
-    endDate: '2026-10-07',
+    title: '5-Day Pokhara Adventure Sports Package',
+    destination: 'Pokhara, Sarangkot, Seti River',
+    duration: '5 Days / 4 Nights',
+    days: 5,
+    startDate: '2026-08-05',
+    endDate: '2026-08-09',
     status: 'confirmed',
-    paxCount: 6,
-    createdAt: '2026-03-15'
+    paxCount: 8,
+    category: 'adventure',
+    createdAt: '2026-03-20'
   },
   {
     id: '8',
-    title: '5-Day Honeymoon: Pokhara & Sarangkot',
-    destination: 'Pokhara, Sarangkot',
-    duration: '5 Days / 4 Nights',
-    days: 5,
-    startDate: '2026-11-10',
-    endDate: '2026-11-14',
-    status: 'confirmed',
-    paxCount: 2,
-    createdAt: '2026-03-18'
+    title: '4-Day White Water Rafting & Bungee Jumping',
+    destination: 'Trishuli River, Kurintar, Pokhara',
+    duration: '4 Days / 3 Nights',
+    days: 4,
+    startDate: '2026-11-15',
+    endDate: '2026-11-18',
+    status: 'draft',
+    paxCount: 10,
+    category: 'adventure',
+    createdAt: '2026-03-25'
   },
+
+  // Safari Itineraries (1)
   {
     id: '9',
-    title: '8-Day Family Holiday: Everest View & Cultural Tour',
-    destination: 'Kathmandu, Lukla, Namche Bazaar',
-    duration: '8 Days / 7 Nights',
-    days: 8,
-    startDate: '2026-12-20',
-    endDate: '2026-12-27',
-    status: 'draft',
-    paxCount: 5,
-    createdAt: '2026-03-20'
+    title: '4-Day Chitwan Wildlife Safari',
+    destination: 'Chitwan National Park, Sauraha',
+    duration: '4 Days / 3 Nights',
+    days: 4,
+    startDate: '2026-12-01',
+    endDate: '2026-12-04',
+    status: 'confirmed',
+    paxCount: 12,
+    category: 'safari',
+    createdAt: '2026-03-30'
   }
 ];
 
@@ -203,6 +217,28 @@ export default function Itineraries() {
       default: return 'bg-slate-100 text-slate-700 border-slate-200';
     }
   };
+
+  const getCategoryInfo = (category: string) => {
+    switch (category) {
+      case 'trekking':
+        return { label: 'Trekking', color: 'bg-blue-100 text-blue-700 border-blue-200', icon: '🥾' };
+      case 'cultural':
+        return { label: 'Cultural', color: 'bg-purple-100 text-purple-700 border-purple-200', icon: '🏛️' };
+      case 'expedition':
+        return { label: 'Expedition', color: 'bg-red-100 text-red-700 border-red-200', icon: '⛰️' };
+      case 'adventure':
+        return { label: 'Adventure', color: 'bg-orange-100 text-orange-700 border-orange-200', icon: '🎯' };
+      case 'safari':
+        return { label: 'Safari', color: 'bg-green-100 text-green-700 border-green-200', icon: '🦁' };
+      default:
+        return { label: 'Other', color: 'bg-slate-100 text-slate-700 border-slate-200', icon: '📍' };
+    }
+  };
+
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const filteredItineraries = categoryFilter === 'all' 
+    ? mockSavedItineraries 
+    : mockSavedItineraries.filter(i => i.category === categoryFilter);
 
   // Main Menu - Two Large Icon Cards
   if (view === 'menu') {
@@ -324,9 +360,75 @@ export default function Itineraries() {
           </button>
         </div>
 
+        {/* Category Filter */}
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setCategoryFilter('all')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                categoryFilter === 'all'
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+            >
+              All ({mockSavedItineraries.length})
+            </button>
+            <button
+              onClick={() => setCategoryFilter('trekking')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                categoryFilter === 'trekking'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+              }`}
+            >
+              🥾 Trekking ({mockSavedItineraries.filter(i => i.category === 'trekking').length})
+            </button>
+            <button
+              onClick={() => setCategoryFilter('cultural')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                categoryFilter === 'cultural'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+              }`}
+            >
+              🏛️ Cultural ({mockSavedItineraries.filter(i => i.category === 'cultural').length})
+            </button>
+            <button
+              onClick={() => setCategoryFilter('expedition')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                categoryFilter === 'expedition'
+                  ? 'bg-red-600 text-white'
+                  : 'bg-red-100 text-red-700 hover:bg-red-200'
+              }`}
+            >
+              ⛰️ Expedition ({mockSavedItineraries.filter(i => i.category === 'expedition').length})
+            </button>
+            <button
+              onClick={() => setCategoryFilter('adventure')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                categoryFilter === 'adventure'
+                  ? 'bg-orange-600 text-white'
+                  : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+              }`}
+            >
+              🎯 Adventure ({mockSavedItineraries.filter(i => i.category === 'adventure').length})
+            </button>
+            <button
+              onClick={() => setCategoryFilter('safari')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                categoryFilter === 'safari'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-green-100 text-green-700 hover:bg-green-200'
+              }`}
+            >
+              🦁 Safari ({mockSavedItineraries.filter(i => i.category === 'safari').length})
+            </button>
+          </div>
+        </div>
+
         {/* Itinerary Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockSavedItineraries.map((itinerary) => (
+          {filteredItineraries.map((itinerary) => (
             <div
               key={itinerary.id}
               className="bg-white rounded-lg border border-slate-200 overflow-hidden transition-all duration-200 hover:shadow-lg hover:border-slate-300 group"
@@ -336,6 +438,11 @@ export default function Itineraries() {
               <div className="p-5 border-b border-slate-100">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${getCategoryInfo(itinerary.category).color}`}>
+                        {getCategoryInfo(itinerary.category).icon} {getCategoryInfo(itinerary.category).label}
+                      </span>
+                    </div>
                     <h3 className="text-base font-semibold text-slate-800 mb-1 line-clamp-2">
                       {itinerary.title}
                     </h3>
