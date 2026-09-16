@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Map, Plus, Calendar, MapPin, Users, Clock, Edit2, Trash2, Copy, 
-  Eye, Save, ChevronDown, ChevronUp, ArrowLeft, FolderOpen, PenTool
+  Eye, Save, ChevronDown, ChevronUp, ArrowLeft, FolderOpen, PenTool,
+  Printer, Download, FileText
 } from 'lucide-react';
 
 interface SavedItinerary {
@@ -229,7 +230,7 @@ const transportOptions = [
 ];
 
 export default function Itineraries() {
-  const [view, setView] = useState<'menu' | 'saved' | 'builder' | 'view' | 'edit'>('menu');
+  const [view, setView] = useState<'menu' | 'saved' | 'builder' | 'view' | 'edit' | 'print'>('menu');
   const [itineraries, setItineraries] = useState<SavedItinerary[]>(mockSavedItineraries);
   const [selectedItinerary, setSelectedItinerary] = useState<SavedItinerary | null>(null);
   const [editingItinerary, setEditingItinerary] = useState<SavedItinerary | null>(null);
@@ -283,6 +284,24 @@ export default function Itineraries() {
       setEditingItinerary(null);
       setView('saved');
     }
+  };
+
+  const handlePrint = (itinerary: SavedItinerary) => {
+    setSelectedItinerary(itinerary);
+    setView('print');
+    // Wait for render, then trigger print
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  };
+
+  const handleExportPDF = (itinerary: SavedItinerary) => {
+    setSelectedItinerary(itinerary);
+    setView('print');
+    // Wait for render, then trigger print (user can save as PDF)
+    setTimeout(() => {
+      window.print();
+    }, 100);
   };
 
   const addDay = () => {
@@ -673,7 +692,21 @@ export default function Itineraries() {
               <p className="text-slate-500 mt-1">View complete itinerary information</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 no-print">
+            <button
+              onClick={() => handlePrint(selectedItinerary)}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-600 text-white rounded-lg font-medium hover:bg-slate-700 transition-colors"
+            >
+              <Printer className="w-4 h-4" />
+              Print
+            </button>
+            <button
+              onClick={() => handleExportPDF(selectedItinerary)}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              Export PDF
+            </button>
             <button
               onClick={() => handleEdit(selectedItinerary)}
               className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
@@ -1082,6 +1115,116 @@ export default function Itineraries() {
               </button>
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Print View
+  if (view === 'print' && selectedItinerary) {
+    return (
+      <div className="print-view bg-white p-8 max-w-4xl mx-auto">
+        {/* Print Header */}
+        <div className="text-center mb-8 pb-6 border-b-2 border-slate-300">
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">{selectedItinerary.title}</h1>
+          <div className="flex items-center justify-center gap-4 text-sm text-slate-600">
+            <span className="flex items-center gap-1">
+              <MapPin className="w-4 h-4" /> {selectedItinerary.destination}
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="w-4 h-4" /> {selectedItinerary.duration}
+            </span>
+            <span className="font-semibold text-green-700">रू {selectedItinerary.price.toLocaleString()} per person</span>
+          </div>
+        </div>
+
+        {/* Overview & Description */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-slate-800 mb-3">Overview</h2>
+          <p className="text-sm text-slate-700 leading-relaxed mb-4">{selectedItinerary.overview}</p>
+          <h3 className="text-lg font-semibold text-slate-800 mb-2">Description</h3>
+          <p className="text-sm text-slate-700 leading-relaxed">{selectedItinerary.description}</p>
+        </div>
+
+        {/* Trip Highlights */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-slate-800 mb-3">Trip Highlights</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {selectedItinerary.highlights.map((highlight, index) => (
+              <div key={index} className="flex items-start gap-2">
+                <span className="text-amber-600 text-lg">⭐</span>
+                <span className="text-sm text-slate-700">{highlight}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Daily Itinerary */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-slate-800 mb-3">Daily Itinerary</h2>
+          <div className="space-y-4">
+            {days.map((day) => (
+              <div key={day.id} className="border-l-4 border-primary-600 pl-4 py-2">
+                <h3 className="font-semibold text-slate-800 mb-1">
+                  Day {day.dayNumber}: {day.dayTitle}
+                </h3>
+                <p className="text-sm text-slate-700 mb-2">{day.activityDescription}</p>
+                <div className="flex flex-wrap gap-3 text-xs text-slate-600">
+                  {day.overnightLocation && (
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3" /> {day.overnightLocation}
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1">
+                    {getTransportIcon(day.transportMode)} {transportOptions.find(t => t.value === day.transportMode)?.label || 'No transport'}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {day.mealsBreakfast && <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded text-xs">B</span>}
+                    {day.mealsLunch && <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded text-xs">L</span>}
+                    {day.mealsDinner && <span className="px-1.5 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs">D</span>}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Included in Package */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+            <span className="text-green-600">✓</span>
+            Included in Package
+          </h2>
+          <ul className="space-y-2">
+            {selectedItinerary.included.map((item, index) => (
+              <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
+                <span className="text-green-600 mt-0.5">✓</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Excluded from Package */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+            <span className="text-red-600">✗</span>
+            Excluded from Package
+          </h2>
+          <ul className="space-y-2">
+            {selectedItinerary.excluded.map((item, index) => (
+              <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
+                <span className="text-red-600 mt-0.5">✗</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 pt-6 border-t-2 border-slate-300 text-center text-xs text-slate-500">
+          <p>Generated on {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p className="mt-1">TravelOps Pro - Tour & Travel Management System</p>
         </div>
       </div>
     );

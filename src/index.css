@@ -632,4 +632,75 @@ body {
     padding: 0;
     margin: 0;
   }
+  
+  /* Itinerary Print Styles */
+  .print-view {
+    background: white !important;
+    color: black !important;
+    padding: 20px !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  .print-view * {
+    color: black !important;
+    background: transparent !important;
+  }
+  
+  .print-view h1,
+  .print-view h2,
+  .print-view h3 {
+    color: black !important;
+    page-break-after: avoid;
+  }
+  
+  .print-view p,
+  .print-view li {
+    color: black !important;
+    page-break-inside: avoid;
+  }
+  
+  .print-view .border-l-4 {
+    border-left-color: #012871 !important;
+  }
+  
+  .print-view .text-green-600,
+  .print-view .text-green-700 {
+    color: #10b981 !important;
+  }
+  
+  .print-view .text-red-600 {
+    color: #ef4444 !important;
+  }
+  
+  .print-view .text-amber-600 {
+    color: #f59e0b !important;
+  }
+  
+  .print-view .bg-amber-100,
+  .print-view .bg-orange-100,
+  .print-view .bg-indigo-100 {
+    background: transparent !important;
+    border: 1px solid currentColor !important;
+    padding: 2px 6px !important;
+  }
+  
+  /* Hide navigation and UI elements when printing */
+  nav,
+  header,
+  footer,
+  .sidebar,
+  button {
+    display: none !important;
+  }
+  
+  /* Ensure proper page breaks */
+  @page {
+    margin: 2cm;
+  }
+  
+  /* Avoid page breaks inside important elements */
+  .print-view > div {
+    page-break-inside: avoid;
+  }
 }
