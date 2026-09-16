@@ -1184,21 +1184,25 @@ export default function Itineraries() {
         </div>
 
         {/* Print Document */}
-        <div className="print-view bg-white max-w-4xl mx-auto" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-          {/* Letterhead - Use uploaded letterhead if available */}
-          {localStorage.getItem('company_letterhead') ? (
-            <div className="mb-4">
-              <img 
-                src={localStorage.getItem('company_letterhead')!} 
-                alt="Company Letterhead"
-                className="w-full h-auto"
-                style={{ maxHeight: '200px', objectFit: 'contain' }}
-              />
-            </div>
-          ) : (
-            /* Fallback: Letterhead Space - Space reserved for uploaded letterhead */
-            <div className="h-32 print:h-40"></div>
-          )}
+        <div 
+          className="print-view max-w-4xl mx-auto relative" 
+          style={{ 
+            fontFamily: 'Inter, system-ui, sans-serif',
+            backgroundImage: localStorage.getItem('company_letterhead') ? `url(${localStorage.getItem('company_letterhead')})` : 'none',
+            backgroundSize: '100% auto',
+            backgroundPosition: 'top center',
+            backgroundRepeat: 'no-repeat',
+            minHeight: '100vh'
+          }}
+        >
+          {/* Content overlay on top of letterhead */}
+          <div className="relative z-10">
+            {/* Spacer for letterhead area */}
+            {localStorage.getItem('company_letterhead') ? (
+              <div className="h-64 print:h-80"></div>
+            ) : (
+              <div className="h-32 print:h-40"></div>
+            )}
           
           {/* Branded Header with Gradient */}
           <div 
@@ -1497,6 +1501,7 @@ export default function Itineraries() {
 
           {/* Footer Space for Letterhead */}
           <div className="h-24 print:h-32 mt-4"></div>
+          </div>
         </div>
       </>
     );
