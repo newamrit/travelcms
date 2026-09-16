@@ -30,77 +30,118 @@ interface Day {
 }
 
 const mockSavedItineraries: SavedItinerary[] = [
+  // School/College Itineraries (3)
   {
     id: '1',
-    title: '7-Day Serengeti & Ngorongoro Safari',
-    destination: 'Tanzania',
-    duration: '7 Days / 6 Nights',
-    days: 7,
-    startDate: '2024-06-15',
-    endDate: '2024-06-21',
+    title: '5-Day Educational Tour: Kathmandu Valley Heritage',
+    destination: 'Kathmandu, Bhaktapur, Patan',
+    duration: '5 Days / 4 Nights',
+    days: 5,
+    startDate: '2026-04-10',
+    endDate: '2026-04-14',
     status: 'confirmed',
-    paxCount: 4,
-    createdAt: '2024-03-01'
+    paxCount: 35,
+    createdAt: '2026-02-15'
   },
   {
     id: '2',
-    title: '5-Day Masai Mara Adventure',
-    destination: 'Kenya',
-    duration: '5 Days / 4 Nights',
-    days: 5,
-    startDate: '2024-07-10',
-    endDate: '2024-07-14',
-    status: 'draft',
-    paxCount: 2,
-    createdAt: '2024-03-05'
+    title: '4-Day Chitwan Wildlife & Conservation Study',
+    destination: 'Chitwan National Park',
+    duration: '4 Days / 3 Nights',
+    days: 4,
+    startDate: '2026-05-20',
+    endDate: '2026-05-23',
+    status: 'confirmed',
+    paxCount: 40,
+    createdAt: '2026-03-01'
   },
   {
     id: '3',
-    title: '10-Day Tanzania & Zanzibar Combo',
-    destination: 'Tanzania',
-    duration: '10 Days / 9 Nights',
-    days: 10,
-    startDate: '2024-08-01',
-    endDate: '2024-08-10',
-    status: 'confirmed',
-    paxCount: 6,
-    createdAt: '2024-02-28'
+    title: '6-Day Annapurna Base Camp Trek - Student Adventure',
+    destination: 'Pokhara, Annapurna Region',
+    duration: '6 Days / 5 Nights',
+    days: 6,
+    startDate: '2026-07-15',
+    endDate: '2026-07-20',
+    status: 'draft',
+    paxCount: 25,
+    createdAt: '2026-03-10'
   },
+
+  // Corporate Retreat Itineraries (3)
   {
     id: '4',
-    title: '3-Day Gorilla Trekking Experience',
-    destination: 'Uganda',
+    title: '3-Day Corporate Retreat: Pokhara Lakeside',
+    destination: 'Pokhara',
     duration: '3 Days / 2 Nights',
     days: 3,
-    startDate: '2024-09-05',
-    endDate: '2024-09-07',
-    status: 'completed',
-    paxCount: 3,
-    createdAt: '2024-01-15'
+    startDate: '2026-06-05',
+    endDate: '2026-06-07',
+    status: 'confirmed',
+    paxCount: 20,
+    createdAt: '2026-03-05'
   },
   {
     id: '5',
-    title: '8-Day South Africa Safari & Cape Town',
-    destination: 'South Africa',
-    duration: '8 Days / 7 Nights',
-    days: 8,
-    startDate: '2024-10-12',
-    endDate: '2024-10-19',
-    status: 'draft',
-    paxCount: 4,
-    createdAt: '2024-03-10'
+    title: '4-Day Team Building: Nagarkot & Dhulikhel',
+    destination: 'Nagarkot, Dhulikhel',
+    duration: '4 Days / 3 Nights',
+    days: 4,
+    startDate: '2026-08-12',
+    endDate: '2026-08-15',
+    status: 'confirmed',
+    paxCount: 30,
+    createdAt: '2026-03-08'
   },
   {
     id: '6',
-    title: '4-Day Victoria Falls & Chobe',
-    destination: 'Zimbabwe/Botswana',
-    duration: '4 Days / 3 Nights',
-    days: 4,
-    startDate: '2024-11-20',
-    endDate: '2024-11-23',
+    title: '2-Day Executive Retreat: Kurintar & Mugling',
+    destination: 'Kurintar, Mugling',
+    duration: '2 Days / 1 Night',
+    days: 2,
+    startDate: '2026-09-20',
+    endDate: '2026-09-21',
+    status: 'draft',
+    paxCount: 15,
+    createdAt: '2026-03-12'
+  },
+
+  // Family & Holidays Itineraries (3)
+  {
+    id: '7',
+    title: '7-Day Family Tour: Kathmandu-Pokhara-Chitwan',
+    destination: 'Kathmandu, Pokhara, Chitwan',
+    duration: '7 Days / 6 Nights',
+    days: 7,
+    startDate: '2026-10-01',
+    endDate: '2026-10-07',
+    status: 'confirmed',
+    paxCount: 6,
+    createdAt: '2026-03-15'
+  },
+  {
+    id: '8',
+    title: '5-Day Honeymoon: Pokhara & Sarangkot',
+    destination: 'Pokhara, Sarangkot',
+    duration: '5 Days / 4 Nights',
+    days: 5,
+    startDate: '2026-11-10',
+    endDate: '2026-11-14',
     status: 'confirmed',
     paxCount: 2,
-    createdAt: '2024-03-08'
+    createdAt: '2026-03-18'
+  },
+  {
+    id: '9',
+    title: '8-Day Family Holiday: Everest View & Cultural Tour',
+    destination: 'Kathmandu, Lukla, Namche Bazaar',
+    duration: '8 Days / 7 Nights',
+    days: 8,
+    startDate: '2026-12-20',
+    endDate: '2026-12-27',
+    status: 'draft',
+    paxCount: 5,
+    createdAt: '2026-03-20'
   }
 ];
 
