@@ -1191,27 +1191,46 @@ export default function Itineraries() {
             minHeight: '100vh'
           }}
         >
-          {/* Letterhead Header - Repeats on every page */}
-          {localStorage.getItem('company_letterhead') ? (
-            <div className="letterhead-header">
-              <img 
-                src={localStorage.getItem('company_letterhead')!} 
-                alt="Company Letterhead"
-                style={{
-                  width: '100%',
-                  height: '180px',
-                  objectFit: 'cover',
-                  objectPosition: 'top center',
-                  display: 'block'
-                }}
-              />
+          {/* Header with Gradient */}
+          <div 
+            className="relative overflow-hidden mb-6"
+            style={{ 
+              background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
+              borderRadius: '16px'
+            }}
+          >
+            {/* Decorative Shapes */}
+            <div className="absolute top-0 right-0 w-32 h-32 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(-30%, 30%)' }}></div>
+            
+            <div className="relative z-10 p-6 text-white">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-12 h-12 flex items-center justify-center text-white font-bold text-xl"
+                    style={{ background: '#f35500', borderRadius: '12px' }}
+                  >
+                    T
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-bold">TravelOps Pro</h1>
+                    <p className="text-sm opacity-90">Tour & Travel Management</p>
+                  </div>
+                </div>
+                <div className="text-right text-sm opacity-90">
+                  <div className="flex items-center gap-2 justify-end">
+                    <span>📞 +977-1-4567890</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-end mt-1">
+                    <span>✉️ info@travelops.pro</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          ) : (
-            <div className="letterhead-header bg-gradient-to-r from-[#012871] to-[#011950]"></div>
-          )}
+          </div>
           
-          {/* Content Area - With proper margins to avoid letterhead overlap */}
-          <div className="print-content relative z-10">
+          {/* Content Area */}
+          <div className="relative z-10">
           
           {/* Branded Header with Gradient */}
           <div 
@@ -1510,30 +1529,35 @@ export default function Itineraries() {
 
           </div>
           
-          {/* Letterhead Footer - Repeats on every page */}
-          {localStorage.getItem('company_letterhead') ? (
-            <div className="letterhead-footer">
-              <img 
-                src={localStorage.getItem('company_letterhead')!} 
-                alt="Company Letterhead Footer"
-                style={{
-                  width: '100%',
-                  height: '100px',
-                  objectFit: 'cover',
-                  objectPosition: 'bottom center',
-                  display: 'block'
-                }}
-              />
-            </div>
-          ) : (
-            <div className="letterhead-footer bg-gradient-to-r from-[#012871] to-[#011950] flex items-center justify-center text-white text-xs">
-              <div className="text-center">
-                <p className="font-semibold">TravelOps Pro</p>
-                <p className="opacity-80">Your Trusted Travel Partner</p>
-                <p className="opacity-70 mt-1">📞 +977-1-4567890 | ✉️ info@travelops.pro | 🌐 www.travelops.pro</p>
+          {/* Footer */}
+          <div 
+            className="mt-6 p-4 text-white text-center"
+            style={{ 
+              background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
+              borderRadius: '16px'
+            }}
+          >
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div 
+                className="w-8 h-8 flex items-center justify-center text-white font-bold text-sm"
+                style={{ background: '#f35500', borderRadius: '8px' }}
+              >
+                T
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-semibold">TravelOps Pro</p>
+                <p className="text-xs opacity-90">Your Trusted Travel Partner</p>
               </div>
             </div>
-          )}
+            <div className="flex items-center justify-center gap-4 text-xs opacity-90">
+              <span>📞 +977-1-4567890</span>
+              <span>✉️ info@travelops.pro</span>
+              <span>🌐 www.travelops.pro</span>
+            </div>
+            <div className="mt-2 text-xs opacity-70">
+              Generated on {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            </div>
+          </div>
         </div>
       </>
     );

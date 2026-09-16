@@ -653,58 +653,14 @@ body {
     min-height: 100vh;
   }
   
-  /* Letterhead header - repeats on every page */
-  .letterhead-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 180px;
-    z-index: 1000;
-    overflow: hidden;
+  /* Itinerary Print Styles - Preserve Branding */
+  .print-view {
+    background: white !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-  }
-  
-  .letterhead-header img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    object-position: top center;
-    display: block;
-  }
-  
-  /* Letterhead footer - repeats on every page */
-  .letterhead-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 100px;
-    z-index: 1000;
-    overflow: hidden;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  
-  .letterhead-footer img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    object-position: bottom center;
-    display: block;
-  }
-  
-  /* Content area with proper margins to avoid letterhead overlap */
-  .print-content {
-    margin-top: 200px !important;
-    margin-bottom: 120px !important;
-    padding: 0 40px !important;
-    page-break-inside: auto;
-    position: relative;
-    z-index: 1;
   }
   
   /* Prevent page breaks inside important sections */
