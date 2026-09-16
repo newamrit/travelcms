@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [allLeads, setAllLeads] = useState<any[]>([]);
   const [allBookings, setAllBookings] = useState<any[]>([]);
   const [allInvoices, setAllInvoices] = useState<any[]>([]);
+  const [allExpenses, setAllExpenses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -52,6 +53,7 @@ export default function Dashboard() {
         setAllLeads(db.findAll(COLLECTIONS.LEADS));
         setAllBookings(db.findAll(COLLECTIONS.BOOKINGS));
         setAllInvoices(db.findAll(COLLECTIONS.INVOICES));
+        setAllExpenses(db.findAll(COLLECTIONS.SUPPLIER_EXPENSES));
       } catch (error) {
         console.error('Failed to load dashboard data:', error);
       } finally {
@@ -67,6 +69,11 @@ export default function Dashboard() {
   const wonLeads = allLeads.filter((l: any) => l.status === 'won').length;
   const totalRevenue = allInvoices.filter((i: any) => i.status === 'paid').reduce((sum: number, i: any) => sum + i.totalAmount, 0);
   const pendingPayments = allInvoices.filter((i: any) => ['sent', 'partial'].includes(i.status)).reduce((sum: number, i: any) => sum + i.totalAmount - (i.payments || []).reduce((s: number, p: any) => s + p.amount, 0), 0);
+  
+  // New metrics for the 4 stat cards
+  const activeBookings = allBookings.filter((b: any) => ['confirmed', 'in_progress'].includes(b.status)).length;
+  const revenueReceived = allInvoices.filter((i: any) => i.status === 'paid').reduce((sum: number, i: any) => sum + i.totalAmount, 0);
+  const vendorPayable = allExpenses.filter((e: any) => e.paymentStatus !== 'paid').reduce((sum: number, e: any) => sum + e.actualAmount, 0);
 
   const statusColors: Record<string, string> = {
     new: 'bg-blue-100 text-blue-700', contacted: 'bg-yellow-100 text-yellow-700',
@@ -83,9 +90,16 @@ export default function Dashboard() {
             <p className="text-slate-500 mt-1">{greeting}, {user?.firstName}!</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <StatCardSkeleton key={i} />
+              <div key={i} className="bg-white rounded-2xl border-2 border-slate-200 p-4 animate-pulse">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-10 h-10 rounded-xl bg-slate-200"></div>
+                  <div className="w-12 h-4 bg-slate-200 rounded"></div>
+                </div>
+                <div className="w-16 h-6 bg-slate-200 rounded mb-1"></div>
+                <div className="w-20 h-3 bg-slate-200 rounded"></div>
+              </div>
             ))}
           </div>
 
@@ -102,6 +116,61 @@ export default function Dashboard() {
         <div className="bg-white rounded-3xl border-2 border-slate-200 p-6">
           <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
           <p className="text-slate-500 mt-1">{greeting}, {user?.firstName}!</p>
+        </div>
+
+        {/* 4 Small Stat Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 hover-lift">
+            <div className="flex items-center justify-between mb-2">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-blue-600" />
+              </div>
+              <span className="flex items-center gap-0.5 text-xs font-medium text-green-600">
+                <ArrowUpRight className="w-3 h-3" /> Active
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-slate-800">{activeBookings}</p>
+            <p className="text-xs text-slate-500 mt-1">Active Bookings</p>
+          </div>
+
+          <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 hover-lift">
+            <div className="flex items-center justify-between mb-2">
+              <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
+                <DollarSign className="w-5 h-5 text-green-600" />
+              </div>
+              <span className="flex items-center gap-0.5 text-xs font-medium text-green-600">
+                <ArrowUpRight className="w-3 h-3" /> +12%
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-slate-800">{formatNepaliCurrency(revenueReceived)}</p>
+            <p className="text-xs text-slate-500 mt-1">Revenue Received</p>
+          </div>
+
+          <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 hover-lift">
+            <div className="flex items-center justify-between mb-2">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                <Clock className="w-5 h-5 text-amber-600" />
+              </div>
+              <span className="flex items-center gap-0.5 text-xs font-medium text-amber-600">
+                <AlertTriangle className="w-3 h-3" /> Pending
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-slate-800">{formatNepaliCurrency(pendingPayments)}</p>
+            <p className="text-xs text-slate-500 mt-1">Pending Payments</p>
+          </div>
+
+          <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 hover-lift">
+            <div className="flex items-center justify-between mb-2">
+              <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+                <Building2 className="w-5 h-5 text-purple-600" />
+              </div>
+              <span className="flex items-center gap-0.5 text-xs font-medium text-purple-600">
+                <ArrowDownRight className="w-3 h-3" /> Payable
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-slate-800">{formatNepaliCurrency(vendorPayable)}</p>
+            <p className="text-xs text-slate-500 mt-1">Vendor Payable</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
