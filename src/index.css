@@ -659,11 +659,20 @@ body {
     top: 0;
     left: 0;
     right: 0;
+    width: 100%;
     height: 180px;
     z-index: 1000;
+    overflow: hidden;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    background-color: white !important;
+  }
+  
+  .letterhead-header img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
   }
   
   /* Letterhead footer - repeats on every page */
@@ -672,11 +681,20 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
+    width: 100%;
     height: 100px;
     z-index: 1000;
+    overflow: hidden;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    background-color: white !important;
+  }
+  
+  .letterhead-footer img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    object-position: bottom center;
+    display: block;
   }
   
   /* Content area with proper margins to avoid letterhead overlap */
