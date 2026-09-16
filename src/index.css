@@ -663,6 +663,7 @@ body {
     z-index: 1000;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    background-color: white !important;
   }
   
   /* Letterhead footer - repeats on every page */
@@ -675,6 +676,7 @@ body {
     z-index: 1000;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    background-color: white !important;
   }
   
   /* Content area with proper margins to avoid letterhead overlap */
@@ -683,6 +685,8 @@ body {
     margin-bottom: 120px !important;
     padding: 0 40px !important;
     page-break-inside: auto;
+    position: relative;
+    z-index: 1;
   }
   
   /* Prevent page breaks inside important sections */

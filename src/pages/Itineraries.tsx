@@ -1193,14 +1193,12 @@ export default function Itineraries() {
         >
           {/* Letterhead Header - Repeats on every page */}
           {localStorage.getItem('company_letterhead') ? (
-            <div className="letterhead-header">
-              <img 
-                src={localStorage.getItem('company_letterhead')!} 
-                alt="Company Letterhead"
-                className="w-full h-full object-cover"
-                style={{ objectPosition: 'top center' }}
-              />
-            </div>
+            <div className="letterhead-header" style={{
+              backgroundImage: `url(${localStorage.getItem('company_letterhead')})`,
+              backgroundSize: '100% 180px',
+              backgroundPosition: 'top center',
+              backgroundRepeat: 'no-repeat'
+            }}></div>
           ) : (
             <div className="letterhead-header bg-gradient-to-r from-[#012871] to-[#011950]"></div>
           )}
@@ -1507,14 +1505,12 @@ export default function Itineraries() {
           
           {/* Letterhead Footer - Repeats on every page */}
           {localStorage.getItem('company_letterhead') ? (
-            <div className="letterhead-footer">
-              <img 
-                src={localStorage.getItem('company_letterhead')!} 
-                alt="Company Letterhead Footer"
-                className="w-full h-full object-cover"
-                style={{ objectPosition: 'bottom center' }}
-              />
-            </div>
+            <div className="letterhead-footer" style={{
+              backgroundImage: `url(${localStorage.getItem('company_letterhead')})`,
+              backgroundSize: '100% 100px',
+              backgroundPosition: 'bottom center',
+              backgroundRepeat: 'no-repeat'
+            }}></div>
           ) : (
             <div className="letterhead-footer bg-gradient-to-r from-[#012871] to-[#011950] flex items-center justify-center text-white text-xs">
               <div className="text-center">
