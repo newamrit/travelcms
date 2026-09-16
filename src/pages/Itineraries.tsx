@@ -658,6 +658,20 @@ export default function Itineraries() {
                   >
                     <Copy className="w-4 h-4" />
                   </button>
+                  <button 
+                    onClick={() => handlePrint(itinerary)}
+                    className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-slate-800 transition-colors" 
+                    title="Print"
+                  >
+                    <Printer className="w-4 h-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleExportPDF(itinerary)}
+                    className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-green-600 transition-colors" 
+                    title="Export PDF"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
                 </div>
                 <button 
                   onClick={() => handleDelete(itinerary)}
