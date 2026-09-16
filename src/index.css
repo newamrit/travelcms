@@ -610,10 +610,10 @@ body {
 
 /* Print Styles */
 @media print {
-  /* Page setup with margins for letterhead */
+  /* Page setup with proper margins */
   @page {
     size: A4;
-    margin: 0;
+    margin: 10mm;
   }
   
   .no-print {
@@ -641,14 +641,27 @@ body {
     margin: 0;
   }
   
-  /* Itinerary Print Styles */
+  /* Itinerary Print Styles with border */
   .print-view {
     background: white !important;
-    padding: 20px !important;
+    padding: 10px !important;
     max-width: 100% !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
+    border: 2px solid #012871 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+  }
+  
+  /* Ensure content doesn't overflow */
+  .print-view * {
+    box-sizing: border-box !important;
+  }
+  
+  /* Prevent blank first page */
+  .print-view > div:first-child {
+    page-break-before: avoid !important;
   }
   
   /* Preserve gradient backgrounds */

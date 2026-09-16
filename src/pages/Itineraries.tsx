@@ -1185,15 +1185,11 @@ export default function Itineraries() {
 
         {/* Print Document */}
         <div 
-          className="print-view max-w-4xl mx-auto relative" 
+          className="print-view max-w-4xl mx-auto" 
           style={{ 
-            fontFamily: 'Inter, system-ui, sans-serif',
-            minHeight: '100vh'
+            fontFamily: 'Inter, system-ui, sans-serif'
           }}
         >
-          {/* Content Area */}
-          <div className="relative z-10">
-          
           {/* Branded Header with Gradient */}
           <div 
             className="relative overflow-hidden"
@@ -1520,7 +1516,6 @@ export default function Itineraries() {
               Generated on {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
           </div>
-        </div>
       </>
     );
   }
