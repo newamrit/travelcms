@@ -2,9 +2,9 @@ import { Lead, Supplier, Booking, Quotation, Voucher, Invoice, User, LeadActivit
 
 export const mockUsers: User[] = [
   { id: '1', firstName: 'System', lastName: 'Admin', email: 'admin@travelops.pro', role: 'admin' },
-  { id: '2', firstName: 'Sarah', lastName: 'Johnson', email: 'sarah@travelops.pro', role: 'sales_agent' },
-  { id: '3', firstName: 'Michael', lastName: 'Chen', email: 'michael@travelops.pro', role: 'operations_manager' },
-  { id: '4', firstName: 'Emily', lastName: 'Davis', email: 'emily@travelops.pro', role: 'accountant' },
+  { id: '2', firstName: 'Sales', lastName: 'Agent', email: 'sales@travelops.pro', role: 'sales_agent' },
+  { id: '3', firstName: 'Operations', lastName: 'Manager', email: 'ops@travelops.pro', role: 'operations_manager' },
+  { id: '4', firstName: 'Accounts', lastName: 'Manager', email: 'accounts@travelops.pro', role: 'accountant' },
 ];
 
 export const mockLeads: Lead[] = [
@@ -13,7 +13,7 @@ export const mockLeads: Lead[] = [
     clientPhone: '+44 7911 123456', clientWhatsapp: '+44 7911 123456', clientCountry: 'United Kingdom',
     paxAdults: 2, paxChildren: 1, travelDateFrom: '2024-06-15', travelDateTo: '2024-06-25',
     budgetMin: 5000, budgetMax: 8000, currency: 'NPR', leadSource: 'website', status: 'quoting',
-    assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'high', notes: 'Interested in Serengeti safari + Zanzibar beach combo',
+    assignedAgentId: '2', assignedAgentName: 'Sales Agent', priority: 'high', notes: 'Interested in Serengeti safari + Zanzibar beach combo',
     createdAt: '2024-03-01T10:30:00Z', updatedAt: '2024-03-05T14:20:00Z'
   },
   {
@@ -21,7 +21,7 @@ export const mockLeads: Lead[] = [
     clientPhone: '+34 612 345 678', clientWhatsapp: '+34 612 345 678', clientCountry: 'Spain',
     paxAdults: 4, paxChildren: 0, travelDateFrom: '2024-07-01', travelDateTo: '2024-07-10',
     budgetMin: 12000, budgetMax: 18000, currency: 'NPR', leadSource: 'referral', status: 'negotiation',
-    assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'urgent', notes: 'Luxury safari - premium lodges only. Anniversary trip.',
+    assignedAgentId: '2', assignedAgentName: 'Sales Agent', priority: 'urgent', notes: 'Luxury safari - premium lodges only. Anniversary trip.',
     createdAt: '2024-02-28T09:15:00Z', updatedAt: '2024-03-06T11:00:00Z'
   },
   {
@@ -29,7 +29,7 @@ export const mockLeads: Lead[] = [
     clientPhone: '+1 555 987 6543', clientWhatsapp: '+1 555 987 6543', clientCountry: 'United States',
     paxAdults: 6, paxChildren: 2, travelDateFrom: '2024-08-10', travelDateTo: '2024-08-20',
     budgetMin: 20000, budgetMax: 35000, currency: 'NPR', leadSource: 'social_media', status: 'requirements_gathered',
-    assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'high', notes: 'Family group trip. Need kid-friendly activities. Photography focus.',
+    assignedAgentId: '2', assignedAgentName: 'Sales Agent', priority: 'high', notes: 'Family group trip. Need kid-friendly activities. Photography focus.',
     createdAt: '2024-03-02T16:45:00Z', updatedAt: '2024-03-04T09:30:00Z'
   },
   {
@@ -37,7 +37,7 @@ export const mockLeads: Lead[] = [
     clientPhone: '+44 7700 900123', clientWhatsapp: '+44 7700 900123', clientCountry: 'United Kingdom',
     paxAdults: 2, paxChildren: 0, travelDateFrom: '2024-05-20', travelDateTo: '2024-05-28',
     budgetMin: 4000, budgetMax: 6000, currency: 'NPR', leadSource: 'direct', status: 'won',
-    assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'medium', notes: 'Honeymoon package - Ngorongoro + Serengeti',
+    assignedAgentId: '2', assignedAgentName: 'Sales Agent', priority: 'medium', notes: 'Honeymoon package - Ngorongoro + Serengeti',
     createdAt: '2024-02-15T08:00:00Z', updatedAt: '2024-03-01T16:00:00Z'
   },
   {
@@ -45,7 +45,7 @@ export const mockLeads: Lead[] = [
     clientPhone: '+971 50 123 4567', clientWhatsapp: '+971 50 123 4567', clientCountry: 'UAE',
     paxAdults: 8, paxChildren: 3, travelDateFrom: '2024-09-01', travelDateTo: '2024-09-14',
     budgetMin: 40000, budgetMax: 60000, currency: 'NPR', leadSource: 'referral', status: 'contacted',
-    assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'urgent', notes: 'VIP group - Royal standard. Private vehicle, chef, security detail.',
+    assignedAgentId: '2', assignedAgentName: 'Sales Agent', priority: 'urgent', notes: 'VIP group - Royal standard. Private vehicle, chef, security detail.',
     createdAt: '2024-03-05T12:00:00Z', updatedAt: '2024-03-05T15:30:00Z'
   },
   {
@@ -53,7 +53,7 @@ export const mockLeads: Lead[] = [
     clientPhone: '+82 10 1234 5678', clientWhatsapp: '+82 10 1234 5678', clientCountry: 'South Korea',
     paxAdults: 2, paxChildren: 0, travelDateFrom: '2024-10-05', travelDateTo: '2024-10-12',
     budgetMin: 3000, budgetMax: 5000, currency: 'USD', leadSource: 'website', status: 'new',
-    assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'medium', notes: 'First time in Africa. Interested in wildlife photography.',
+    assignedAgentId: '2', assignedAgentName: 'Sales Agent', priority: 'medium', notes: 'First time in Africa. Interested in wildlife photography.',
     createdAt: '2024-03-06T07:20:00Z', updatedAt: '2024-03-06T07:20:00Z'
   },
   {
@@ -61,18 +61,18 @@ export const mockLeads: Lead[] = [
     clientPhone: '+49 170 1234567', clientWhatsapp: '+49 170 1234567', clientCountry: 'Germany',
     paxAdults: 3, paxChildren: 1, travelDateFrom: '2024-04-15', travelDateTo: '2024-04-22',
     budgetMin: 6000, budgetMax: 9000, currency: 'USD', leadSource: 'social_media', status: 'lost',
-    assignedAgentId: '2', assignedAgentName: 'Sarah Johnson', priority: 'low', notes: 'Budget constraints - went with competitor',
+    assignedAgentId: '2', assignedAgentName: 'Sales Agent', priority: 'low', notes: 'Budget constraints - went with competitor',
     createdAt: '2024-01-20T14:00:00Z', updatedAt: '2024-02-28T10:00:00Z'
   },
 ];
 
 export const mockActivities: LeadActivity[] = [
-  { id: '1', leadId: '1', userId: '2', userName: 'Sarah Johnson', activityType: 'note', subject: 'Initial Contact', description: 'Client reached out via website form. Interested in Tanzania safari.', createdAt: '2024-03-01T10:30:00Z' },
-  { id: '2', leadId: '1', userId: '2', userName: 'Sarah Johnson', activityType: 'call', subject: 'Discovery Call', description: '30-min call. Confirmed dates, budget range, and preferences for mid-range lodges.', createdAt: '2024-03-02T14:00:00Z' },
-  { id: '3', leadId: '1', userId: '2', userName: 'Sarah Johnson', activityType: 'status_change', subject: 'Status Updated', description: 'Moved from Contacted to Requirements Gathered', createdAt: '2024-03-03T09:00:00Z' },
-  { id: '4', leadId: '1', userId: '2', userName: 'Sarah Johnson', activityType: 'quote_sent', subject: 'Quotation Sent', description: 'Sent 7-day Serengeti + Zanzibar package quotation ($6,500/pp)', createdAt: '2024-03-05T14:20:00Z' },
-  { id: '5', leadId: '2', userId: '2', userName: 'Sarah Johnson', activityType: 'note', subject: 'Referral from existing client', description: 'Referred by Mr. & Mrs. Thompson (Booking BK-2024-0001). VIP treatment required.', createdAt: '2024-02-28T09:15:00Z' },
-  { id: '6', leadId: '4', userId: '2', userName: 'Sarah Johnson', activityType: 'status_change', subject: 'Deal Won!', description: 'Client confirmed booking. Moving to operations.', createdAt: '2024-03-01T16:00:00Z' },
+  { id: '1', leadId: '1', userId: '2', userName: 'Sales Agent', activityType: 'note', subject: 'Initial Contact', description: 'Client reached out via website form. Interested in Tanzania safari.', createdAt: '2024-03-01T10:30:00Z' },
+  { id: '2', leadId: '1', userId: '2', userName: 'Sales Agent', activityType: 'call', subject: 'Discovery Call', description: '30-min call. Confirmed dates, budget range, and preferences for mid-range lodges.', createdAt: '2024-03-02T14:00:00Z' },
+  { id: '3', leadId: '1', userId: '2', userName: 'Sales Agent', activityType: 'status_change', subject: 'Status Updated', description: 'Moved from Contacted to Requirements Gathered', createdAt: '2024-03-03T09:00:00Z' },
+  { id: '4', leadId: '1', userId: '2', userName: 'Sales Agent', activityType: 'quote_sent', subject: 'Quotation Sent', description: 'Sent 7-day Serengeti + Zanzibar package quotation ($6,500/pp)', createdAt: '2024-03-05T14:20:00Z' },
+  { id: '5', leadId: '2', userId: '2', userName: 'Sales Agent', activityType: 'note', subject: 'Referral from existing client', description: 'Referred by Mr. & Mrs. Thompson (Booking BK-2024-0001). VIP treatment required.', createdAt: '2024-02-28T09:15:00Z' },
+  { id: '6', leadId: '4', userId: '2', userName: 'Sales Agent', activityType: 'status_change', subject: 'Deal Won!', description: 'Client confirmed booking. Moving to operations.', createdAt: '2024-03-01T16:00:00Z' },
 ];
 
 export const mockSuppliers: Supplier[] = [

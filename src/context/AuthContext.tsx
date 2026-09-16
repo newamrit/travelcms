@@ -45,9 +45,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Mock login for demo/preview mode
     const mockUsers: Record<string, User> = {
       'admin@travelops.pro': { id: '1', firstName: 'System', lastName: 'Admin', email: 'admin@travelops.pro', role: 'admin' },
-      'sarah@travelops.pro': { id: '2', firstName: 'Sarah', lastName: 'Johnson', email: 'sarah@travelops.pro', role: 'sales_agent' },
-      'michael@travelops.pro': { id: '3', firstName: 'Michael', lastName: 'Chen', email: 'michael@travelops.pro', role: 'operations_manager' },
-      'emily@travelops.pro': { id: '4', firstName: 'Emily', lastName: 'Davis', email: 'emily@travelops.pro', role: 'accountant' },
+      'sales@travelops.pro': { id: '2', firstName: 'Sales', lastName: 'Agent', email: 'sales@travelops.pro', role: 'sales_agent' },
+      'ops@travelops.pro': { id: '3', firstName: 'Operations', lastName: 'Manager', email: 'ops@travelops.pro', role: 'operations_manager' },
+      'accounts@travelops.pro': { id: '4', firstName: 'Accounts', lastName: 'Manager', email: 'accounts@travelops.pro', role: 'accountant' },
     };
 
     const foundUser = mockUsers[email];
