@@ -169,7 +169,10 @@ const transportOptions = [
 ];
 
 export default function Itineraries() {
-  const [view, setView] = useState<'menu' | 'saved' | 'builder'>('menu');
+  const [view, setView] = useState<'menu' | 'saved' | 'builder' | 'view' | 'edit'>('menu');
+  const [itineraries, setItineraries] = useState<SavedItinerary[]>(mockSavedItineraries);
+  const [selectedItinerary, setSelectedItinerary] = useState<SavedItinerary | null>(null);
+  const [editingItinerary, setEditingItinerary] = useState<SavedItinerary | null>(null);
   const [title, setTitle] = useState('7-Day Serengeti & Ngorongoro Safari');
   const [expandedDay, setExpandedDay] = useState<number | null>(0);
   const [days, setDays] = useState<Day[]>([
@@ -181,6 +184,42 @@ export default function Itineraries() {
     { id: '6', dayNumber: 6, dayTitle: 'Serengeti to Zanzibar', activityDescription: 'Morning game drive, then fly to Zanzibar. Beach afternoon.', overnightLocation: 'Zanzibar Beach Resort', mealsBreakfast: true, mealsLunch: false, mealsDinner: true, transportMode: 'domestic_flight' },
     { id: '7', dayNumber: 7, dayTitle: 'Zanzibar & Departure', activityDescription: 'Morning at leisure. Optional Stone Town tour. Departure.', overnightLocation: 'N/A - Departure', mealsBreakfast: true, mealsLunch: false, mealsDinner: false, transportMode: '4x4_safari_vehicle' },
   ]);
+
+  // Handler functions
+  const handleView = (itinerary: SavedItinerary) => {
+    setSelectedItinerary(itinerary);
+    setView('view');
+  };
+
+  const handleEdit = (itinerary: SavedItinerary) => {
+    setEditingItinerary({ ...itinerary });
+    setView('edit');
+  };
+
+  const handleDuplicate = (itinerary: SavedItinerary) => {
+    const duplicated: SavedItinerary = {
+      ...itinerary,
+      id: String(Date.now()),
+      title: `${itinerary.title} (Copy)`,
+      status: 'draft',
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+    setItineraries([...itineraries, duplicated]);
+  };
+
+  const handleDelete = (itinerary: SavedItinerary) => {
+    if (confirm(`Are you sure you want to delete "${itinerary.title}"?`)) {
+      setItineraries(itineraries.filter(i => i.id !== itinerary.id));
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (editingItinerary) {
+      setItineraries(itineraries.map(i => i.id === editingItinerary.id ? editingItinerary : i));
+      setEditingItinerary(null);
+      setView('saved');
+    }
+  };
 
   const addDay = () => {
     const newDay: Day = { id: String(Date.now()), dayNumber: days.length + 1, dayTitle: `Day ${days.length + 1}`, activityDescription: '', overnightLocation: '', mealsBreakfast: true, mealsLunch: true, mealsDinner: true, transportMode: '4x4_safari_vehicle' };
@@ -237,8 +276,8 @@ export default function Itineraries() {
 
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const filteredItineraries = categoryFilter === 'all' 
-    ? mockSavedItineraries 
-    : mockSavedItineraries.filter(i => i.category === categoryFilter);
+    ? itineraries 
+    : itineraries.filter(i => i.category === categoryFilter);
 
   // Main Menu - Two Large Icon Cards
   if (view === 'menu') {
@@ -271,7 +310,7 @@ export default function Itineraries() {
 
               {/* Stats */}
               <div className="flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full">
-                <span className="text-2xl font-bold text-primary-600">{mockSavedItineraries.length}</span>
+                <span className="text-2xl font-bold text-primary-600">{itineraries.length}</span>
                 <span className="text-sm text-primary-500">itineraries</span>
               </div>
 
@@ -371,7 +410,7 @@ export default function Itineraries() {
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
-              All ({mockSavedItineraries.length})
+              All ({itineraries.length})
             </button>
             <button
               onClick={() => setCategoryFilter('trekking')}
@@ -381,7 +420,7 @@ export default function Itineraries() {
                   : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
               }`}
             >
-              🥾 Trekking ({mockSavedItineraries.filter(i => i.category === 'trekking').length})
+              🥾 Trekking ({itineraries.filter(i => i.category === 'trekking').length})
             </button>
             <button
               onClick={() => setCategoryFilter('cultural')}
@@ -391,7 +430,7 @@ export default function Itineraries() {
                   : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
               }`}
             >
-              🏛️ Cultural ({mockSavedItineraries.filter(i => i.category === 'cultural').length})
+              🏛️ Cultural ({itineraries.filter(i => i.category === 'cultural').length})
             </button>
             <button
               onClick={() => setCategoryFilter('expedition')}
@@ -401,7 +440,7 @@ export default function Itineraries() {
                   : 'bg-red-100 text-red-700 hover:bg-red-200'
               }`}
             >
-              ⛰️ Expedition ({mockSavedItineraries.filter(i => i.category === 'expedition').length})
+              ⛰️ Expedition ({itineraries.filter(i => i.category === 'expedition').length})
             </button>
             <button
               onClick={() => setCategoryFilter('adventure')}
@@ -411,7 +450,7 @@ export default function Itineraries() {
                   : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
               }`}
             >
-              🎯 Adventure ({mockSavedItineraries.filter(i => i.category === 'adventure').length})
+              🎯 Adventure ({itineraries.filter(i => i.category === 'adventure').length})
             </button>
             <button
               onClick={() => setCategoryFilter('safari')}
@@ -421,7 +460,7 @@ export default function Itineraries() {
                   : 'bg-green-100 text-green-700 hover:bg-green-200'
               }`}
             >
-              🦁 Safari ({mockSavedItineraries.filter(i => i.category === 'safari').length})
+              🦁 Safari ({itineraries.filter(i => i.category === 'safari').length})
             </button>
           </div>
         </div>
@@ -492,22 +531,267 @@ export default function Itineraries() {
               {/* Card Actions */}
               <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
                 <div className="flex gap-1">
-                  <button className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-primary-600 transition-colors" title="View">
+                  <button 
+                    onClick={() => handleView(itinerary)}
+                    className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-primary-600 transition-colors" 
+                    title="View"
+                  >
                     <Eye className="w-4 h-4" />
                   </button>
-                  <button className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-primary-600 transition-colors" title="Edit">
+                  <button 
+                    onClick={() => handleEdit(itinerary)}
+                    className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-primary-600 transition-colors" 
+                    title="Edit"
+                  >
                     <Edit2 className="w-4 h-4" />
                   </button>
-                  <button className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-primary-600 transition-colors" title="Duplicate">
+                  <button 
+                    onClick={() => handleDuplicate(itinerary)}
+                    className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-primary-600 transition-colors" 
+                    title="Duplicate"
+                  >
                     <Copy className="w-4 h-4" />
                   </button>
                 </div>
-                <button className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-red-600 transition-colors" title="Delete">
+                <button 
+                  onClick={() => handleDelete(itinerary)}
+                  className="p-2 rounded-md hover:bg-white text-slate-600 hover:text-red-600 transition-colors" 
+                  title="Delete"
+                >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  // View Itinerary Detail View
+  if (view === 'view' && selectedItinerary) {
+    return (
+      <div className="space-y-6">
+        {/* Header with Back Button */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setView('saved')}
+              className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-800">Itinerary Details</h1>
+              <p className="text-slate-500 mt-1">View complete itinerary information</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleEdit(selectedItinerary)}
+              className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
+            >
+              <Edit2 className="w-4 h-4" />
+              Edit
+            </button>
+          </div>
+        </div>
+
+        {/* Itinerary Details Card */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <div className="space-y-6">
+            {/* Category and Status */}
+            <div className="flex items-center gap-3">
+              <span className={`px-3 py-1.5 rounded-full text-sm font-medium border ${getCategoryInfo(selectedItinerary.category).color}`}>
+                {getCategoryInfo(selectedItinerary.category).icon} {getCategoryInfo(selectedItinerary.category).label}
+              </span>
+              <span className={`px-3 py-1.5 rounded-full text-sm font-medium border ${getStatusColor(selectedItinerary.status)}`}>
+                {selectedItinerary.status.charAt(0).toUpperCase() + selectedItinerary.status.slice(1)}
+              </span>
+            </div>
+
+            {/* Title and Destination */}
+            <div>
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">{selectedItinerary.title}</h2>
+              <div className="flex items-center gap-2 text-slate-600">
+                <MapPin className="w-5 h-5" />
+                <span className="text-lg">{selectedItinerary.destination}</span>
+              </div>
+            </div>
+
+            {/* Details Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-200">
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-slate-500 mb-1">Duration</p>
+                  <p className="text-lg font-semibold text-slate-800">{selectedItinerary.duration}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500 mb-1">Group Size</p>
+                  <p className="text-lg font-semibold text-slate-800">{selectedItinerary.paxCount} passengers</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-slate-500 mb-1">Start Date</p>
+                  <p className="text-lg font-semibold text-slate-800">{new Date(selectedItinerary.startDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500 mb-1">End Date</p>
+                  <p className="text-lg font-semibold text-slate-800">{new Date(selectedItinerary.endDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Created Date */}
+            <div className="pt-6 border-t border-slate-200">
+              <p className="text-sm text-slate-500">
+                Created on {new Date(selectedItinerary.createdAt).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Edit Itinerary View
+  if (view === 'edit' && editingItinerary) {
+    return (
+      <div className="space-y-6">
+        {/* Header with Back Button */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setView('saved')}
+              className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-800">Edit Itinerary</h1>
+              <p className="text-slate-500 mt-1">Update itinerary details</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Edit Form */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <div className="space-y-6">
+            {/* Title */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Itinerary Title</label>
+              <input
+                type="text"
+                value={editingItinerary.title}
+                onChange={(e) => setEditingItinerary({ ...editingItinerary, title: e.target.value })}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            {/* Destination */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Destination</label>
+              <input
+                type="text"
+                value={editingItinerary.destination}
+                onChange={(e) => setEditingItinerary({ ...editingItinerary, destination: e.target.value })}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            {/* Category and Status */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Category</label>
+                <select
+                  value={editingItinerary.category}
+                  onChange={(e) => setEditingItinerary({ ...editingItinerary, category: e.target.value as any })}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                >
+                  <option value="trekking">🥾 Trekking</option>
+                  <option value="cultural">🏛️ Cultural</option>
+                  <option value="expedition">⛰️ Expedition</option>
+                  <option value="adventure">🎯 Adventure</option>
+                  <option value="safari">🦁 Safari</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Status</label>
+                <select
+                  value={editingItinerary.status}
+                  onChange={(e) => setEditingItinerary({ ...editingItinerary, status: e.target.value as any })}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                >
+                  <option value="draft">Draft</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Duration and Pax Count */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Duration</label>
+                <input
+                  type="text"
+                  value={editingItinerary.duration}
+                  onChange={(e) => setEditingItinerary({ ...editingItinerary, duration: e.target.value })}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                  placeholder="e.g., 5 Days / 4 Nights"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Group Size (Pax Count)</label>
+                <input
+                  type="number"
+                  value={editingItinerary.paxCount}
+                  onChange={(e) => setEditingItinerary({ ...editingItinerary, paxCount: parseInt(e.target.value) })}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                  min="1"
+                />
+              </div>
+            </div>
+
+            {/* Dates */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Start Date</label>
+                <input
+                  type="date"
+                  value={editingItinerary.startDate}
+                  onChange={(e) => setEditingItinerary({ ...editingItinerary, startDate: e.target.value })}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">End Date</label>
+                <input
+                  type="date"
+                  value={editingItinerary.endDate}
+                  onChange={(e) => setEditingItinerary({ ...editingItinerary, endDate: e.target.value })}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 pt-6 border-t border-slate-200">
+              <button
+                onClick={() => setView('saved')}
+                className="px-6 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                className="px-6 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
