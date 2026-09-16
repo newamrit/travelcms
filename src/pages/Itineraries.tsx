@@ -15,6 +15,10 @@ interface SavedItinerary {
   status: 'draft' | 'confirmed' | 'completed';
   paxCount: number;
   category: 'trekking' | 'cultural' | 'expedition' | 'adventure' | 'safari';
+  price: number;
+  overview: string;
+  description: string;
+  highlights: string[];
   included: string[];
   excluded: string[];
   createdAt: string;
@@ -45,6 +49,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 8,
     category: 'trekking',
+    price: 850,
+    overview: 'Experience the breathtaking Annapurna Base Camp trek through diverse landscapes, from subtropical forests to alpine meadows, culminating at the sacred sanctuary of the Annapurna massif.',
+    description: 'This classic trek takes you through the heart of the Annapurna region, passing through traditional Gurung villages, rhododendron forests, and dramatic mountain landscapes. The journey culminates at Annapurna Base Camp (4,130m), offering panoramic views of the Annapurna range including Annapurna I, II, III, IV, South, and Machhapuchhre (Fishtail).',
+    highlights: ['Stunning panoramic mountain views', 'Traditional Gurung village visits', 'Rhododendron forest walks', 'Hot springs at Jhinu Danda', 'Sunrise view from Base Camp', 'Diverse flora and fauna'],
     included: ['Accommodation in tea houses', 'All meals during trek', 'Experienced guide & porters', 'Annapurna Conservation Permit', 'First aid kit', 'Transportation to/from trailhead'],
     excluded: ['Personal expenses', 'Travel insurance', 'Tips for guide/porters', 'Hot showers', 'Wi-Fi charges', 'Extra snacks'],
     createdAt: '2026-02-15'
@@ -60,6 +68,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 6,
     category: 'trekking',
+    price: 1200,
+    overview: 'Trek to the heart of the Everest region with breathtaking views of the world\'s highest peaks, including Everest, Lhotse, and Ama Dablam, without the commitment of base camp.',
+    description: 'This moderate trek takes you through the legendary Khumbu region, following in the footsteps of legendary mountaineers. Experience Sherpa culture, visit ancient monasteries, and enjoy spectacular mountain views from multiple vantage points including Kala Patthar.',
+    highlights: ['Everest viewpoint from Kala Patthar', 'Tengboche Monastery visit', 'Sherpa culture experience', 'Namche Bazaar market', 'Stunning Himalayan panoramas', 'Traditional Sherpa hospitality'],
     included: ['Tea house accommodation', 'All meals (B/L/D)', 'Licensed sherpa guide', 'TIMS card & permits', 'Domestic flights (KTM-LUK-KTM)', 'Porter service (1 porter per 2 trekkers)'],
     excluded: ['Nepal entry visa', 'Personal gear', 'Alcoholic beverages', 'Battery charging', 'Internet access', 'Emergency evacuation'],
     createdAt: '2026-03-10'
@@ -77,6 +89,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 12,
     category: 'cultural',
+    price: 650,
+    overview: 'Explore the rich cultural heritage of the Kathmandu Valley, visiting UNESCO World Heritage Sites, ancient temples, and experiencing traditional Newari culture.',
+    description: 'Immerse yourself in the vibrant culture of Nepal\'s capital valley. Visit seven UNESCO World Heritage Sites, explore ancient palaces and temples, experience traditional Newari cuisine, and witness living heritage in the medieval cities of Bhaktapur and Patan.',
+    highlights: ['7 UNESCO World Heritage Sites', 'Ancient palace squares', 'Traditional Newari culture', 'Buddhist & Hindu temples', 'Local market experiences', 'Cultural performances'],
     included: ['4-star hotel accommodation', 'Daily breakfast', 'All entrance fees', 'Professional cultural guide', 'Private transportation', 'Welcome & farewell dinners'],
     excluded: ['Lunch & dinner (except included)', 'Personal shopping', 'Tips', 'Travel insurance', 'Optional activities'],
     createdAt: '2026-02-20'
@@ -92,6 +108,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 10,
     category: 'cultural',
+    price: 480,
+    overview: 'Experience stunning Himalayan sunrise views, explore ancient temples, and discover the cultural heritage of the hills surrounding Kathmandu Valley.',
+    description: 'This tour combines natural beauty with cultural exploration. Witness spectacular sunrise views over the Himalayas from Nagarkot, explore the ancient town of Dhulikhel, visit the oldest temple in Nepal at Changunarayan, and experience authentic hill village life.',
+    highlights: ['Himalayan sunrise views', 'Ancient Changunarayan Temple', 'Traditional hill villages', 'Panoramic mountain views', 'Local culture experience', 'Scenic hiking trails'],
     included: ['Resort accommodation', 'All meals', 'Sunrise/sunset viewpoints', 'Cultural guide', 'Transportation', 'Changunarayan Temple entry'],
     excluded: ['Personal expenses', 'Tips', 'Travel insurance', 'Optional hiking gear rental'],
     createdAt: '2026-03-05'
@@ -107,6 +127,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'draft',
     paxCount: 15,
     category: 'cultural',
+    price: 320,
+    overview: 'Discover the natural beauty and cultural attractions of Pokhara, Nepal\'s tourism capital, with its stunning lakes, waterfalls, and panoramic mountain views.',
+    description: 'Explore the enchanting city of Pokhara, nestled beside the serene Phewa Lake with the Annapurna range as a backdrop. Visit the iconic World Peace Pagoda, marvel at Davis Falls, explore caves, and experience the relaxed lakeside atmosphere.',
+    highlights: ['Phewa Lake boat ride', 'World Peace Pagoda visit', 'Davis Falls exploration', 'Mountain museum tour', 'Lakeside relaxation', 'Panoramic mountain views'],
     included: ['Hotel accommodation', 'Daily breakfast', 'City tour', 'Guide services', 'Transportation'],
     excluded: ['Lunch & dinner', 'Boat rides', 'Personal expenses', 'Tips'],
     createdAt: '2026-03-15'
@@ -124,6 +148,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 4,
     category: 'expedition',
+    price: 2800,
+    overview: 'Embark on the ultimate adventure to Everest Base Camp, standing at the foot of the world\'s highest peak and experiencing the legendary Khumbu region.',
+    description: 'This challenging expedition takes you to Everest Base Camp (5,364m) through the legendary Khumbu Valley. Experience Sherpa culture, cross suspension bridges over roaring rivers, acclimatize at high altitude, and stand at the base of the world\'s highest mountain. Includes proper acclimatization days and experienced climbing sherpa support.',
+    highlights: ['Everest Base Camp (5,364m)', 'Kala Patthar viewpoint (5,545m)', 'Sherpa culture immersion', 'Tengboche Monastery', 'Khumbu Icefall view', 'High altitude experience'],
     included: ['All accommodation', 'All meals during expedition', 'Experienced climbing sherpa', 'All permits & fees', 'Domestic flights', 'Porter service', 'Group climbing equipment', 'First aid & oxygen', 'Satellite phone'],
     excluded: ['Personal climbing gear', 'High altitude insurance', 'Tips for sherpa/porters', 'Personal medications', 'Extra oxygen', 'Emergency evacuation'],
     createdAt: '2026-01-10'
@@ -141,6 +169,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 8,
     category: 'adventure',
+    price: 750,
+    overview: 'Experience the thrill of adventure sports in Pokhara, including paragliding, zip-lining, and canyon swing with stunning Himalayan backdrop.',
+    description: 'Get your adrenaline pumping with Nepal\'s premier adventure sports destination. Soar through the skies with paragliding over Phewa Lake, experience the thrill of zip-lining, feel the rush of canyon swinging, and enjoy other adventure activities with professional instructors and top-quality equipment.',
+    highlights: ['Paragliding over Phewa Lake', 'Zip-lining adventure', 'Canyon swing experience', 'Professional instructors', 'Safety equipment provided', 'Stunning mountain views'],
     included: ['Hotel accommodation', 'Daily breakfast', 'Paragliding flight', 'Zip-lining', 'Canyon swing', 'All equipment', 'Professional instructors', 'Transportation', 'Insurance'],
     excluded: ['Lunch & dinner', 'GoPro footage', 'Personal expenses', 'Tips', 'Travel insurance'],
     createdAt: '2026-03-20'
@@ -156,6 +188,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'draft',
     paxCount: 10,
     category: 'adventure',
+    price: 580,
+    overview: 'Combine the thrill of white water rafting on the Trishuli River with the ultimate adrenaline rush of bungee jumping at one of Nepal\'s highest bungee sites.',
+    description: 'Experience two of Nepal\'s most exciting adventure activities. Navigate the rapids of the Trishuli River with experienced guides, camp riverside under the stars, and then take the leap of faith with bungee jumping from a 160m high platform over the Bhote Koshi River.',
+    highlights: ['White water rafting (Grade 3-4)', 'Riverside camping', 'Bungee jumping (160m)', 'Professional guides', 'Safety equipment', 'Scenic river valleys'],
     included: ['Camping accommodation', 'All meals during rafting', 'Rafting equipment', 'Bungee jumping', 'Professional guides', 'Transportation', 'Safety equipment'],
     excluded: ['Personal gear', 'Alcoholic beverages', 'Tips', 'Travel insurance', 'Optional activities'],
     createdAt: '2026-03-25'
@@ -173,6 +209,10 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 12,
     category: 'safari',
+    price: 520,
+    overview: 'Explore the wilderness of Chitwan National Park, a UNESCO World Heritage Site, home to endangered species including one-horned rhinoceros and Bengal tigers.',
+    description: 'Immerse yourself in the rich biodiversity of Chitwan National Park, Nepal\'s first national park and a UNESCO World Heritage Site. Experience jungle safaris by jeep and canoe, visit the elephant breeding center, enjoy bird watching, and experience traditional Tharu culture in this subtropical wilderness.',
+    highlights: ['Jungle safari (jeep & canoe)', 'One-horned rhinoceros spotting', 'Elephant breeding center', 'Bird watching (500+ species)', 'Tharu cultural program', 'Sunrise/sunset views'],
     included: ['Resort accommodation', 'All meals', 'Jungle safari (jeep)', 'Elephant breeding center visit', 'Bird watching tour', 'Cultural program', 'National park fees', 'Naturalist guide', 'Transportation'],
     excluded: ['Personal expenses', 'Tips', 'Travel insurance', 'Optional canoe ride', 'Souvenirs'],
     createdAt: '2026-03-30'
@@ -644,102 +684,154 @@ export default function Itineraries() {
           </div>
         </div>
 
-        {/* Itinerary Details Card */}
+        {/* 1. Destination, Duration, Price Card */}
         <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
-          <div className="space-y-6">
-            {/* Category and Status */}
-            <div className="flex items-center gap-3">
-              <span className={`px-3 py-1.5 rounded-full text-sm font-medium border ${getCategoryInfo(selectedItinerary.category).color}`}>
-                {getCategoryInfo(selectedItinerary.category).icon} {getCategoryInfo(selectedItinerary.category).label}
-              </span>
-              <span className={`px-3 py-1.5 rounded-full text-sm font-medium border ${getStatusColor(selectedItinerary.status)}`}>
-                {selectedItinerary.status.charAt(0).toUpperCase() + selectedItinerary.status.slice(1)}
-              </span>
-            </div>
-
-            {/* Title and Destination */}
-            <div>
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">{selectedItinerary.title}</h2>
-              <div className="flex items-center gap-2 text-slate-600">
-                <MapPin className="w-5 h-5" />
-                <span className="text-lg">{selectedItinerary.destination}</span>
-              </div>
-            </div>
-
-            {/* Details Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-200">
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Duration</p>
-                  <p className="text-lg font-semibold text-slate-800">{selectedItinerary.duration}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Group Size</p>
-                  <p className="text-lg font-semibold text-slate-800">{selectedItinerary.paxCount} passengers</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Start Date</p>
-                  <p className="text-lg font-semibold text-slate-800">{new Date(selectedItinerary.startDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">End Date</p>
-                  <p className="text-lg font-semibold text-slate-800">{new Date(selectedItinerary.endDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Included/Excluded Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-200">
-              {/* Included in Package */}
+          <div className="flex items-center gap-3 mb-4">
+            <span className={`px-3 py-1.5 rounded-full text-sm font-medium border ${getCategoryInfo(selectedItinerary.category).color}`}>
+              {getCategoryInfo(selectedItinerary.category).icon} {getCategoryInfo(selectedItinerary.category).label}
+            </span>
+            <span className={`px-3 py-1.5 rounded-full text-sm font-medium border ${getStatusColor(selectedItinerary.status)}`}>
+              {selectedItinerary.status.charAt(0).toUpperCase() + selectedItinerary.status.slice(1)}
+            </span>
+          </div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">{selectedItinerary.title}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg">
+              <MapPin className="w-6 h-6 text-primary-600" />
               <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 rounded bg-green-100 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <h3 className="text-base font-semibold text-slate-800">Included in Package</h3>
-                </div>
-                <ul className="space-y-2">
-                  {selectedItinerary.included.map((item, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-slate-600">
-                      <span className="text-green-600 mt-0.5">✓</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Excluded from Package */}
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 rounded bg-red-100 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </div>
-                  <h3 className="text-base font-semibold text-slate-800">Excluded from Package</h3>
-                </div>
-                <ul className="space-y-2">
-                  {selectedItinerary.excluded.map((item, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-slate-600">
-                      <span className="text-red-600 mt-0.5">✗</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <p className="text-xs text-slate-500 mb-1">Destination</p>
+                <p className="text-sm font-semibold text-slate-800">{selectedItinerary.destination}</p>
               </div>
             </div>
-
-            {/* Created Date */}
-            <div className="pt-6 border-t border-slate-200">
-              <p className="text-sm text-slate-500">
-                Created on {new Date(selectedItinerary.createdAt).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-              </p>
+            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg">
+              <Calendar className="w-6 h-6 text-primary-600" />
+              <div>
+                <p className="text-xs text-slate-500 mb-1">Duration</p>
+                <p className="text-sm font-semibold text-slate-800">{selectedItinerary.duration}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <p className="text-xs text-slate-500 mb-1">Price per person</p>
+                <p className="text-sm font-bold text-green-700">रू {selectedItinerary.price.toLocaleString()}</p>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* 2. Overview & Description */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <h3 className="text-lg font-semibold text-slate-800 mb-3">Overview & Description</h3>
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm font-medium text-slate-700 mb-2">Overview</p>
+              <p className="text-sm text-slate-600 leading-relaxed">{selectedItinerary.overview}</p>
+            </div>
+            <div className="pt-4 border-t border-slate-200">
+              <p className="text-sm font-medium text-slate-700 mb-2">Description</p>
+              <p className="text-sm text-slate-600 leading-relaxed">{selectedItinerary.description}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Trip Highlights */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <h3 className="text-lg font-semibold text-slate-800 mb-3">Trip Highlights</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {selectedItinerary.highlights.map((highlight, index) => (
+              <div key={index} className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="text-sm text-slate-700">{highlight}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 4. Daily Itinerary */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Daily Itinerary</h3>
+          <div className="space-y-3">
+            {days.map((day, index) => (
+              <div key={day.id} className="flex gap-4 p-4 bg-slate-50 rounded-lg">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-sm font-bold text-primary-700">
+                    {day.dayNumber}
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-slate-800 mb-1">{day.dayTitle}</h4>
+                  <p className="text-sm text-slate-600 mb-2">{day.activityDescription}</p>
+                  <div className="flex flex-wrap gap-3 text-xs text-slate-500">
+                    {day.overnightLocation && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3" /> {day.overnightLocation}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      {getTransportIcon(day.transportMode)} {transportOptions.find(t => t.value === day.transportMode)?.label || 'No transport'}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      {day.mealsBreakfast && <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded">B</span>}
+                      {day.mealsLunch && <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded">L</span>}
+                      {day.mealsDinner && <span className="px-1.5 py-0.5 bg-indigo-100 text-indigo-700 rounded">D</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 5. Included in Package */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 rounded bg-green-100 flex items-center justify-center">
+              <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800">Included in Package</h3>
+          </div>
+          <ul className="space-y-2">
+            {selectedItinerary.included.map((item, index) => (
+              <li key={index} className="flex items-start gap-2 text-sm text-slate-600">
+                <span className="text-green-600 mt-0.5">✓</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* 6. Excluded from Package */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 rounded bg-red-100 flex items-center justify-center">
+              <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800">Excluded from Package</h3>
+          </div>
+          <ul className="space-y-2">
+            {selectedItinerary.excluded.map((item, index) => (
+              <li key={index} className="flex items-start gap-2 text-sm text-slate-600">
+                <span className="text-red-600 mt-0.5">✗</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Created Date */}
+        <div className="bg-white rounded-lg border border-slate-200 p-4" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <p className="text-sm text-slate-500 text-center">
+            Created on {new Date(selectedItinerary.createdAt).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+          </p>
         </div>
       </div>
     );
@@ -864,6 +956,55 @@ export default function Itineraries() {
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
+            </div>
+
+            {/* Price */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Price per person (NPR)</label>
+              <input
+                type="number"
+                value={editingItinerary.price}
+                onChange={(e) => setEditingItinerary({ ...editingItinerary, price: parseFloat(e.target.value) })}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                min="0"
+                step="10"
+              />
+            </div>
+
+            {/* Overview */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Overview</label>
+              <textarea
+                value={editingItinerary.overview}
+                onChange={(e) => setEditingItinerary({ ...editingItinerary, overview: e.target.value })}
+                rows={2}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all resize-none"
+                placeholder="Brief overview of the itinerary..."
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
+              <textarea
+                value={editingItinerary.description}
+                onChange={(e) => setEditingItinerary({ ...editingItinerary, description: e.target.value })}
+                rows={4}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all resize-none"
+                placeholder="Detailed description of the itinerary..."
+              />
+            </div>
+
+            {/* Highlights */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Trip Highlights (one per line)</label>
+              <textarea
+                value={editingItinerary.highlights.join('\n')}
+                onChange={(e) => setEditingItinerary({ ...editingItinerary, highlights: e.target.value.split('\n').filter(h => h.trim()) })}
+                rows={6}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all resize-none"
+                placeholder="Enter each highlight on a new line..."
+              />
             </div>
 
             {/* Included/Excluded Section */}
@@ -1005,6 +1146,70 @@ export default function Itineraries() {
             <span>{totalMeals.dinner} Dinners</span>
           </div>
         </div>
+      </div>
+
+      {/* Destination, Duration, Price */}
+      <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+        <h3 className="text-lg font-semibold text-slate-800 mb-4">Destination, Duration & Price</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Destination</label>
+            <input 
+              type="text" 
+              placeholder="e.g., Pokhara, Annapurna Region"
+              className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all" 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Duration</label>
+            <input 
+              type="text" 
+              placeholder="e.g., 6 Days / 5 Nights"
+              className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all" 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Price per person (NPR)</label>
+            <input 
+              type="number" 
+              placeholder="e.g., 850"
+              className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all" 
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Overview & Description */}
+      <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+        <h3 className="text-lg font-semibold text-slate-800 mb-4">Overview & Description</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Overview</label>
+            <textarea 
+              rows={2}
+              placeholder="Brief overview of the itinerary..."
+              className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all resize-none" 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+            <textarea 
+              rows={4}
+              placeholder="Detailed description of the itinerary..."
+              className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all resize-none" 
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Trip Highlights */}
+      <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+        <h3 className="text-lg font-semibold text-slate-800 mb-4">Trip Highlights</h3>
+        <textarea 
+          rows={6}
+          placeholder="Enter each highlight on a new line..."
+          className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all resize-none" 
+        />
       </div>
 
       {/* Day Cards */}
