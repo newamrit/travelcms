@@ -7,6 +7,7 @@ import {
 
 interface SavedItinerary {
   id: string;
+  clientName: string;
   title: string;
   destination: string;
   duration: string;
@@ -41,6 +42,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   // Trekking Itineraries (2)
   {
     id: '1',
+    clientName: 'John Smith',
     title: '6-Day Annapurna Base Camp Trek',
     destination: 'Pokhara, Annapurna Region',
     duration: '6 Days / 5 Nights',
@@ -60,6 +62,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   },
   {
     id: '2',
+    clientName: 'Sarah Johnson',
     title: '8-Day Everest View Trek',
     destination: 'Lukla, Namche Bazaar, Tengboche',
     duration: '8 Days / 7 Nights',
@@ -81,6 +84,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   // Cultural Itineraries (3)
   {
     id: '3',
+    clientName: 'Michael Brown',
     title: '5-Day Kathmandu Valley Heritage Tour',
     destination: 'Kathmandu, Bhaktapur, Patan',
     duration: '5 Days / 4 Nights',
@@ -100,6 +104,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   },
   {
     id: '4',
+    clientName: 'Emily Davis',
     title: '4-Day Nagarkot & Dhulikhel Cultural Tour',
     destination: 'Nagarkot, Dhulikhel, Changunarayan',
     duration: '4 Days / 3 Nights',
@@ -119,6 +124,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   },
   {
     id: '5',
+    clientName: 'David Wilson',
     title: '3-Day Pokhara Lakeside Cultural Experience',
     destination: 'Pokhara, World Peace Pagoda, Davis Falls',
     duration: '3 Days / 2 Nights',
@@ -140,6 +146,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   // Expedition Itineraries (1)
   {
     id: '6',
+    clientName: 'Robert Taylor',
     title: '14-Day Everest Base Camp Expedition',
     destination: 'Lukla, Namche, Gorak Shep, EBC',
     duration: '14 Days / 13 Nights',
@@ -161,6 +168,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   // Adventure Itineraries (2)
   {
     id: '7',
+    clientName: 'Jennifer Martinez',
     title: '5-Day Pokhara Adventure Sports Package',
     destination: 'Pokhara, Sarangkot, Seti River',
     duration: '5 Days / 4 Nights',
@@ -180,6 +188,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   },
   {
     id: '8',
+    clientName: 'Christopher Lee',
     title: '4-Day White Water Rafting & Bungee Jumping',
     destination: 'Trishuli River, Kurintar, Pokhara',
     duration: '4 Days / 3 Nights',
@@ -201,6 +210,7 @@ const mockSavedItineraries: SavedItinerary[] = [
   // Safari Itineraries (1)
   {
     id: '9',
+    clientName: 'Amanda White',
     title: '4-Day Chitwan Wildlife Safari',
     destination: 'Chitwan National Park, Sauraha',
     duration: '4 Days / 3 Nights',
@@ -1191,6 +1201,12 @@ export default function Itineraries() {
             <div className="absolute bottom-0 left-0 w-24 h-24 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(-30%, 30%)' }}></div>
             
             <div className="relative z-10 p-4 text-white">
+              {/* Client Name */}
+              <div className="text-center mb-2">
+                <p className="text-xs opacity-80 mb-0.5">Prepared for</p>
+                <h2 className="text-lg font-bold">{selectedItinerary.clientName}</h2>
+              </div>
+
               {/* Itinerary Title */}
               <div className="text-center mb-3">
                 <h1 className="text-xl font-bold mb-2">{selectedItinerary.title}</h1>
