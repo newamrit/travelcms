@@ -199,8 +199,8 @@ export default function Settings() {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Currency Symbol Position</label>
                     <select className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none">
-                      <option>Before amount (रू100)</option>
-                      <option>After amount (100 रू)</option>
+                      <option>Before amount (रु100)</option>
+                      <option>After amount (100 रु)</option>
                     </select>
                   </div>
                   <div>

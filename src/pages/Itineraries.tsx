@@ -764,7 +764,7 @@ export default function Itineraries() {
               </svg>
               <div>
                 <p className="text-xs text-slate-500 mb-1">Price per person</p>
-                <p className="text-sm font-bold text-green-700">रू {selectedItinerary.price.toLocaleString()}</p>
+                <p className="text-sm font-bold text-green-700">रु {selectedItinerary.price.toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -1190,73 +1190,45 @@ export default function Itineraries() {
             <div className="absolute top-0 right-0 w-32 h-32 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(-30%, 30%)' }}></div>
             
-            <div className="relative z-10 p-6 text-white">
-              {/* Company Logo/Name */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div 
-                    className="w-10 h-10 flex items-center justify-center text-white font-bold text-lg"
-                    style={{ background: '#f35500', borderRadius: '12px' }}
-                  >
-                    T
-                  </div>
-                  <div>
-                    <h1 className="text-lg font-bold">TravelOps Pro</h1>
-                    <p className="text-xs opacity-90">Tour & Travel Management</p>
-                  </div>
-                </div>
-                <div className="text-right text-xs opacity-90">
-                  <div className="flex items-center gap-1.5 justify-end">
-                    <Phone className="w-3 h-3" />
-                    <span>+977-1-4567890</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 justify-end mt-0.5">
-                    <Mail className="w-3 h-3" />
-                    <span>info@travelops.pro</span>
-                  </div>
-                </div>
-              </div>
-
+            <div className="relative z-10 p-4 text-white">
               {/* Itinerary Title */}
-              <div className="text-center mb-4">
-                <h1 className="text-2xl font-bold mb-2">{selectedItinerary.title}</h1>
+              <div className="text-center mb-3">
+                <h1 className="text-xl font-bold mb-2">{selectedItinerary.title}</h1>
                 <div 
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 text-white text-xs font-semibold"
-                  style={{ background: '#f35500', borderRadius: '8px' }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 text-white text-xs font-semibold"
+                  style={{ background: '#f35500', borderRadius: '6px' }}
                 >
-                  <MapPin className="w-3.5 h-3.5" />
+                  <MapPin className="w-3 h-3" />
                   {selectedItinerary.destination}
                 </div>
               </div>
 
               {/* Quick Info Cards */}
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-1.5">
                 <div 
-                  className="p-2 text-center"
-                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '10px', backdropFilter: 'blur(10px)' }}
+                  className="p-1.5 text-center"
+                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '8px' }}
                 >
-                  <Calendar className="w-5 h-5 mx-auto mb-1 opacity-90" />
-                  <p className="text-[10px] opacity-80 mb-0.5">Duration</p>
-                  <p className="text-sm font-bold">{selectedItinerary.duration}</p>
+                  <Calendar className="w-4 h-4 mx-auto mb-0.5 opacity-90" />
+                  <p className="text-[9px] opacity-80 mb-0.5">Duration</p>
+                  <p className="text-xs font-bold">{selectedItinerary.duration}</p>
                 </div>
                 <div 
-                  className="p-2 text-center"
-                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '10px', backdropFilter: 'blur(10px)' }}
+                  className="p-1.5 text-center"
+                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '8px' }}
                 >
-                  <Users className="w-5 h-5 mx-auto mb-1 opacity-90" />
-                  <p className="text-[10px] opacity-80 mb-0.5">Group Size</p>
-                  <p className="text-sm font-bold">{selectedItinerary.paxCount} Pax</p>
+                  <Users className="w-4 h-4 mx-auto mb-0.5 opacity-90" />
+                  <p className="text-[9px] opacity-80 mb-0.5">Group Size</p>
+                  <p className="text-xs font-bold">{selectedItinerary.paxCount} Pax</p>
                 </div>
                 {showPrice && (
                   <div 
-                    className="p-2 text-center"
-                    style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '10px', backdropFilter: 'blur(10px)' }}
+                    className="p-1.5 text-center"
+                    style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '8px' }}
                   >
-                    <div className="w-5 h-5 mx-auto mb-1 flex items-center justify-center opacity-90">
-                      <span className="text-sm font-bold">रू</span>
-                    </div>
-                    <p className="text-[10px] opacity-80 mb-0.5">Price Per Person</p>
-                    <p className="text-sm font-bold">{selectedItinerary.price.toLocaleString()}</p>
+                    <span className="text-xs font-bold">रु</span>
+                    <p className="text-[9px] opacity-80 mb-0.5">Per Person</p>
+                    <p className="text-xs font-bold">{selectedItinerary.price.toLocaleString()}</p>
                   </div>
                 )}
               </div>
@@ -1465,35 +1437,38 @@ export default function Itineraries() {
             {/* Price Summary (if showPrice is true) */}
             {showPrice && (
               <div 
-                className="mb-3 p-2"
+                className="mb-2 p-1"
                 style={{ 
                   background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
-                  borderRadius: '12px'
+                  borderRadius: '8px'
                 }}
               >
                 <div className="text-white text-center">
-                  <h2 className="text-sm font-bold mb-1.5">Pricing Summary</h2>
-                  <div className="grid grid-cols-2 gap-1.5 mb-1.5">
+                  <h2 className="text-xs font-bold mb-1">Pricing Summary</h2>
+                  <div className="grid grid-cols-2 gap-1 mb-1">
                     <div 
-                      className="p-1.5"
-                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '8px' }}
+                      className="p-1"
+                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '6px' }}
                     >
-                      <p className="text-[10px] opacity-80 mb-0.5">Price Per Person</p>
-                      <p className="text-lg font-bold">रू {selectedItinerary.price.toLocaleString()}</p>
+                      <p className="text-[9px] opacity-80 mb-0.5">Per Person</p>
+                      <p className="text-base font-bold">रु {selectedItinerary.price.toLocaleString()}</p>
                     </div>
                     <div 
-                      className="p-1.5"
-                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '8px' }}
+                      className="p-1"
+                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '6px' }}
                     >
-                      <p className="text-[10px] opacity-80 mb-0.5">Total for {selectedItinerary.paxCount} Pax</p>
-                      <p className="text-lg font-bold">रू {(selectedItinerary.price * selectedItinerary.paxCount).toLocaleString()}</p>
+                      <p className="text-[9px] opacity-80 mb-0.5">Total ({selectedItinerary.paxCount} Pax)</p>
+                      <p className="text-base font-bold">रु {(selectedItinerary.price * selectedItinerary.paxCount).toLocaleString()}</p>
                     </div>
                   </div>
-                  <p className="text-[10px] opacity-80">* Prices are in Nepalese Rupees (NPR)</p>
+                  <p className="text-[9px] opacity-80">* Prices in NPR</p>
                 </div>
               </div>
             )}
           </div>
+
+          {/* Footer Space for Letterhead */}
+          <div className="h-24 print:h-32 mt-4"></div>
         </div>
       </>
     );
