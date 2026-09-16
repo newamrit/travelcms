@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  LayoutDashboard, BarChart3, Users, Calendar, DollarSign, 
+  LayoutDashboard, BarChart3, Users, Calendar, DollarSign, Banknote,
   TrendingUp, ArrowUpRight, ArrowDownRight, Clock, AlertTriangle, 
   Building2, ArrowLeft, Activity, Zap
 } from 'lucide-react';
@@ -136,7 +136,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 hover-lift">
             <div className="flex items-center justify-between mb-2">
               <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-green-600" />
+                <Banknote className="w-5 h-5 text-green-600" />
               </div>
               <span className="flex items-center gap-0.5 text-xs font-medium text-green-600">
                 <ArrowUpRight className="w-3 h-3" /> +12%
