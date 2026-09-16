@@ -198,6 +198,174 @@ body {
   color: #cbd5e1;
 }
 
+/* Additional dark mode fixes */
+.dark .bg-white\/95 {
+  background-color: rgba(30, 41, 59, 0.95);
+}
+
+.dark .ring-white {
+  --tw-ring-color: #1e293b;
+}
+
+.dark .bg-primary-50 {
+  background-color: #1e3a5f;
+}
+
+.dark .text-primary-700 {
+  color: #60a5fa;
+}
+
+.dark .text-primary-600 {
+  color: #3b82f6;
+}
+
+.dark .border-primary-100 {
+  border-color: #1e3a5f;
+}
+
+.dark .bg-amber-100 {
+  background-color: #78350f;
+  color: #fbbf24;
+}
+
+.dark .text-amber-700 {
+  color: #fbbf24;
+}
+
+.dark .border-amber-200 {
+  border-color: #92400e;
+}
+
+.dark .hover\:bg-red-50:hover {
+  background-color: #7f1d1d;
+}
+
+.dark .text-red-600 {
+  color: #f87171;
+}
+
+.dark .bg-gray-900\/50 {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.dark .bg-slate-800 {
+  background-color: #1e293b;
+}
+
+.dark .text-white {
+  color: #f1f5f9;
+}
+
+/* Dark mode specific component fixes */
+.dark .backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+.dark header {
+  background-color: rgba(30, 41, 59, 0.95);
+  border-color: #334155;
+}
+
+.dark aside {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.dark footer {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+/* Dark mode dropdown and modal fixes */
+.dark [class*="absolute"][class*="bg-white"] {
+  background-color: #1e293b;
+}
+
+.dark [class*="border-slate-100"] {
+  border-color: #334155;
+}
+
+/* Dark mode search input */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="tel"],
+.dark input[type="number"],
+.dark input[type="date"],
+.dark input[type="time"],
+.dark input[type="url"],
+.dark select,
+.dark textarea {
+  background-color: #334155;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b;
+}
+
+/* Dark mode button fixes */
+.dark button[class*="bg-white"] {
+  background-color: #334155;
+}
+
+.dark button[class*="bg-slate-50"] {
+  background-color: #334155;
+}
+
+/* Dark mode card and container fixes */
+.dark div[class*="bg-white"][class*="rounded"] {
+  background-color: #1e293b;
+}
+
+.dark div[class*="bg-slate-50"][class*="rounded"] {
+  background-color: #1e293b;
+}
+
+/* Dark mode gradient text */
+.dark .bg-clip-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+/* Dark mode gradient fixes */
+.dark .from-white {
+  --tw-gradient-from: #1e293b;
+  --tw-gradient-to: rgb(30 41 59 / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.dark .to-\[\#012871\]\/5 {
+  --tw-gradient-to: rgb(1 40 113 / 0.1);
+}
+
+.dark .to-\[\#f35500\]\/5 {
+  --tw-gradient-to: rgb(243 85 0 / 0.1);
+}
+
+/* Dark mode skeleton loader */
+.dark .skeleton {
+  background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
+  background-size: 200% 100%;
+}
+
+/* Dark mode focus rings */
+.dark *:focus {
+  outline-color: #3b82f6;
+}
+
+.dark .focus\:ring-2:focus {
+  --tw-ring-color: #3b82f6;
+}
+
+/* Dark mode hover states */
+.dark a:hover,
+.dark button:hover {
+  transition: all 0.2s ease;
+}
+
 /* Smooth theme transition */
 * {
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
