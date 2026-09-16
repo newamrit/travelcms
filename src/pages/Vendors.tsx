@@ -1,0 +1,784 @@
+import React, { useState, useEffect } from 'react';
+import { Building2, Plus, Phone, Mail, MapPin, Star, Edit2, Trash2, ArrowLeft, Users, Car, UserCheck, Utensils, Ticket, MoreHorizontal } from 'lucide-react';
+import { db, COLLECTIONS } from '../services/database';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import { CardSkeleton } from '../components/common/SkeletonLoader';
+
+const typeColors: Record<string, string> = {
+  Vehicle: 'bg-green-100 text-green-700',
+  Guide: 'bg-purple-100 text-purple-700',
+  Hotel: 'bg-blue-100 text-blue-700',
+  Restaurant: 'bg-orange-100 text-orange-700',
+  Activity: 'bg-pink-100 text-pink-700',
+  Permit: 'bg-indigo-100 text-indigo-700',
+  Others: 'bg-slate-100 text-slate-700',
+};
+
+const typeIcons: Record<string, any> = {
+  Vehicle: Car,
+  Guide: UserCheck,
+  Hotel: Building2,
+  Restaurant: Utensils,
+  Activity: MapPin,
+  Permit: Ticket,
+  Others: MoreHorizontal,
+};
+
+export default function Vendors() {
+  const [view, setView] = useState<'menu' | 'directory' | 'add' | 'edit'>('menu');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [vendors, setVendors] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editingVendor, setEditingVendor] = useState<any | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const vendorsData = db.findAll(COLLECTIONS.VENDORS);
+        setVendors(vendorsData);
+      } catch (error) {
+        console.error('Failed to load vendors:', error);
+      } finally {
+        setLoading(false);
+      }
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    type: 'Vehicle' as any,
+    contactPerson: '',
+    email: '',
+    phone: '',
+    location: '',
+    rating: 5,
+    vehicleNumber: '',
+    vehicleType: ''
+  });
+
+  // Handlers
+  const handleAddVendor = () => {
+    if (!formData.name || !formData.email) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const newVendor = {
+      id: Date.now().toString(),
+      ...formData,
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      db.create(COLLECTIONS.VENDORS, newVendor);
+      setVendors([...vendors, newVendor]);
+      setFormData({
+        name: '',
+        type: 'Vehicle',
+        contactPerson: '',
+        email: '',
+        phone: '',
+        location: '',
+        rating: 5,
+        vehicleNumber: '',
+        vehicleType: ''
+      });
+      setView('directory');
+      alert('Vendor added successfully!');
+    } catch (error) {
+      console.error('Failed to add vendor:', error);
+      alert('Failed to add vendor');
+    }
+  };
+
+  const handleEditVendor = (vendor: any) => {
+    setEditingVendor(vendor);
+    setFormData({
+      name: vendor.name,
+      type: vendor.type,
+      contactPerson: vendor.contactPerson,
+      email: vendor.email,
+      phone: vendor.phone,
+      location: vendor.location,
+      rating: vendor.rating,
+      vehicleNumber: vendor.vehicleNumber || '',
+      vehicleType: vendor.vehicleType || ''
+    });
+    setView('edit');
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingVendor || !formData.name || !formData.email) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      const updatedVendor = { ...editingVendor, ...formData };
+      db.update(COLLECTIONS.VENDORS, editingVendor.id, updatedVendor);
+      setVendors(vendors.map(v => v.id === editingVendor.id ? updatedVendor : v));
+      setEditingVendor(null);
+      setFormData({
+        name: '',
+        type: 'Vehicle',
+        contactPerson: '',
+        email: '',
+        phone: '',
+        location: '',
+        rating: 5,
+        vehicleNumber: '',
+        vehicleType: ''
+      });
+      setView('directory');
+      alert('Vendor updated successfully!');
+    } catch (error) {
+      console.error('Failed to update vendor:', error);
+      alert('Failed to update vendor');
+    }
+  };
+
+  const handleDeleteVendor = (vendorId: string) => {
+    if (confirm('Are you sure you want to delete this vendor?')) {
+      try {
+        db.delete(COLLECTIONS.VENDORS, vendorId);
+        setVendors(vendors.filter(v => v.id !== vendorId));
+        alert('Vendor deleted successfully!');
+      } catch (error) {
+        console.error('Failed to delete vendor:', error);
+        alert('Failed to delete vendor');
+      }
+    }
+  };
+
+  if (view === 'menu') {
+    if (loading) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#012871] to-[#f35500] bg-clip-text text-transparent">Vendors</h1>
+            <p className="text-slate-600 mt-1">Manage your supplier and vendor relationships</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <CardSkeleton />
+            <CardSkeleton />
+          </div>
+
+          <div className="mt-12">
+            <h2 className="text-xl font-bold text-slate-800 mb-6">Vendors by Category</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-3xl border-2 border-slate-200 p-6 animate-pulse">
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-200" />
+                    <div className="w-20 h-5 bg-slate-200 rounded" />
+                    <div className="w-8 h-8 bg-slate-200 rounded-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6 fade-in-up">
+        <div>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-[#012871] to-[#f35500] bg-clip-text text-transparent">Vendors</h1>
+          <p className="text-slate-600 mt-1">Manage your supplier and vendor relationships</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <button
+            onClick={() => setView('directory')}
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#012871] hover:shadow-2xl hover:-translate-y-1"
+            style={{ minHeight: '400px' }}
+          >
+            <div className="flex flex-col items-center justify-center h-full space-y-6">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-16 h-16 text-white" />
+              </div>
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">Vendor Directory</h2>
+                <p className="text-slate-500 text-sm">Browse and manage existing vendors</p>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-[#012871]/10 rounded-full">
+                <span className="text-2xl font-bold text-[#012871]">{vendors.length}</span>
+                <span className="text-sm text-[#012871]/70">vendors</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#012871] font-medium text-sm group-hover:gap-3 transition-all">
+                <span>View Directory</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setView('add')}
+            className="group bg-white rounded-3xl border-2 border-slate-200 p-12 text-left transition-all duration-300 hover:border-[#f35500] hover:shadow-2xl hover:-translate-y-1"
+            style={{ minHeight: '400px' }}
+          >
+            <div className="flex flex-col items-center justify-center h-full space-y-6">
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Plus className="w-16 h-16 text-white" />
+              </div>
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">Add New Vendor</h2>
+                <p className="text-slate-500 text-sm">Register a new supplier or vendor</p>
+              </div>
+              <div className="space-y-2 text-sm text-slate-600">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f35500]"></div>
+                  <span>Hotels & lodges</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f35500]"></div>
+                  <span>Transport companies</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f35500]"></div>
+                  <span>Guides & activities</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-[#f35500] font-medium text-sm group-hover:gap-3 transition-all">
+                <span>Add Vendor</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Vendors by Category Section */}
+        <div className="mt-12">
+          <h2 className="text-xl font-bold text-[#012871] mb-6">Vendors by Category</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            {/* Vehicle */}
+            <button
+              onClick={() => setView('directory')}
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-6 text-center transition-all duration-300 hover:border-[#012871] hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Car className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800 mb-1">Vehicle</h3>
+                  <p className="text-2xl font-bold text-[#012871]">{vendors.filter((v: any) => v.type === 'Vehicle').length}</p>
+                </div>
+              </div>
+            </button>
+
+            {/* Guide */}
+            <button
+              onClick={() => setView('directory')}
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-6 text-center transition-all duration-300 hover:border-[#f35500] hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <UserCheck className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800 mb-1">Guide</h3>
+                  <p className="text-2xl font-bold text-[#f35500]">{vendors.filter((v: any) => v.type === 'Guide').length}</p>
+                </div>
+              </div>
+            </button>
+
+            {/* Hotel */}
+            <button
+              onClick={() => setView('directory')}
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-6 text-center transition-all duration-300 hover:border-[#012871] hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Building2 className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800 mb-1">Hotel</h3>
+                  <p className="text-2xl font-bold text-[#012871]">{vendors.filter((v: any) => v.type === 'Hotel').length}</p>
+                </div>
+              </div>
+            </button>
+
+            {/* Restaurant */}
+            <button
+              onClick={() => setView('directory')}
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-6 text-center transition-all duration-300 hover:border-[#f35500] hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Utensils className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800 mb-1">Restaurant</h3>
+                  <p className="text-2xl font-bold text-[#f35500]">{vendors.filter((v: any) => v.type === 'Restaurant').length}</p>
+                </div>
+              </div>
+            </button>
+
+            {/* Activity */}
+            <button
+              onClick={() => setView('directory')}
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-6 text-center transition-all duration-300 hover:border-[#012871] hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <MapPin className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800 mb-1">Activity</h3>
+                  <p className="text-2xl font-bold text-[#012871]">{vendors.filter((v: any) => v.type === 'Activity').length}</p>
+                </div>
+              </div>
+            </button>
+
+            {/* Permit */}
+            <button
+              onClick={() => setView('directory')}
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-6 text-center transition-all duration-300 hover:border-[#f35500] hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#f35500] to-[#c54300] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Ticket className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800 mb-1">Permit</h3>
+                  <p className="text-2xl font-bold text-[#f35500]">{vendors.filter((v: any) => v.type === 'Permit').length}</p>
+                </div>
+              </div>
+            </button>
+
+            {/* Others */}
+            <button
+              onClick={() => setView('directory')}
+              className="group bg-white rounded-3xl border-2 border-slate-200 p-6 text-center transition-all duration-300 hover:border-[#012871] hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <MoreHorizontal className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800 mb-1">Others</h3>
+                  <p className="text-2xl font-bold text-[#012871]">{vendors.filter((v: any) => v.type === 'Others').length}</p>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Filter vendors based on search and category
+  const filteredVendors = vendors.filter((vendor: any) => {
+    const matchesSearch = searchTerm === '' || 
+      vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vendor.contactPerson.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vendor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vendor.location.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = categoryFilter === 'all' || vendor.type === categoryFilter;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  if (view === 'directory') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setView('menu')} className="p-2 rounded-lg hover:bg-[#012871]/10 text-[#012871] transition-colors">
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-[#012871]">Vendor Directory</h1>
+              <p className="text-slate-600 mt-1">All registered vendors and suppliers</p>
+            </div>
+          </div>
+          <button onClick={() => setView('add')} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">
+            <Plus className="w-4 h-4" /> Add Vendor
+          </button>
+        </div>
+
+        {/* Search and Filter Section */}
+        <div className="bg-white rounded-3xl border-2 border-[#012871]/20 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Search Bar */}
+            <div className="relative md:col-span-2">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#012871]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by name, contact, email, or location..."
+                className="w-full pl-10 pr-4 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all bg-white"
+              >
+                <option value="all">All Categories</option>
+                <option value="Vehicle">Vehicle</option>
+                <option value="Guide">Guide</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Activity">Activity</option>
+                <option value="Permit">Permit</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Filter Status */}
+          {(searchTerm || categoryFilter !== 'all') && (
+            <div className="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
+              <p className="text-sm text-slate-600">
+                Showing <span className="font-semibold text-[#012871]">{filteredVendors.length}</span> of <span className="font-semibold">{vendors.length}</span> vendors
+              </p>
+              <button
+                onClick={() => { setSearchTerm(''); setCategoryFilter('all'); }}
+                className="text-sm text-[#f35500] hover:underline font-medium"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredVendors.map(vendor => {
+            const Icon = typeIcons[vendor.type] || Building2;
+            return (
+            <div key={vendor.id} className="bg-white rounded-3xl border border-slate-200 p-5 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${typeColors[vendor.type]}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-800">{vendor.name}</h3>
+                    <p className="text-xs text-slate-500">{vendor.type}</p>
+                  </div>
+                </div>
+                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${typeColors[vendor.type]}`}>
+                  {vendor.type}
+                </span>
+              </div>
+              <div className="space-y-2 text-sm text-slate-600">
+                <div className="flex items-center gap-2"><span className="text-slate-400">👤</span><span>{vendor.contactPerson}</span></div>
+                <div className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-slate-400" /><span>{vendor.phone}</span></div>
+                <div className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-slate-400" /><span className="truncate">{vendor.email}</span></div>
+                <div className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-slate-400" /><span>{vendor.location}</span></div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`w-3.5 h-3.5 ${i < vendor.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} />
+                  ))}
+                </div>
+                <div className="flex gap-1">
+                  <button 
+                    onClick={() => handleEditVendor(vendor)}
+                    className="p-1.5 rounded hover:bg-slate-100 text-slate-400 hover:text-[#012871]"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteVendor(vendor.id)}
+                    className="p-1.5 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+          })}
+        </div>
+
+        {/* Empty State */}
+        {filteredVendors.length === 0 && (
+          <div className="bg-white rounded-3xl border-2 border-dashed border-[#012871]/30 p-12 text-center">
+            <div className="w-16 h-16 rounded-full bg-[#012871]/10 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-[#012871]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">No vendors found</h3>
+            <p className="text-slate-600 mb-4">Try adjusting your search or filter criteria</p>
+            <button
+              onClick={() => { setSearchTerm(''); setCategoryFilter('all'); }}
+              className="px-4 py-2 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg font-medium hover:shadow-lg transition-all"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Edit Vendor View
+  if (view === 'edit' && editingVendor) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <button onClick={() => { setView('directory'); setEditingVendor(null); }} className="p-2 rounded-lg hover:bg-[#012871]/10 text-[#012871] transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#012871] to-[#f35500] bg-clip-text text-transparent">Edit Vendor</h1>
+            <p className="text-slate-600 mt-1">Update vendor information</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl border-2 border-[#f35500]/20 p-6">
+          <form className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Company Name</label>
+                <input 
+                  type="text" 
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Vendor Type</label>
+                <select 
+                  value={formData.type}
+                  onChange={(e) => setFormData({...formData, type: e.target.value as any})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                >
+                  <option value="Vehicle">Vehicle</option>
+                  <option value="Guide">Guide</option>
+                  <option value="Hotel">Hotel</option>
+                  <option value="Restaurant">Restaurant</option>
+                  <option value="Activity">Activity</option>
+                  <option value="Permit">Permit</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+              
+              {formData.type === 'Vehicle' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number</label>
+                    <input 
+                      type="text" 
+                      value={formData.vehicleNumber}
+                      onChange={(e) => setFormData({...formData, vehicleNumber: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type</label>
+                    <select 
+                      value={formData.vehicleType}
+                      onChange={(e) => setFormData({...formData, vehicleType: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                    >
+                      <option value="">Select vehicle type</option>
+                      <option value="Scorpio">Scorpio</option>
+                      <option value="Bolero">Bolero</option>
+                      <option value="712 Bus">712 Bus</option>
+                      <option value="Super">Super</option>
+                      <option value="Tourist">Tourist</option>
+                      <option value="Hiace">Hiace</option>
+                      <option value="EV Micro">EV Micro</option>
+                      <option value="MiniBus">MiniBus</option>
+                    </select>
+                  </div>
+                </>
+              )}
+              
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Contact Person</label>
+                <input 
+                  type="text" 
+                  value={formData.contactPerson}
+                  onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Email</label>
+                <input 
+                  type="email" 
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Phone</label>
+                <input 
+                  type="tel" 
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Location</label>
+                <input 
+                  type="text" 
+                  value={formData.location}
+                  onChange={(e) => setFormData({...formData, location: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-4 border-t-2 border-slate-200">
+              <button type="button" onClick={() => { setView('directory'); setEditingVendor(null); }} className="px-6 py-2.5 text-[#012871] bg-white border-2 border-[#012871] rounded-lg font-medium hover:bg-[#012871]/5 transition-colors">Cancel</button>
+              <button type="button" onClick={handleSaveEdit} className="px-6 py-2.5 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <button onClick={() => setView('menu')} className="p-2 rounded-lg hover:bg-[#012871]/10 text-[#012871] transition-colors">
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <div>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-[#012871] to-[#f35500] bg-clip-text text-transparent">Add New Vendor</h1>
+          <p className="text-slate-600 mt-1">Register a new supplier or vendor</p>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl border-2 border-[#f35500]/20 p-6">
+        <form className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#012871] mb-1">Company Name</label>
+              <input 
+                type="text" 
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="Enter company name" 
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#012871] mb-1">Vendor Type</label>
+              <select 
+                value={formData.type}
+                onChange={(e) => setFormData({...formData, type: e.target.value as any})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+              >
+                <option value="Vehicle">Vehicle</option>
+                <option value="Guide">Guide</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Activity">Activity</option>
+                <option value="Permit">Permit</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+            
+            {/* Vehicle-specific fields - only shown when vendor type is Vehicle */}
+            {formData.type === 'Vehicle' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number</label>
+                  <input 
+                    type="text" 
+                    value={formData.vehicleNumber}
+                    onChange={(e) => setFormData({...formData, vehicleNumber: e.target.value})}
+                    className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                    placeholder="e.g., KA01AB1234" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type</label>
+                  <select 
+                    value={formData.vehicleType}
+                    onChange={(e) => setFormData({...formData, vehicleType: e.target.value})}
+                    className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                  >
+                    <option value="">Select vehicle type</option>
+                    <option value="Scorpio">Scorpio</option>
+                    <option value="Bolero">Bolero</option>
+                    <option value="712 Bus">712 Bus</option>
+                    <option value="Super">Super</option>
+                    <option value="Tourist">Tourist</option>
+                    <option value="Hiace">Hiace</option>
+                    <option value="EV Micro">EV Micro</option>
+                    <option value="MiniBus">MiniBus</option>
+                  </select>
+                </div>
+              </>
+            )}
+            
+            <div>
+              <label className="block text-sm font-medium text-[#012871] mb-1">Contact Person</label>
+              <input 
+                type="text" 
+                value={formData.contactPerson}
+                onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="Contact name" 
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#012871] mb-1">Email</label>
+              <input 
+                type="email" 
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="email@example.com" 
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#012871] mb-1">Phone</label>
+              <input 
+                type="tel" 
+                value={formData.phone}
+                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="+1 234 567 890" 
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#012871] mb-1">Location</label>
+              <input 
+                type="text" 
+                value={formData.location}
+                onChange={(e) => setFormData({...formData, location: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="City, Country" 
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-3 pt-4 border-t-2 border-slate-200">
+            <button type="button" onClick={() => setView('menu')} className="px-6 py-2.5 text-[#012871] bg-white border-2 border-[#012871] rounded-lg font-medium hover:bg-[#012871]/5 transition-colors">Cancel</button>
+            <button type="button" onClick={handleAddVendor} className="px-6 py-2.5 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">Save Vendor</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
