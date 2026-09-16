@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Map, Plus, Calendar, MapPin, Users, Clock, Edit2, Trash2, Copy, 
-  Eye, Save, ChevronDown, ChevronUp, ArrowLeft, FolderOpen, PenTool,
-  Printer, Download, FileText
+  Eye, EyeOff, Save, ChevronDown, ChevronUp, ArrowLeft, FolderOpen, PenTool,
+  Printer, Download, FileText, CheckCircle, XCircle, Star, Globe, Phone, Mail
 } from 'lucide-react';
 
 interface SavedItinerary {
@@ -240,6 +240,7 @@ export default function Itineraries() {
   const [builderExcluded, setBuilderExcluded] = useState<string[]>([]);
   const [newIncludedItem, setNewIncludedItem] = useState('');
   const [newExcludedItem, setNewExcludedItem] = useState('');
+  const [showPrice, setShowPrice] = useState(true);
   const [days, setDays] = useState<Day[]>([
     { id: '1', dayNumber: 1, dayTitle: 'Arrival in Arusha', activityDescription: 'Arrive at Kilimanjaro International Airport. Transfer to hotel.', overnightLocation: 'Arusha Coffee Lodge', mealsBreakfast: false, mealsLunch: false, mealsDinner: true, transportMode: '4x4_safari_vehicle' },
     { id: '2', dayNumber: 2, dayTitle: 'Tarangire National Park', activityDescription: 'Full day game drive. Known for elephant herds and baobab trees.', overnightLocation: 'Tarangire Safari Lodge', mealsBreakfast: true, mealsLunch: true, mealsDinner: true, transportMode: '4x4_safari_vehicle' },
@@ -1137,110 +1138,404 @@ export default function Itineraries() {
   // Print View
   if (view === 'print' && selectedItinerary) {
     return (
-      <div className="print-view bg-white p-8 max-w-4xl mx-auto">
-        {/* Print Header */}
-        <div className="text-center mb-8 pb-6 border-b-2 border-slate-300">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">{selectedItinerary.title}</h1>
-          <div className="flex items-center justify-center gap-4 text-sm text-slate-600">
-            <span className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" /> {selectedItinerary.destination}
-            </span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" /> {selectedItinerary.duration}
-            </span>
-            <span className="font-semibold text-green-700">रू {selectedItinerary.price.toLocaleString()} per person</span>
+      <>
+        {/* Print Options Toolbar - Hidden when printing */}
+        <div className="no-print bg-white border-b border-slate-200 p-4 sticky top-0 z-10">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setView('view')}
+                className="flex items-center gap-2 px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </button>
+              <h2 className="text-lg font-semibold text-slate-800">Print Preview</h2>
+            </div>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showPrice}
+                  onChange={(e) => setShowPrice(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                />
+                <span className="text-sm font-medium text-slate-700">Show Price</span>
+              </label>
+              <button
+                onClick={() => window.print()}
+                className="flex items-center gap-2 px-6 py-2 text-white bg-gradient-to-r from-[#012871] to-[#011950] rounded-lg hover:shadow-lg transition-all"
+              >
+                <Printer className="w-4 h-4" />
+                Print / Save PDF
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Overview & Description */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-800 mb-3">Overview</h2>
-          <p className="text-sm text-slate-700 leading-relaxed mb-4">{selectedItinerary.overview}</p>
-          <h3 className="text-lg font-semibold text-slate-800 mb-2">Description</h3>
-          <p className="text-sm text-slate-700 leading-relaxed">{selectedItinerary.description}</p>
-        </div>
-
-        {/* Trip Highlights */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-800 mb-3">Trip Highlights</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {selectedItinerary.highlights.map((highlight, index) => (
-              <div key={index} className="flex items-start gap-2">
-                <span className="text-amber-600 text-lg">⭐</span>
-                <span className="text-sm text-slate-700">{highlight}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Daily Itinerary */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-800 mb-3">Daily Itinerary</h2>
-          <div className="space-y-4">
-            {days.map((day) => (
-              <div key={day.id} className="border-l-4 border-primary-600 pl-4 py-2">
-                <h3 className="font-semibold text-slate-800 mb-1">
-                  Day {day.dayNumber}: {day.dayTitle}
-                </h3>
-                <p className="text-sm text-slate-700 mb-2">{day.activityDescription}</p>
-                <div className="flex flex-wrap gap-3 text-xs text-slate-600">
-                  {day.overnightLocation && (
-                    <span className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3" /> {day.overnightLocation}
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1">
-                    {getTransportIcon(day.transportMode)} {transportOptions.find(t => t.value === day.transportMode)?.label || 'No transport'}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    {day.mealsBreakfast && <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded text-xs">B</span>}
-                    {day.mealsLunch && <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded text-xs">L</span>}
-                    {day.mealsDinner && <span className="px-1.5 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs">D</span>}
+        {/* Print Document */}
+        <div className="print-view bg-white max-w-4xl mx-auto my-8" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+          {/* Branded Header with Gradient */}
+          <div 
+            className="relative overflow-hidden"
+            style={{ 
+              background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
+              borderRadius: '0 0 24px 24px'
+            }}
+          >
+            {/* Decorative Shapes */}
+            <div className="absolute top-0 right-0 w-64 h-64 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(-30%, 30%)' }}></div>
+            
+            <div className="relative z-10 p-12 text-white">
+              {/* Company Logo/Name */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-14 h-14 flex items-center justify-center text-white font-bold text-2xl"
+                    style={{ background: '#f35500', borderRadius: '16px' }}
+                  >
+                    T
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold">TravelOps Pro</h1>
+                    <p className="text-sm opacity-90">Tour & Travel Management</p>
+                  </div>
+                </div>
+                <div className="text-right text-sm opacity-90">
+                  <div className="flex items-center gap-2 justify-end">
+                    <Phone className="w-4 h-4" />
+                    <span>+977-1-4567890</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-end mt-1">
+                    <Mail className="w-4 h-4" />
+                    <span>info@travelops.pro</span>
                   </div>
                 </div>
               </div>
-            ))}
+
+              {/* Itinerary Title */}
+              <div className="text-center mb-8">
+                <h1 className="text-4xl font-bold mb-4">{selectedItinerary.title}</h1>
+                <div 
+                  className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-semibold"
+                  style={{ background: '#f35500', borderRadius: '12px' }}
+                >
+                  <MapPin className="w-5 h-5" />
+                  {selectedItinerary.destination}
+                </div>
+              </div>
+
+              {/* Quick Info Cards */}
+              <div className="grid grid-cols-3 gap-4">
+                <div 
+                  className="p-4 text-center"
+                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px', backdropFilter: 'blur(10px)' }}
+                >
+                  <Calendar className="w-8 h-8 mx-auto mb-2 opacity-90" />
+                  <p className="text-xs opacity-80 mb-1">Duration</p>
+                  <p className="text-lg font-bold">{selectedItinerary.duration}</p>
+                </div>
+                <div 
+                  className="p-4 text-center"
+                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px', backdropFilter: 'blur(10px)' }}
+                >
+                  <Users className="w-8 h-8 mx-auto mb-2 opacity-90" />
+                  <p className="text-xs opacity-80 mb-1">Group Size</p>
+                  <p className="text-lg font-bold">{selectedItinerary.paxCount} Pax</p>
+                </div>
+                {showPrice && (
+                  <div 
+                    className="p-4 text-center"
+                    style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px', backdropFilter: 'blur(10px)' }}
+                  >
+                    <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center opacity-90">
+                      <span className="text-2xl font-bold">रू</span>
+                    </div>
+                    <p className="text-xs opacity-80 mb-1">Price Per Person</p>
+                    <p className="text-lg font-bold">{selectedItinerary.price.toLocaleString()}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Content Sections */}
+          <div className="p-12">
+            {/* Overview & Description */}
+            <div 
+              className="mb-8 p-6"
+              style={{ background: '#f8fafc', borderRadius: '20px' }}
+            >
+              <h2 
+                className="text-2xl font-bold mb-4 flex items-center gap-2"
+                style={{ color: '#012871' }}
+              >
+                <div className="w-1 h-8" style={{ background: '#f35500', borderRadius: '2px' }}></div>
+                Overview
+              </h2>
+              <p className="text-base text-slate-700 leading-relaxed mb-4">{selectedItinerary.overview}</p>
+              
+              <h3 
+                className="text-xl font-bold mb-3 flex items-center gap-2"
+                style={{ color: '#012871' }}
+              >
+                <div className="w-1 h-6" style={{ background: '#f35500', borderRadius: '2px' }}></div>
+                Description
+              </h3>
+              <p className="text-base text-slate-700 leading-relaxed">{selectedItinerary.description}</p>
+            </div>
+
+            {/* Trip Highlights */}
+            <div 
+              className="mb-8 p-6"
+              style={{ background: '#fffbeb', borderRadius: '20px', border: '2px solid #fef3c7' }}
+            >
+              <h2 
+                className="text-2xl font-bold mb-4 flex items-center gap-2"
+                style={{ color: '#012871' }}
+              >
+                <Star className="w-6 h-6" style={{ color: '#f35500' }} />
+                Trip Highlights
+              </h2>
+              <div className="grid grid-cols-2 gap-3">
+                {selectedItinerary.highlights.map((highlight, index) => (
+                  <div 
+                    key={index} 
+                    className="flex items-start gap-3 p-3"
+                    style={{ background: 'white', borderRadius: '12px' }}
+                  >
+                    <div 
+                      className="w-8 h-8 flex items-center justify-center flex-shrink-0"
+                      style={{ background: '#f35500', borderRadius: '8px' }}
+                    >
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-sm text-slate-700 font-medium pt-1">{highlight}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Daily Itinerary */}
+            <div className="mb-8">
+              <h2 
+                className="text-2xl font-bold mb-4 flex items-center gap-2"
+                style={{ color: '#012871' }}
+              >
+                <div className="w-1 h-8" style={{ background: '#f35500', borderRadius: '2px' }}></div>
+                Daily Itinerary
+              </h2>
+              <div className="space-y-4">
+                {days.map((day) => (
+                  <div 
+                    key={day.id} 
+                    className="p-5"
+                    style={{ 
+                      background: 'white', 
+                      borderRadius: '16px',
+                      border: '2px solid #e2e8f0',
+                      borderLeft: '6px solid #012871'
+                    }}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div 
+                        className="w-16 h-16 flex flex-col items-center justify-center flex-shrink-0 text-white font-bold"
+                        style={{ background: 'linear-gradient(135deg, #012871 0%, #011950 100%)', borderRadius: '12px' }}
+                      >
+                        <span className="text-xs opacity-80">DAY</span>
+                        <span className="text-2xl">{day.dayNumber}</span>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-slate-800 mb-2">
+                          {day.dayTitle}
+                        </h3>
+                        <p className="text-sm text-slate-700 mb-3 leading-relaxed">{day.activityDescription}</p>
+                        <div className="flex flex-wrap gap-3">
+                          {day.overnightLocation && (
+                            <div 
+                              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium"
+                              style={{ background: '#eff6ff', color: '#012871', borderRadius: '8px' }}
+                            >
+                              <MapPin className="w-3.5 h-3.5" />
+                              {day.overnightLocation}
+                            </div>
+                          )}
+                          <div 
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700"
+                            style={{ background: '#f1f5f9', borderRadius: '8px' }}
+                          >
+                            <span>{getTransportIcon(day.transportMode)}</span>
+                            {transportOptions.find(t => t.value === day.transportMode)?.label || 'No transport'}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {day.mealsBreakfast && (
+                              <div 
+                                className="px-2.5 py-1.5 text-xs font-bold"
+                                style={{ background: '#fef3c7', color: '#92400e', borderRadius: '8px' }}
+                              >
+                                🌅 Breakfast
+                              </div>
+                            )}
+                            {day.mealsLunch && (
+                              <div 
+                                className="px-2.5 py-1.5 text-xs font-bold"
+                                style={{ background: '#ffedd5', color: '#9a3412', borderRadius: '8px' }}
+                              >
+                                ☀️ Lunch
+                              </div>
+                            )}
+                            {day.mealsDinner && (
+                              <div 
+                                className="px-2.5 py-1.5 text-xs font-bold"
+                                style={{ background: '#e0e7ff', color: '#3730a3', borderRadius: '8px' }}
+                              >
+                                🌙 Dinner
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Included & Excluded - Side by Side */}
+            <div className="grid grid-cols-2 gap-6 mb-8">
+              {/* Included in Package */}
+              <div 
+                className="p-6"
+                style={{ background: '#f0fdf4', borderRadius: '20px', border: '2px solid #bbf7d0' }}
+              >
+                <h2 
+                  className="text-xl font-bold mb-4 flex items-center gap-2"
+                  style={{ color: '#012871' }}
+                >
+                  <div 
+                    className="w-8 h-8 flex items-center justify-center"
+                    style={{ background: '#10b981', borderRadius: '8px' }}
+                  >
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  </div>
+                  Included in Package
+                </h2>
+                <ul className="space-y-2">
+                  {selectedItinerary.included.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
+                      <span className="text-green-600 mt-0.5 font-bold">✓</span>
+                      <span className="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Excluded from Package */}
+              <div 
+                className="p-6"
+                style={{ background: '#fef2f2', borderRadius: '20px', border: '2px solid #fecaca' }}
+              >
+                <h2 
+                  className="text-xl font-bold mb-4 flex items-center gap-2"
+                  style={{ color: '#012871' }}
+                >
+                  <div 
+                    className="w-8 h-8 flex items-center justify-center"
+                    style={{ background: '#ef4444', borderRadius: '8px' }}
+                  >
+                    <XCircle className="w-5 h-5 text-white" />
+                  </div>
+                  Excluded from Package
+                </h2>
+                <ul className="space-y-2">
+                  {selectedItinerary.excluded.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
+                      <span className="text-red-600 mt-0.5 font-bold">✗</span>
+                      <span className="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Price Summary (if showPrice is true) */}
+            {showPrice && (
+              <div 
+                className="mb-8 p-6"
+                style={{ 
+                  background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
+                  borderRadius: '20px'
+                }}
+              >
+                <div className="text-white text-center">
+                  <h2 className="text-2xl font-bold mb-4">Pricing Summary</h2>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div 
+                      className="p-4"
+                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px' }}
+                    >
+                      <p className="text-sm opacity-80 mb-1">Price Per Person</p>
+                      <p className="text-3xl font-bold">रू {selectedItinerary.price.toLocaleString()}</p>
+                    </div>
+                    <div 
+                      className="p-4"
+                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px' }}
+                    >
+                      <p className="text-sm opacity-80 mb-1">Total for {selectedItinerary.paxCount} Pax</p>
+                      <p className="text-3xl font-bold">रू {(selectedItinerary.price * selectedItinerary.paxCount).toLocaleString()}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm opacity-80">* Prices are in Nepalese Rupees (NPR)</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Branded Footer */}
+          <div 
+            className="p-8 text-white text-center"
+            style={{ 
+              background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
+              borderRadius: '24px 24px 0 0'
+            }}
+          >
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div 
+                className="w-12 h-12 flex items-center justify-center text-white font-bold text-xl"
+                style={{ background: '#f35500', borderRadius: '12px' }}
+              >
+                T
+              </div>
+              <div className="text-left">
+                <h3 className="text-xl font-bold">TravelOps Pro</h3>
+                <p className="text-sm opacity-90">Your Trusted Travel Partner</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-6 text-sm opacity-90 mb-4">
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4" />
+                <span>+977-1-4567890</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                <span>info@travelops.pro</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                <span>www.travelops.pro</span>
+              </div>
+            </div>
+            <div 
+              className="pt-4 text-xs opacity-80"
+              style={{ borderTop: '1px solid rgba(255, 255, 255, 0.2)' }}
+            >
+              <p>Generated on {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <p className="mt-1">© 2026 TravelOps Pro. All rights reserved.</p>
+            </div>
           </div>
         </div>
-
-        {/* Included in Package */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
-            <span className="text-green-600">✓</span>
-            Included in Package
-          </h2>
-          <ul className="space-y-2">
-            {selectedItinerary.included.map((item, index) => (
-              <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
-                <span className="text-green-600 mt-0.5">✓</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Excluded from Package */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
-            <span className="text-red-600">✗</span>
-            Excluded from Package
-          </h2>
-          <ul className="space-y-2">
-            {selectedItinerary.excluded.map((item, index) => (
-              <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
-                <span className="text-red-600 mt-0.5">✗</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-8 pt-6 border-t-2 border-slate-300 text-center text-xs text-slate-500">
-          <p>Generated on {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-          <p className="mt-1">TravelOps Pro - Tour & Travel Management System</p>
-        </div>
-      </div>
+      </>
     );
   }
 
