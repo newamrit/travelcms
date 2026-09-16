@@ -1175,6 +1175,9 @@ export default function Itineraries() {
 
         {/* Print Document */}
         <div className="print-view bg-white max-w-4xl mx-auto" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+          {/* Letterhead Space - Space reserved for uploaded letterhead */}
+          <div className="h-32 print:h-40"></div>
+          
           {/* Branded Header with Gradient */}
           <div 
             className="relative overflow-hidden"
@@ -1462,77 +1465,34 @@ export default function Itineraries() {
             {/* Price Summary (if showPrice is true) */}
             {showPrice && (
               <div 
-                className="mb-6 p-4"
+                className="mb-3 p-2"
                 style={{ 
                   background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
-                  borderRadius: '16px'
+                  borderRadius: '12px'
                 }}
               >
                 <div className="text-white text-center">
-                  <h2 className="text-xl font-bold mb-3">Pricing Summary</h2>
-                  <div className="grid grid-cols-2 gap-3 mb-3">
+                  <h2 className="text-sm font-bold mb-1.5">Pricing Summary</h2>
+                  <div className="grid grid-cols-2 gap-1.5 mb-1.5">
                     <div 
-                      className="p-3"
-                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '12px' }}
+                      className="p-1.5"
+                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '8px' }}
                     >
-                      <p className="text-xs opacity-80 mb-0.5">Price Per Person</p>
-                      <p className="text-2xl font-bold">रू {selectedItinerary.price.toLocaleString()}</p>
+                      <p className="text-[10px] opacity-80 mb-0.5">Price Per Person</p>
+                      <p className="text-lg font-bold">रू {selectedItinerary.price.toLocaleString()}</p>
                     </div>
                     <div 
-                      className="p-3"
-                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '12px' }}
+                      className="p-1.5"
+                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '8px' }}
                     >
-                      <p className="text-xs opacity-80 mb-0.5">Total for {selectedItinerary.paxCount} Pax</p>
-                      <p className="text-2xl font-bold">रू {(selectedItinerary.price * selectedItinerary.paxCount).toLocaleString()}</p>
+                      <p className="text-[10px] opacity-80 mb-0.5">Total for {selectedItinerary.paxCount} Pax</p>
+                      <p className="text-lg font-bold">रू {(selectedItinerary.price * selectedItinerary.paxCount).toLocaleString()}</p>
                     </div>
                   </div>
-                  <p className="text-xs opacity-80">* Prices are in Nepalese Rupees (NPR)</p>
+                  <p className="text-[10px] opacity-80">* Prices are in Nepalese Rupees (NPR)</p>
                 </div>
               </div>
             )}
-          </div>
-
-          {/* Branded Footer */}
-          <div 
-            className="p-5 text-white text-center"
-            style={{ 
-              background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
-              borderRadius: '16px 16px 0 0'
-            }}
-          >
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <div 
-                className="w-9 h-9 flex items-center justify-center text-white font-bold text-base"
-                style={{ background: '#f35500', borderRadius: '8px' }}
-              >
-                T
-              </div>
-              <div className="text-left">
-                <h3 className="text-base font-bold">TravelOps Pro</h3>
-                <p className="text-xs opacity-90">Your Trusted Travel Partner</p>
-              </div>
-            </div>
-            <div className="flex items-center justify-center gap-4 text-xs opacity-90 mb-3">
-              <div className="flex items-center gap-1.5">
-                <Phone className="w-3 h-3" />
-                <span>+977-1-4567890</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Mail className="w-3 h-3" />
-                <span>info@travelops.pro</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Globe className="w-3 h-3" />
-                <span>www.travelops.pro</span>
-              </div>
-            </div>
-            <div 
-              className="pt-3 text-[10px] opacity-80"
-              style={{ borderTop: '1px solid rgba(255, 255, 255, 0.2)' }}
-            >
-              <p>Generated on {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-              <p className="mt-0.5">© 2026 TravelOps Pro. All rights reserved.</p>
-            </div>
           </div>
         </div>
       </>
