@@ -66,10 +66,11 @@ const categoryConfig: CategoryData[] = [
 
 export default function Invoices() {
   const { play } = useSound();
-  const [view, setView] = useState<'menu' | 'category' | 'create'>('menu');
+  const [view, setView] = useState<'menu' | 'category' | 'create' | 'edit'>('menu');
   const [selectedCategory, setSelectedCategory] = useState<InvoiceCategory | null>(null);
   const [invoices, setInvoices] = useState<DBInvoice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingInvoice, setEditingInvoice] = useState<DBInvoice | null>(null);
 
   useEffect(() => {
     const loadInvoices = () => {
@@ -84,6 +85,132 @@ export default function Invoices() {
     };
     loadInvoices();
   }, []);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    invoiceType: 'vendor_settlement' as InvoiceCategory,
+    clientName: '',
+    invoiceDate: '',
+    amount: 0,
+    notes: ''
+  });
+
+  // Handlers
+  const handleCreateInvoice = () => {
+    if (!formData.clientName || !formData.invoiceDate || formData.amount <= 0) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const newInvoice: DBInvoice = {
+      id: Date.now().toString(),
+      invoiceNumber: `INV-${Date.now()}`,
+      bookingId: '',
+      bookingNumber: '',
+      clientName: formData.clientName,
+      subtotal: formData.amount,
+      taxPercent: 13,
+      taxAmount: formData.amount * 0.13,
+      discountAmount: 0,
+      totalAmount: formData.amount * 1.13,
+      currency: 'NPR',
+      status: 'draft',
+      invoiceDate: formData.invoiceDate,
+      dueDate: new Date(new Date(formData.invoiceDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      payments: [],
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      db.create(COLLECTIONS.INVOICES, newInvoice);
+      setInvoices([...invoices, newInvoice]);
+      setFormData({
+        invoiceType: 'vendor_settlement',
+        clientName: '',
+        invoiceDate: '',
+        amount: 0,
+        notes: ''
+      });
+      setView('menu');
+      alert('Invoice created successfully!');
+    } catch (error) {
+      console.error('Failed to create invoice:', error);
+      alert('Failed to create invoice');
+    }
+  };
+
+  const handleEditInvoice = (invoice: DBInvoice) => {
+    setEditingInvoice(invoice);
+    setFormData({
+      invoiceType: 'vendor_settlement',
+      clientName: invoice.clientName,
+      invoiceDate: invoice.invoiceDate,
+      amount: invoice.subtotal,
+      notes: ''
+    });
+    setView('edit');
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingInvoice || !formData.clientName || !formData.invoiceDate || formData.amount <= 0) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      const updatedInvoice = { 
+        ...editingInvoice, 
+        clientName: formData.clientName,
+        invoiceDate: formData.invoiceDate,
+        subtotal: formData.amount,
+        taxAmount: formData.amount * 0.13,
+        totalAmount: formData.amount * 1.13
+      };
+      db.update(COLLECTIONS.INVOICES, editingInvoice.id, updatedInvoice);
+      setInvoices(invoices.map(i => i.id === editingInvoice.id ? updatedInvoice : i));
+      setEditingInvoice(null);
+      setFormData({
+        invoiceType: 'vendor_settlement',
+        clientName: '',
+        invoiceDate: '',
+        amount: 0,
+        notes: ''
+      });
+      setView('menu');
+      alert('Invoice updated successfully!');
+    } catch (error) {
+      console.error('Failed to update invoice:', error);
+      alert('Failed to update invoice');
+    }
+  };
+
+  const handleDeleteInvoice = (invoiceId: string) => {
+    if (confirm('Are you sure you want to delete this invoice?')) {
+      try {
+        db.delete(COLLECTIONS.INVOICES, invoiceId);
+        setInvoices(invoices.filter(i => i.id !== invoiceId));
+        alert('Invoice deleted successfully!');
+      } catch (error) {
+        console.error('Failed to delete invoice:', error);
+        alert('Failed to delete invoice');
+      }
+    }
+  };
+
+  const handleMarkAsPaid = (invoiceId: string) => {
+    try {
+      const invoice = invoices.find(i => i.id === invoiceId);
+      if (invoice) {
+        const updatedInvoice = { ...invoice, status: 'paid' as const };
+        db.update(COLLECTIONS.INVOICES, invoiceId, updatedInvoice);
+        setInvoices(invoices.map(i => i.id === invoiceId ? updatedInvoice : i));
+        alert('Invoice marked as paid!');
+      }
+    } catch (error) {
+      console.error('Failed to update invoice:', error);
+      alert('Failed to update invoice');
+    }
+  };
 
   // Mock categorization - in real app, this would come from database
   const categorizeInvoices = (category: InvoiceCategory): DBInvoice[] => {
@@ -314,7 +441,11 @@ export default function Invoices() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Invoice Type</label>
-                <select className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none">
+                <select 
+                  value={formData.invoiceType}
+                  onChange={(e) => setFormData({...formData, invoiceType: e.target.value as InvoiceCategory})}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                >
                   <option value="vendor_settlement">Vendor Settlement</option>
                   <option value="client_settlement">Client Settlement</option>
                   <option value="credit_notes">Credit Note</option>
@@ -323,24 +454,114 @@ export default function Invoices() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Client/Vendor</label>
-                <input type="text" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" placeholder="Enter name" />
+                <input 
+                  type="text" 
+                  value={formData.clientName}
+                  onChange={(e) => setFormData({...formData, clientName: e.target.value})}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                  placeholder="Enter name" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Invoice Date</label>
-                <input type="date" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
+                <input 
+                  type="date" 
+                  value={formData.invoiceDate}
+                  onChange={(e) => setFormData({...formData, invoiceDate: e.target.value})}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Amount</label>
-                <input type="number" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" placeholder="0.00" />
+                <input 
+                  type="number" 
+                  value={formData.amount}
+                  onChange={(e) => setFormData({...formData, amount: parseFloat(e.target.value) || 0})}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                  placeholder="0.00" 
+                />
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
-              <textarea rows={3} className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none resize-none" placeholder="Additional notes..." />
+              <textarea 
+                rows={3} 
+                value={formData.notes}
+                onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none resize-none" 
+                placeholder="Additional notes..." 
+              />
             </div>
             <div className="flex justify-end gap-3 pt-4">
               <button type="button" onClick={() => { play('click'); setView('menu'); }} className="px-4 py-2 text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50">Cancel</button>
-              <button type="button" onClick={() => { play('save'); setView('menu'); }} className="px-4 py-2 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg hover:shadow-lg transition-all">Create Invoice</button>
+              <button type="button" onClick={handleCreateInvoice} className="px-4 py-2 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg hover:shadow-lg transition-all">Create Invoice</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Edit Invoice View
+  if (view === 'edit' && editingInvoice) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => { play('click'); setView('menu'); setEditingInvoice(null); }} 
+            className="p-2 rounded-lg hover:bg-slate-100 text-slate-600"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">Edit Invoice</h1>
+            <p className="text-slate-500 mt-1">Update invoice information</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl border border-slate-200 p-6">
+          <form className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Client/Vendor</label>
+                <input 
+                  type="text" 
+                  value={formData.clientName}
+                  onChange={(e) => setFormData({...formData, clientName: e.target.value})}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Invoice Date</label>
+                <input 
+                  type="date" 
+                  value={formData.invoiceDate}
+                  onChange={(e) => setFormData({...formData, invoiceDate: e.target.value})}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Amount</label>
+                <input 
+                  type="number" 
+                  value={formData.amount}
+                  onChange={(e) => setFormData({...formData, amount: parseFloat(e.target.value) || 0})}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
+              <textarea 
+                rows={3} 
+                value={formData.notes}
+                onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none resize-none" 
+              />
+            </div>
+            <div className="flex justify-end gap-3 pt-4">
+              <button type="button" onClick={() => { play('click'); setView('menu'); setEditingInvoice(null); }} className="px-4 py-2 text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50">Cancel</button>
+              <button type="button" onClick={handleSaveEdit} className="px-4 py-2 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg hover:shadow-lg transition-all">Save Changes</button>
             </div>
           </form>
         </div>

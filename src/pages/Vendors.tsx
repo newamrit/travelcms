@@ -25,11 +25,12 @@ const typeIcons: Record<string, any> = {
 };
 
 export default function Vendors() {
-  const [view, setView] = useState<'menu' | 'directory' | 'add'>('menu');
+  const [view, setView] = useState<'menu' | 'directory' | 'add' | 'edit'>('menu');
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [vendors, setVendors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingVendor, setEditingVendor] = useState<any | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,10 +47,112 @@ export default function Vendors() {
     return () => clearTimeout(timer);
   }, []);
   
-  // Vehicle-specific fields for Add Vendor form
-  const [vendorType, setVendorType] = useState('Vehicle');
-  const [vehicleNumber, setVehicleNumber] = useState('');
-  const [vehicleType, setVehicleType] = useState('');
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    type: 'Vehicle' as any,
+    contactPerson: '',
+    email: '',
+    phone: '',
+    location: '',
+    rating: 5,
+    vehicleNumber: '',
+    vehicleType: ''
+  });
+
+  // Handlers
+  const handleAddVendor = () => {
+    if (!formData.name || !formData.email) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const newVendor = {
+      id: Date.now().toString(),
+      ...formData,
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      db.create(COLLECTIONS.VENDORS, newVendor);
+      setVendors([...vendors, newVendor]);
+      setFormData({
+        name: '',
+        type: 'Vehicle',
+        contactPerson: '',
+        email: '',
+        phone: '',
+        location: '',
+        rating: 5,
+        vehicleNumber: '',
+        vehicleType: ''
+      });
+      setView('directory');
+      alert('Vendor added successfully!');
+    } catch (error) {
+      console.error('Failed to add vendor:', error);
+      alert('Failed to add vendor');
+    }
+  };
+
+  const handleEditVendor = (vendor: any) => {
+    setEditingVendor(vendor);
+    setFormData({
+      name: vendor.name,
+      type: vendor.type,
+      contactPerson: vendor.contactPerson,
+      email: vendor.email,
+      phone: vendor.phone,
+      location: vendor.location,
+      rating: vendor.rating,
+      vehicleNumber: vendor.vehicleNumber || '',
+      vehicleType: vendor.vehicleType || ''
+    });
+    setView('edit');
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingVendor || !formData.name || !formData.email) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      const updatedVendor = { ...editingVendor, ...formData };
+      db.update(COLLECTIONS.VENDORS, editingVendor.id, updatedVendor);
+      setVendors(vendors.map(v => v.id === editingVendor.id ? updatedVendor : v));
+      setEditingVendor(null);
+      setFormData({
+        name: '',
+        type: 'Vehicle',
+        contactPerson: '',
+        email: '',
+        phone: '',
+        location: '',
+        rating: 5,
+        vehicleNumber: '',
+        vehicleType: ''
+      });
+      setView('directory');
+      alert('Vendor updated successfully!');
+    } catch (error) {
+      console.error('Failed to update vendor:', error);
+      alert('Failed to update vendor');
+    }
+  };
+
+  const handleDeleteVendor = (vendorId: string) => {
+    if (confirm('Are you sure you want to delete this vendor?')) {
+      try {
+        db.delete(COLLECTIONS.VENDORS, vendorId);
+        setVendors(vendors.filter(v => v.id !== vendorId));
+        alert('Vendor deleted successfully!');
+      } catch (error) {
+        console.error('Failed to delete vendor:', error);
+        alert('Failed to delete vendor');
+      }
+    }
+  };
 
   if (view === 'menu') {
     if (loading) {
@@ -390,8 +493,18 @@ export default function Vendors() {
                   ))}
                 </div>
                 <div className="flex gap-1">
-                  <button className="p-1.5 rounded hover:bg-slate-100 text-slate-400 hover:text-[#012871]"><Edit2 className="w-3.5 h-3.5" /></button>
-                  <button className="p-1.5 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"><Trash2 className="w-3.5 h-3.5" /></button>
+                  <button 
+                    onClick={() => handleEditVendor(vendor)}
+                    className="p-1.5 rounded hover:bg-slate-100 text-slate-400 hover:text-[#012871]"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteVendor(vendor.id)}
+                    className="p-1.5 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -421,6 +534,128 @@ export default function Vendors() {
     );
   }
 
+  // Edit Vendor View
+  if (view === 'edit' && editingVendor) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <button onClick={() => { setView('directory'); setEditingVendor(null); }} className="p-2 rounded-lg hover:bg-[#012871]/10 text-[#012871] transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#012871] to-[#f35500] bg-clip-text text-transparent">Edit Vendor</h1>
+            <p className="text-slate-600 mt-1">Update vendor information</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl border-2 border-[#f35500]/20 p-6">
+          <form className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Company Name</label>
+                <input 
+                  type="text" 
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Vendor Type</label>
+                <select 
+                  value={formData.type}
+                  onChange={(e) => setFormData({...formData, type: e.target.value as any})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                >
+                  <option value="Vehicle">Vehicle</option>
+                  <option value="Guide">Guide</option>
+                  <option value="Hotel">Hotel</option>
+                  <option value="Restaurant">Restaurant</option>
+                  <option value="Activity">Activity</option>
+                  <option value="Permit">Permit</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+              
+              {formData.type === 'Vehicle' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number</label>
+                    <input 
+                      type="text" 
+                      value={formData.vehicleNumber}
+                      onChange={(e) => setFormData({...formData, vehicleNumber: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type</label>
+                    <select 
+                      value={formData.vehicleType}
+                      onChange={(e) => setFormData({...formData, vehicleType: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
+                    >
+                      <option value="">Select vehicle type</option>
+                      <option value="Scorpio">Scorpio</option>
+                      <option value="Bolero">Bolero</option>
+                      <option value="712 Bus">712 Bus</option>
+                      <option value="Super">Super</option>
+                      <option value="Tourist">Tourist</option>
+                      <option value="Hiace">Hiace</option>
+                      <option value="EV Micro">EV Micro</option>
+                      <option value="MiniBus">MiniBus</option>
+                    </select>
+                  </div>
+                </>
+              )}
+              
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Contact Person</label>
+                <input 
+                  type="text" 
+                  value={formData.contactPerson}
+                  onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Email</label>
+                <input 
+                  type="email" 
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Phone</label>
+                <input 
+                  type="tel" 
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#012871] mb-1">Location</label>
+                <input 
+                  type="text" 
+                  value={formData.location}
+                  onChange={(e) => setFormData({...formData, location: e.target.value})}
+                  className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-4 border-t-2 border-slate-200">
+              <button type="button" onClick={() => { setView('directory'); setEditingVendor(null); }} className="px-6 py-2.5 text-[#012871] bg-white border-2 border-[#012871] rounded-lg font-medium hover:bg-[#012871]/5 transition-colors">Cancel</button>
+              <button type="button" onClick={handleSaveEdit} className="px-6 py-2.5 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -438,13 +673,19 @@ export default function Vendors() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-[#012871] mb-1">Company Name</label>
-              <input type="text" className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" placeholder="Enter company name" />
+              <input 
+                type="text" 
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="Enter company name" 
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-[#012871] mb-1">Vendor Type</label>
               <select 
-                value={vendorType}
-                onChange={(e) => setVendorType(e.target.value)}
+                value={formData.type}
+                onChange={(e) => setFormData({...formData, type: e.target.value as any})}
                 className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
               >
                 <option value="Vehicle">Vehicle</option>
@@ -458,14 +699,14 @@ export default function Vendors() {
             </div>
             
             {/* Vehicle-specific fields - only shown when vendor type is Vehicle */}
-            {vendorType === 'Vehicle' && (
+            {formData.type === 'Vehicle' && (
               <>
                 <div>
                   <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Number</label>
                   <input 
                     type="text" 
-                    value={vehicleNumber}
-                    onChange={(e) => setVehicleNumber(e.target.value)}
+                    value={formData.vehicleNumber}
+                    onChange={(e) => setFormData({...formData, vehicleNumber: e.target.value})}
                     className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
                     placeholder="e.g., KA01AB1234" 
                   />
@@ -473,8 +714,8 @@ export default function Vendors() {
                 <div>
                   <label className="block text-sm font-medium text-[#012871] mb-1">Vehicle Type</label>
                   <select 
-                    value={vehicleType}
-                    onChange={(e) => setVehicleType(e.target.value)}
+                    value={formData.vehicleType}
+                    onChange={(e) => setFormData({...formData, vehicleType: e.target.value})}
                     className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all"
                   >
                     <option value="">Select vehicle type</option>
@@ -493,24 +734,48 @@ export default function Vendors() {
             
             <div>
               <label className="block text-sm font-medium text-[#012871] mb-1">Contact Person</label>
-              <input type="text" className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" placeholder="Contact name" />
+              <input 
+                type="text" 
+                value={formData.contactPerson}
+                onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="Contact name" 
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-[#012871] mb-1">Email</label>
-              <input type="email" className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" placeholder="email@example.com" />
+              <input 
+                type="email" 
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="email@example.com" 
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-[#012871] mb-1">Phone</label>
-              <input type="tel" className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" placeholder="+1 234 567 890" />
+              <input 
+                type="tel" 
+                value={formData.phone}
+                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="+1 234 567 890" 
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-[#012871] mb-1">Location</label>
-              <input type="text" className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" placeholder="City, Country" />
+              <input 
+                type="text" 
+                value={formData.location}
+                onChange={(e) => setFormData({...formData, location: e.target.value})}
+                className="w-full px-3 py-2 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] focus:border-[#012871] outline-none transition-all" 
+                placeholder="City, Country" 
+              />
             </div>
           </div>
           <div className="flex justify-end gap-3 pt-4 border-t-2 border-slate-200">
             <button type="button" onClick={() => setView('menu')} className="px-6 py-2.5 text-[#012871] bg-white border-2 border-[#012871] rounded-lg font-medium hover:bg-[#012871]/5 transition-colors">Cancel</button>
-            <button type="button" onClick={() => setView('directory')} className="px-6 py-2.5 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">Save Vendor</button>
+            <button type="button" onClick={handleAddVendor} className="px-6 py-2.5 text-white bg-gradient-to-r from-[#f35500] to-[#c54300] rounded-lg font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">Save Vendor</button>
           </div>
         </form>
       </div>
