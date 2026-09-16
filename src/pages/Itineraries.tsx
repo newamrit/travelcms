@@ -1188,21 +1188,25 @@ export default function Itineraries() {
           className="print-view max-w-4xl mx-auto relative" 
           style={{ 
             fontFamily: 'Inter, system-ui, sans-serif',
-            backgroundImage: localStorage.getItem('company_letterhead') ? `url(${localStorage.getItem('company_letterhead')})` : 'none',
-            backgroundSize: '100% auto',
-            backgroundPosition: 'top center',
-            backgroundRepeat: 'no-repeat',
             minHeight: '100vh'
           }}
         >
-          {/* Content overlay on top of letterhead */}
-          <div className="relative z-10">
-            {/* Spacer for letterhead area */}
-            {localStorage.getItem('company_letterhead') ? (
-              <div className="h-64 print:h-80"></div>
-            ) : (
-              <div className="h-32 print:h-40"></div>
-            )}
+          {/* Letterhead Header - Repeats on every page */}
+          {localStorage.getItem('company_letterhead') ? (
+            <div className="letterhead-header">
+              <img 
+                src={localStorage.getItem('company_letterhead')!} 
+                alt="Company Letterhead"
+                className="w-full h-full object-cover"
+                style={{ objectPosition: 'top center' }}
+              />
+            </div>
+          ) : (
+            <div className="letterhead-header bg-gradient-to-r from-[#012871] to-[#011950]"></div>
+          )}
+          
+          {/* Content Area - With proper margins to avoid letterhead overlap */}
+          <div className="print-content relative z-10">
           
           {/* Branded Header with Gradient */}
           <div 
@@ -1271,7 +1275,7 @@ export default function Itineraries() {
           <div className="p-4">
             {/* Overview & Description */}
             <div 
-              className="mb-6 p-4"
+              className="mb-6 p-4 no-break"
               style={{ background: '#f8fafc', borderRadius: '16px' }}
             >
               <h2 
@@ -1295,7 +1299,7 @@ export default function Itineraries() {
 
             {/* Trip Highlights */}
             <div 
-              className="mb-6 p-4"
+              className="mb-6 p-4 no-break"
               style={{ background: '#fffbeb', borderRadius: '16px', border: '1.5px solid #fef3c7' }}
             >
               <h2 
@@ -1327,7 +1331,7 @@ export default function Itineraries() {
             {/* Daily Itinerary */}
             <div className="mb-6">
               <h2 
-                className="text-xl font-bold mb-3 flex items-center gap-2"
+                className="text-xl font-bold mb-3 flex items-center gap-2 no-break"
                 style={{ color: '#012871' }}
               >
                 <div className="w-1 h-6" style={{ background: '#f35500', borderRadius: '2px' }}></div>
@@ -1337,7 +1341,7 @@ export default function Itineraries() {
                 {days.map((day) => (
                   <div 
                     key={day.id} 
-                    className="p-3"
+                    className="p-3 no-break"
                     style={{ 
                       background: 'white', 
                       borderRadius: '12px',
@@ -1410,7 +1414,7 @@ export default function Itineraries() {
             </div>
 
             {/* Included & Excluded - Side by Side */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-2 gap-4 mb-6 page-break-before">
               {/* Included in Package */}
               <div 
                 className="p-4"
@@ -1469,7 +1473,7 @@ export default function Itineraries() {
             {/* Price Summary (if showPrice is true) */}
             {showPrice && (
               <div 
-                className="mb-2 p-1"
+                className="mb-2 p-1 no-break"
                 style={{ 
                   background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
                   borderRadius: '8px'
@@ -1499,9 +1503,27 @@ export default function Itineraries() {
             )}
           </div>
 
-          {/* Footer Space for Letterhead */}
-          <div className="h-24 print:h-32 mt-4"></div>
           </div>
+          
+          {/* Letterhead Footer - Repeats on every page */}
+          {localStorage.getItem('company_letterhead') ? (
+            <div className="letterhead-footer">
+              <img 
+                src={localStorage.getItem('company_letterhead')!} 
+                alt="Company Letterhead Footer"
+                className="w-full h-full object-cover"
+                style={{ objectPosition: 'bottom center' }}
+              />
+            </div>
+          ) : (
+            <div className="letterhead-footer bg-gradient-to-r from-[#012871] to-[#011950] flex items-center justify-center text-white text-xs">
+              <div className="text-center">
+                <p className="font-semibold">TravelOps Pro</p>
+                <p className="opacity-80">Your Trusted Travel Partner</p>
+                <p className="opacity-70 mt-1">📞 +977-1-4567890 | ✉️ info@travelops.pro | 🌐 www.travelops.pro</p>
+              </div>
+            </div>
+          )}
         </div>
       </>
     );

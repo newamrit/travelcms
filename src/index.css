@@ -610,13 +610,21 @@ body {
 
 /* Print Styles */
 @media print {
+  /* Page setup with margins for letterhead */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  
   .no-print {
     display: none !important;
   }
   
   body {
     background: white;
-    font-size: 12pt;
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
   }
   
   .print-break-before {
@@ -633,7 +641,7 @@ body {
     margin: 0;
   }
   
-  /* Itinerary Print Styles - Preserve Branding */
+  /* Itinerary Print Styles - Multi-page letterhead support */
   .print-view {
     background: white !important;
     padding: 0 !important;
@@ -641,6 +649,57 @@ body {
     margin: 0 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    position: relative;
+    min-height: 100vh;
+  }
+  
+  /* Letterhead header - repeats on every page */
+  .letterhead-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    z-index: 1000;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Letterhead footer - repeats on every page */
+  .letterhead-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    z-index: 1000;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Content area with proper margins to avoid letterhead overlap */
+  .print-content {
+    margin-top: 200px !important;
+    margin-bottom: 120px !important;
+    padding: 0 40px !important;
+    page-break-inside: auto;
+  }
+  
+  /* Prevent page breaks inside important sections */
+  .print-content h1,
+  .print-content h2,
+  .print-content h3 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  .print-content .no-break {
+    page-break-inside: avoid;
+  }
+  
+  /* Force page break before certain sections if needed */
+  .print-content .page-break-before {
+    page-break-before: always;
   }
   
   /* Preserve gradient backgrounds */
