@@ -15,6 +15,8 @@ interface SavedItinerary {
   status: 'draft' | 'confirmed' | 'completed';
   paxCount: number;
   category: 'trekking' | 'cultural' | 'expedition' | 'adventure' | 'safari';
+  included: string[];
+  excluded: string[];
   createdAt: string;
 }
 
@@ -43,6 +45,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 8,
     category: 'trekking',
+    included: ['Accommodation in tea houses', 'All meals during trek', 'Experienced guide & porters', 'Annapurna Conservation Permit', 'First aid kit', 'Transportation to/from trailhead'],
+    excluded: ['Personal expenses', 'Travel insurance', 'Tips for guide/porters', 'Hot showers', 'Wi-Fi charges', 'Extra snacks'],
     createdAt: '2026-02-15'
   },
   {
@@ -56,6 +60,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 6,
     category: 'trekking',
+    included: ['Tea house accommodation', 'All meals (B/L/D)', 'Licensed sherpa guide', 'TIMS card & permits', 'Domestic flights (KTM-LUK-KTM)', 'Porter service (1 porter per 2 trekkers)'],
+    excluded: ['Nepal entry visa', 'Personal gear', 'Alcoholic beverages', 'Battery charging', 'Internet access', 'Emergency evacuation'],
     createdAt: '2026-03-10'
   },
 
@@ -71,6 +77,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 12,
     category: 'cultural',
+    included: ['4-star hotel accommodation', 'Daily breakfast', 'All entrance fees', 'Professional cultural guide', 'Private transportation', 'Welcome & farewell dinners'],
+    excluded: ['Lunch & dinner (except included)', 'Personal shopping', 'Tips', 'Travel insurance', 'Optional activities'],
     createdAt: '2026-02-20'
   },
   {
@@ -84,6 +92,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 10,
     category: 'cultural',
+    included: ['Resort accommodation', 'All meals', 'Sunrise/sunset viewpoints', 'Cultural guide', 'Transportation', 'Changunarayan Temple entry'],
+    excluded: ['Personal expenses', 'Tips', 'Travel insurance', 'Optional hiking gear rental'],
     createdAt: '2026-03-05'
   },
   {
@@ -97,6 +107,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'draft',
     paxCount: 15,
     category: 'cultural',
+    included: ['Hotel accommodation', 'Daily breakfast', 'City tour', 'Guide services', 'Transportation'],
+    excluded: ['Lunch & dinner', 'Boat rides', 'Personal expenses', 'Tips'],
     createdAt: '2026-03-15'
   },
 
@@ -112,6 +124,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 4,
     category: 'expedition',
+    included: ['All accommodation', 'All meals during expedition', 'Experienced climbing sherpa', 'All permits & fees', 'Domestic flights', 'Porter service', 'Group climbing equipment', 'First aid & oxygen', 'Satellite phone'],
+    excluded: ['Personal climbing gear', 'High altitude insurance', 'Tips for sherpa/porters', 'Personal medications', 'Extra oxygen', 'Emergency evacuation'],
     createdAt: '2026-01-10'
   },
 
@@ -127,6 +141,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 8,
     category: 'adventure',
+    included: ['Hotel accommodation', 'Daily breakfast', 'Paragliding flight', 'Zip-lining', 'Canyon swing', 'All equipment', 'Professional instructors', 'Transportation', 'Insurance'],
+    excluded: ['Lunch & dinner', 'GoPro footage', 'Personal expenses', 'Tips', 'Travel insurance'],
     createdAt: '2026-03-20'
   },
   {
@@ -140,6 +156,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'draft',
     paxCount: 10,
     category: 'adventure',
+    included: ['Camping accommodation', 'All meals during rafting', 'Rafting equipment', 'Bungee jumping', 'Professional guides', 'Transportation', 'Safety equipment'],
+    excluded: ['Personal gear', 'Alcoholic beverages', 'Tips', 'Travel insurance', 'Optional activities'],
     createdAt: '2026-03-25'
   },
 
@@ -155,6 +173,8 @@ const mockSavedItineraries: SavedItinerary[] = [
     status: 'confirmed',
     paxCount: 12,
     category: 'safari',
+    included: ['Resort accommodation', 'All meals', 'Jungle safari (jeep)', 'Elephant breeding center visit', 'Bird watching tour', 'Cultural program', 'National park fees', 'Naturalist guide', 'Transportation'],
+    excluded: ['Personal expenses', 'Tips', 'Travel insurance', 'Optional canoe ride', 'Souvenirs'],
     createdAt: '2026-03-30'
   }
 ];
@@ -175,6 +195,10 @@ export default function Itineraries() {
   const [editingItinerary, setEditingItinerary] = useState<SavedItinerary | null>(null);
   const [title, setTitle] = useState('7-Day Serengeti & Ngorongoro Safari');
   const [expandedDay, setExpandedDay] = useState<number | null>(0);
+  const [builderIncluded, setBuilderIncluded] = useState<string[]>([]);
+  const [builderExcluded, setBuilderExcluded] = useState<string[]>([]);
+  const [newIncludedItem, setNewIncludedItem] = useState('');
+  const [newExcludedItem, setNewExcludedItem] = useState('');
   const [days, setDays] = useState<Day[]>([
     { id: '1', dayNumber: 1, dayTitle: 'Arrival in Arusha', activityDescription: 'Arrive at Kilimanjaro International Airport. Transfer to hotel.', overnightLocation: 'Arusha Coffee Lodge', mealsBreakfast: false, mealsLunch: false, mealsDinner: true, transportMode: '4x4_safari_vehicle' },
     { id: '2', dayNumber: 2, dayTitle: 'Tarangire National Park', activityDescription: 'Full day game drive. Known for elephant herds and baobab trees.', overnightLocation: 'Tarangire Safari Lodge', mealsBreakfast: true, mealsLunch: true, mealsDinner: true, transportMode: '4x4_safari_vehicle' },
@@ -247,6 +271,29 @@ export default function Itineraries() {
 
   const getTransportIcon = (mode: string) => transportOptions.find(o => o.value === mode)?.icon || '🚫';
   const totalMeals = { breakfast: days.filter(d => d.mealsBreakfast).length, lunch: days.filter(d => d.mealsLunch).length, dinner: days.filter(d => d.mealsDinner).length };
+
+  // Included/Excluded handlers
+  const handleAddIncluded = () => {
+    if (newIncludedItem.trim()) {
+      setBuilderIncluded([...builderIncluded, newIncludedItem.trim()]);
+      setNewIncludedItem('');
+    }
+  };
+
+  const handleRemoveIncluded = (index: number) => {
+    setBuilderIncluded(builderIncluded.filter((_, i) => i !== index));
+  };
+
+  const handleAddExcluded = () => {
+    if (newExcludedItem.trim()) {
+      setBuilderExcluded([...builderExcluded, newExcludedItem.trim()]);
+      setNewExcludedItem('');
+    }
+  };
+
+  const handleRemoveExcluded = (index: number) => {
+    setBuilderExcluded(builderExcluded.filter((_, i) => i !== index));
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -643,6 +690,49 @@ export default function Itineraries() {
               </div>
             </div>
 
+            {/* Included/Excluded Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-200">
+              {/* Included in Package */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded bg-green-100 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-base font-semibold text-slate-800">Included in Package</h3>
+                </div>
+                <ul className="space-y-2">
+                  {selectedItinerary.included.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm text-slate-600">
+                      <span className="text-green-600 mt-0.5">✓</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Excluded from Package */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded bg-red-100 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                  <h3 className="text-base font-semibold text-slate-800">Excluded from Package</h3>
+                </div>
+                <ul className="space-y-2">
+                  {selectedItinerary.excluded.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm text-slate-600">
+                      <span className="text-red-600 mt-0.5">✗</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
             {/* Created Date */}
             <div className="pt-6 border-t border-slate-200">
               <p className="text-sm text-slate-500">
@@ -773,6 +863,65 @@ export default function Itineraries() {
                   onChange={(e) => setEditingItinerary({ ...editingItinerary, endDate: e.target.value })}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
                 />
+              </div>
+            </div>
+
+            {/* Included/Excluded Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-200">
+              {/* Included in Package */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded bg-green-100 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-base font-semibold text-slate-800">Included in Package</h3>
+                </div>
+                <ul className="space-y-2">
+                  {editingItinerary.included.map((item, index) => (
+                    <li key={index} className="flex items-center justify-between p-2 bg-green-50 rounded-md border border-green-200">
+                      <span className="text-sm text-slate-700">{item}</span>
+                      <button
+                        onClick={() => setEditingItinerary({
+                          ...editingItinerary,
+                          included: editingItinerary.included.filter((_, i) => i !== index)
+                        })}
+                        className="p-1 text-red-500 hover:bg-red-100 rounded transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Excluded from Package */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded bg-red-100 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                  <h3 className="text-base font-semibold text-slate-800">Excluded from Package</h3>
+                </div>
+                <ul className="space-y-2">
+                  {editingItinerary.excluded.map((item, index) => (
+                    <li key={index} className="flex items-center justify-between p-2 bg-red-50 rounded-md border border-red-200">
+                      <span className="text-sm text-slate-700">{item}</span>
+                      <button
+                        onClick={() => setEditingItinerary({
+                          ...editingItinerary,
+                          excluded: editingItinerary.excluded.filter((_, i) => i !== index)
+                        })}
+                        className="p-1 text-red-500 hover:bg-red-100 rounded transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
@@ -1019,6 +1168,107 @@ export default function Itineraries() {
       >
         <Plus className="w-4 h-4" /> Add Day {days.length + 1}
       </button>
+
+      {/* Included/Excluded Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Included in Package */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800">Included in Package</h3>
+          </div>
+
+          {/* Add Item Input */}
+          <div className="flex gap-2 mb-4">
+            <input
+              type="text"
+              value={newIncludedItem}
+              onChange={(e) => setNewIncludedItem(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAddIncluded()}
+              placeholder="Add item (e.g., Accommodation, Meals...)"
+              className="flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+            />
+            <button
+              onClick={handleAddIncluded}
+              className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 transition-colors"
+            >
+              Add
+            </button>
+          </div>
+
+          {/* Included Items List */}
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {builderIncluded.length === 0 ? (
+              <p className="text-sm text-slate-400 text-center py-4">No items added yet</p>
+            ) : (
+              builderIncluded.map((item, index) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-green-50 rounded-md border border-green-200">
+                  <span className="text-sm text-slate-700">{item}</span>
+                  <button
+                    onClick={() => handleRemoveIncluded(index)}
+                    className="p-1 text-red-500 hover:bg-red-100 rounded transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Excluded from Package */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6" style={{ boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
+              <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800">Excluded from Package</h3>
+          </div>
+
+          {/* Add Item Input */}
+          <div className="flex gap-2 mb-4">
+            <input
+              type="text"
+              value={newExcludedItem}
+              onChange={(e) => setNewExcludedItem(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAddExcluded()}
+              placeholder="Add item (e.g., Personal expenses, Tips...)"
+              className="flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
+            />
+            <button
+              onClick={handleAddExcluded}
+              className="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+            >
+              Add
+            </button>
+          </div>
+
+          {/* Excluded Items List */}
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {builderExcluded.length === 0 ? (
+              <p className="text-sm text-slate-400 text-center py-4">No items added yet</p>
+            ) : (
+              builderExcluded.map((item, index) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-red-50 rounded-md border border-red-200">
+                  <span className="text-sm text-slate-700">{item}</span>
+                  <button
+                    onClick={() => handleRemoveExcluded(index)}
+                    className="p-1 text-red-500 hover:bg-red-100 rounded transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Save Button */}
       <div className="flex justify-end gap-3 pt-4">
