@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { SoundProvider } from './context/SoundContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Login from './pages/Login';
@@ -40,11 +41,13 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <SoundProvider>
-          <AppRoutes />
-        </SoundProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <SoundProvider>
+            <AppRoutes />
+          </SoundProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

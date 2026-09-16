@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSound } from '../../context/SoundContext';
 import { Menu, Bell, Search, LogOut, User, Settings, ChevronDown, Volume2, VolumeX } from 'lucide-react';
+import ThemeToggle from '../common/ThemeToggle';
 
 interface NavbarProps {
   onMenuClick: () => void;
@@ -61,6 +62,9 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {/* Sound Toggle */}
           <button 
             onClick={() => { toggleSound(); play('toggle'); }}
