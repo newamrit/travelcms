@@ -1174,86 +1174,86 @@ export default function Itineraries() {
         </div>
 
         {/* Print Document */}
-        <div className="print-view bg-white max-w-4xl mx-auto my-8" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+        <div className="print-view bg-white max-w-4xl mx-auto" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
           {/* Branded Header with Gradient */}
           <div 
             className="relative overflow-hidden"
             style={{ 
               background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
-              borderRadius: '0 0 24px 24px'
+              borderRadius: '0 0 16px 16px'
             }}
           >
             {/* Decorative Shapes */}
-            <div className="absolute top-0 right-0 w-64 h-64 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(-30%, 30%)' }}></div>
+            <div className="absolute top-0 right-0 w-32 h-32 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 opacity-10" style={{ background: '#f35500', borderRadius: '50%', transform: 'translate(-30%, 30%)' }}></div>
             
-            <div className="relative z-10 p-12 text-white">
+            <div className="relative z-10 p-6 text-white">
               {/* Company Logo/Name */}
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
                   <div 
-                    className="w-14 h-14 flex items-center justify-center text-white font-bold text-2xl"
-                    style={{ background: '#f35500', borderRadius: '16px' }}
+                    className="w-10 h-10 flex items-center justify-center text-white font-bold text-lg"
+                    style={{ background: '#f35500', borderRadius: '12px' }}
                   >
                     T
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold">TravelOps Pro</h1>
-                    <p className="text-sm opacity-90">Tour & Travel Management</p>
+                    <h1 className="text-lg font-bold">TravelOps Pro</h1>
+                    <p className="text-xs opacity-90">Tour & Travel Management</p>
                   </div>
                 </div>
-                <div className="text-right text-sm opacity-90">
-                  <div className="flex items-center gap-2 justify-end">
-                    <Phone className="w-4 h-4" />
+                <div className="text-right text-xs opacity-90">
+                  <div className="flex items-center gap-1.5 justify-end">
+                    <Phone className="w-3 h-3" />
                     <span>+977-1-4567890</span>
                   </div>
-                  <div className="flex items-center gap-2 justify-end mt-1">
-                    <Mail className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 justify-end mt-0.5">
+                    <Mail className="w-3 h-3" />
                     <span>info@travelops.pro</span>
                   </div>
                 </div>
               </div>
 
               {/* Itinerary Title */}
-              <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold mb-4">{selectedItinerary.title}</h1>
+              <div className="text-center mb-4">
+                <h1 className="text-2xl font-bold mb-2">{selectedItinerary.title}</h1>
                 <div 
-                  className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-semibold"
-                  style={{ background: '#f35500', borderRadius: '12px' }}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 text-white text-xs font-semibold"
+                  style={{ background: '#f35500', borderRadius: '8px' }}
                 >
-                  <MapPin className="w-5 h-5" />
+                  <MapPin className="w-3.5 h-3.5" />
                   {selectedItinerary.destination}
                 </div>
               </div>
 
               {/* Quick Info Cards */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-2">
                 <div 
-                  className="p-4 text-center"
-                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px', backdropFilter: 'blur(10px)' }}
+                  className="p-2 text-center"
+                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '10px', backdropFilter: 'blur(10px)' }}
                 >
-                  <Calendar className="w-8 h-8 mx-auto mb-2 opacity-90" />
-                  <p className="text-xs opacity-80 mb-1">Duration</p>
-                  <p className="text-lg font-bold">{selectedItinerary.duration}</p>
+                  <Calendar className="w-5 h-5 mx-auto mb-1 opacity-90" />
+                  <p className="text-[10px] opacity-80 mb-0.5">Duration</p>
+                  <p className="text-sm font-bold">{selectedItinerary.duration}</p>
                 </div>
                 <div 
-                  className="p-4 text-center"
-                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px', backdropFilter: 'blur(10px)' }}
+                  className="p-2 text-center"
+                  style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '10px', backdropFilter: 'blur(10px)' }}
                 >
-                  <Users className="w-8 h-8 mx-auto mb-2 opacity-90" />
-                  <p className="text-xs opacity-80 mb-1">Group Size</p>
-                  <p className="text-lg font-bold">{selectedItinerary.paxCount} Pax</p>
+                  <Users className="w-5 h-5 mx-auto mb-1 opacity-90" />
+                  <p className="text-[10px] opacity-80 mb-0.5">Group Size</p>
+                  <p className="text-sm font-bold">{selectedItinerary.paxCount} Pax</p>
                 </div>
                 {showPrice && (
                   <div 
-                    className="p-4 text-center"
-                    style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px', backdropFilter: 'blur(10px)' }}
+                    className="p-2 text-center"
+                    style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '10px', backdropFilter: 'blur(10px)' }}
                   >
-                    <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center opacity-90">
-                      <span className="text-2xl font-bold">रू</span>
+                    <div className="w-5 h-5 mx-auto mb-1 flex items-center justify-center opacity-90">
+                      <span className="text-sm font-bold">रू</span>
                     </div>
-                    <p className="text-xs opacity-80 mb-1">Price Per Person</p>
-                    <p className="text-lg font-bold">{selectedItinerary.price.toLocaleString()}</p>
+                    <p className="text-[10px] opacity-80 mb-0.5">Price Per Person</p>
+                    <p className="text-sm font-bold">{selectedItinerary.price.toLocaleString()}</p>
                   </div>
                 )}
               </div>
@@ -1261,109 +1261,109 @@ export default function Itineraries() {
           </div>
 
           {/* Content Sections */}
-          <div className="p-12">
+          <div className="p-4">
             {/* Overview & Description */}
             <div 
-              className="mb-8 p-6"
-              style={{ background: '#f8fafc', borderRadius: '20px' }}
+              className="mb-6 p-4"
+              style={{ background: '#f8fafc', borderRadius: '16px' }}
             >
               <h2 
-                className="text-2xl font-bold mb-4 flex items-center gap-2"
-                style={{ color: '#012871' }}
-              >
-                <div className="w-1 h-8" style={{ background: '#f35500', borderRadius: '2px' }}></div>
-                Overview
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed mb-4">{selectedItinerary.overview}</p>
-              
-              <h3 
                 className="text-xl font-bold mb-3 flex items-center gap-2"
                 style={{ color: '#012871' }}
               >
                 <div className="w-1 h-6" style={{ background: '#f35500', borderRadius: '2px' }}></div>
+                Overview
+              </h2>
+              <p className="text-sm text-slate-700 leading-relaxed mb-3">{selectedItinerary.overview}</p>
+              
+              <h3 
+                className="text-lg font-bold mb-2 flex items-center gap-2"
+                style={{ color: '#012871' }}
+              >
+                <div className="w-1 h-5" style={{ background: '#f35500', borderRadius: '2px' }}></div>
                 Description
               </h3>
-              <p className="text-base text-slate-700 leading-relaxed">{selectedItinerary.description}</p>
+              <p className="text-sm text-slate-700 leading-relaxed">{selectedItinerary.description}</p>
             </div>
 
             {/* Trip Highlights */}
             <div 
-              className="mb-8 p-6"
-              style={{ background: '#fffbeb', borderRadius: '20px', border: '2px solid #fef3c7' }}
+              className="mb-6 p-4"
+              style={{ background: '#fffbeb', borderRadius: '16px', border: '1.5px solid #fef3c7' }}
             >
               <h2 
-                className="text-2xl font-bold mb-4 flex items-center gap-2"
+                className="text-xl font-bold mb-3 flex items-center gap-2"
                 style={{ color: '#012871' }}
               >
-                <Star className="w-6 h-6" style={{ color: '#f35500' }} />
+                <Star className="w-5 h-5" style={{ color: '#f35500' }} />
                 Trip Highlights
               </h2>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 {selectedItinerary.highlights.map((highlight, index) => (
                   <div 
                     key={index} 
-                    className="flex items-start gap-3 p-3"
-                    style={{ background: 'white', borderRadius: '12px' }}
+                    className="flex items-start gap-2 p-2"
+                    style={{ background: 'white', borderRadius: '10px' }}
                   >
                     <div 
-                      className="w-8 h-8 flex items-center justify-center flex-shrink-0"
-                      style={{ background: '#f35500', borderRadius: '8px' }}
+                      className="w-6 h-6 flex items-center justify-center flex-shrink-0"
+                      style={{ background: '#f35500', borderRadius: '6px' }}
                     >
-                      <CheckCircle className="w-5 h-5 text-white" />
+                      <CheckCircle className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm text-slate-700 font-medium pt-1">{highlight}</span>
+                    <span className="text-xs text-slate-700 font-medium pt-0.5">{highlight}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Daily Itinerary */}
-            <div className="mb-8">
+            <div className="mb-6">
               <h2 
-                className="text-2xl font-bold mb-4 flex items-center gap-2"
+                className="text-xl font-bold mb-3 flex items-center gap-2"
                 style={{ color: '#012871' }}
               >
-                <div className="w-1 h-8" style={{ background: '#f35500', borderRadius: '2px' }}></div>
+                <div className="w-1 h-6" style={{ background: '#f35500', borderRadius: '2px' }}></div>
                 Daily Itinerary
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {days.map((day) => (
                   <div 
                     key={day.id} 
-                    className="p-5"
+                    className="p-3"
                     style={{ 
                       background: 'white', 
-                      borderRadius: '16px',
-                      border: '2px solid #e2e8f0',
-                      borderLeft: '6px solid #012871'
+                      borderRadius: '12px',
+                      border: '1.5px solid #e2e8f0',
+                      borderLeft: '4px solid #012871'
                     }}
                   >
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-start gap-3">
                       <div 
-                        className="w-16 h-16 flex flex-col items-center justify-center flex-shrink-0 text-white font-bold"
-                        style={{ background: 'linear-gradient(135deg, #012871 0%, #011950 100%)', borderRadius: '12px' }}
+                        className="w-12 h-12 flex flex-col items-center justify-center flex-shrink-0 text-white font-bold"
+                        style={{ background: 'linear-gradient(135deg, #012871 0%, #011950 100%)', borderRadius: '10px' }}
                       >
-                        <span className="text-xs opacity-80">DAY</span>
-                        <span className="text-2xl">{day.dayNumber}</span>
+                        <span className="text-[10px] opacity-80">DAY</span>
+                        <span className="text-lg">{day.dayNumber}</span>
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-slate-800 mb-2">
+                        <h3 className="text-sm font-bold text-slate-800 mb-1">
                           {day.dayTitle}
                         </h3>
-                        <p className="text-sm text-slate-700 mb-3 leading-relaxed">{day.activityDescription}</p>
-                        <div className="flex flex-wrap gap-3">
+                        <p className="text-xs text-slate-700 mb-2 leading-relaxed">{day.activityDescription}</p>
+                        <div className="flex flex-wrap gap-2">
                           {day.overnightLocation && (
                             <div 
-                              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium"
-                              style={{ background: '#eff6ff', color: '#012871', borderRadius: '8px' }}
+                              className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-medium"
+                              style={{ background: '#eff6ff', color: '#012871', borderRadius: '6px' }}
                             >
-                              <MapPin className="w-3.5 h-3.5" />
+                              <MapPin className="w-3 h-3" />
                               {day.overnightLocation}
                             </div>
                           )}
                           <div 
-                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700"
-                            style={{ background: '#f1f5f9', borderRadius: '8px' }}
+                            className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-medium text-slate-700"
+                            style={{ background: '#f1f5f9', borderRadius: '6px' }}
                           >
                             <span>{getTransportIcon(day.transportMode)}</span>
                             {transportOptions.find(t => t.value === day.transportMode)?.label || 'No transport'}
@@ -1371,24 +1371,24 @@ export default function Itineraries() {
                           <div className="flex items-center gap-1">
                             {day.mealsBreakfast && (
                               <div 
-                                className="px-2.5 py-1.5 text-xs font-bold"
-                                style={{ background: '#fef3c7', color: '#92400e', borderRadius: '8px' }}
+                                className="px-2 py-1 text-[11px] font-bold"
+                                style={{ background: '#fef3c7', color: '#92400e', borderRadius: '6px' }}
                               >
                                 🌅 Breakfast
                               </div>
                             )}
                             {day.mealsLunch && (
                               <div 
-                                className="px-2.5 py-1.5 text-xs font-bold"
-                                style={{ background: '#ffedd5', color: '#9a3412', borderRadius: '8px' }}
+                                className="px-2 py-1 text-[11px] font-bold"
+                                style={{ background: '#ffedd5', color: '#9a3412', borderRadius: '6px' }}
                               >
                                 ☀️ Lunch
                               </div>
                             )}
                             {day.mealsDinner && (
                               <div 
-                                className="px-2.5 py-1.5 text-xs font-bold"
-                                style={{ background: '#e0e7ff', color: '#3730a3', borderRadius: '8px' }}
+                                className="px-2 py-1 text-[11px] font-bold"
+                                style={{ background: '#e0e7ff', color: '#3730a3', borderRadius: '6px' }}
                               >
                                 🌙 Dinner
                               </div>
@@ -1403,27 +1403,27 @@ export default function Itineraries() {
             </div>
 
             {/* Included & Excluded - Side by Side */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-2 gap-4 mb-6">
               {/* Included in Package */}
               <div 
-                className="p-6"
-                style={{ background: '#f0fdf4', borderRadius: '20px', border: '2px solid #bbf7d0' }}
+                className="p-4"
+                style={{ background: '#f0fdf4', borderRadius: '16px', border: '1.5px solid #bbf7d0' }}
               >
                 <h2 
-                  className="text-xl font-bold mb-4 flex items-center gap-2"
+                  className="text-lg font-bold mb-3 flex items-center gap-2"
                   style={{ color: '#012871' }}
                 >
                   <div 
-                    className="w-8 h-8 flex items-center justify-center"
-                    style={{ background: '#10b981', borderRadius: '8px' }}
+                    className="w-7 h-7 flex items-center justify-center"
+                    style={{ background: '#10b981', borderRadius: '6px' }}
                   >
-                    <CheckCircle className="w-5 h-5 text-white" />
+                    <CheckCircle className="w-4 h-4 text-white" />
                   </div>
                   Included in Package
                 </h2>
-                <ul className="space-y-2">
+                <ul className="space-y-1.5">
                   {selectedItinerary.included.map((item, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
+                    <li key={index} className="flex items-start gap-1.5 text-xs text-slate-700">
                       <span className="text-green-600 mt-0.5 font-bold">✓</span>
                       <span className="leading-relaxed">{item}</span>
                     </li>
@@ -1433,24 +1433,24 @@ export default function Itineraries() {
 
               {/* Excluded from Package */}
               <div 
-                className="p-6"
-                style={{ background: '#fef2f2', borderRadius: '20px', border: '2px solid #fecaca' }}
+                className="p-4"
+                style={{ background: '#fef2f2', borderRadius: '16px', border: '1.5px solid #fecaca' }}
               >
                 <h2 
-                  className="text-xl font-bold mb-4 flex items-center gap-2"
+                  className="text-lg font-bold mb-3 flex items-center gap-2"
                   style={{ color: '#012871' }}
                 >
                   <div 
-                    className="w-8 h-8 flex items-center justify-center"
-                    style={{ background: '#ef4444', borderRadius: '8px' }}
+                    className="w-7 h-7 flex items-center justify-center"
+                    style={{ background: '#ef4444', borderRadius: '6px' }}
                   >
-                    <XCircle className="w-5 h-5 text-white" />
+                    <XCircle className="w-4 h-4 text-white" />
                   </div>
                   Excluded from Package
                 </h2>
-                <ul className="space-y-2">
+                <ul className="space-y-1.5">
                   {selectedItinerary.excluded.map((item, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
+                    <li key={index} className="flex items-start gap-1.5 text-xs text-slate-700">
                       <span className="text-red-600 mt-0.5 font-bold">✗</span>
                       <span className="leading-relaxed">{item}</span>
                     </li>
@@ -1462,31 +1462,31 @@ export default function Itineraries() {
             {/* Price Summary (if showPrice is true) */}
             {showPrice && (
               <div 
-                className="mb-8 p-6"
+                className="mb-6 p-4"
                 style={{ 
                   background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
-                  borderRadius: '20px'
+                  borderRadius: '16px'
                 }}
               >
                 <div className="text-white text-center">
-                  <h2 className="text-2xl font-bold mb-4">Pricing Summary</h2>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <h2 className="text-xl font-bold mb-3">Pricing Summary</h2>
+                  <div className="grid grid-cols-2 gap-3 mb-3">
                     <div 
-                      className="p-4"
-                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px' }}
+                      className="p-3"
+                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '12px' }}
                     >
-                      <p className="text-sm opacity-80 mb-1">Price Per Person</p>
-                      <p className="text-3xl font-bold">रू {selectedItinerary.price.toLocaleString()}</p>
+                      <p className="text-xs opacity-80 mb-0.5">Price Per Person</p>
+                      <p className="text-2xl font-bold">रू {selectedItinerary.price.toLocaleString()}</p>
                     </div>
                     <div 
-                      className="p-4"
-                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '16px' }}
+                      className="p-3"
+                      style={{ background: 'rgba(255, 255, 255, 0.15)', borderRadius: '12px' }}
                     >
-                      <p className="text-sm opacity-80 mb-1">Total for {selectedItinerary.paxCount} Pax</p>
-                      <p className="text-3xl font-bold">रू {(selectedItinerary.price * selectedItinerary.paxCount).toLocaleString()}</p>
+                      <p className="text-xs opacity-80 mb-0.5">Total for {selectedItinerary.paxCount} Pax</p>
+                      <p className="text-2xl font-bold">रू {(selectedItinerary.price * selectedItinerary.paxCount).toLocaleString()}</p>
                     </div>
                   </div>
-                  <p className="text-sm opacity-80">* Prices are in Nepalese Rupees (NPR)</p>
+                  <p className="text-xs opacity-80">* Prices are in Nepalese Rupees (NPR)</p>
                 </div>
               </div>
             )}
@@ -1494,44 +1494,44 @@ export default function Itineraries() {
 
           {/* Branded Footer */}
           <div 
-            className="p-8 text-white text-center"
+            className="p-5 text-white text-center"
             style={{ 
               background: 'linear-gradient(135deg, #012871 0%, #011950 100%)',
-              borderRadius: '24px 24px 0 0'
+              borderRadius: '16px 16px 0 0'
             }}
           >
-            <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="flex items-center justify-center gap-2 mb-3">
               <div 
-                className="w-12 h-12 flex items-center justify-center text-white font-bold text-xl"
-                style={{ background: '#f35500', borderRadius: '12px' }}
+                className="w-9 h-9 flex items-center justify-center text-white font-bold text-base"
+                style={{ background: '#f35500', borderRadius: '8px' }}
               >
                 T
               </div>
               <div className="text-left">
-                <h3 className="text-xl font-bold">TravelOps Pro</h3>
-                <p className="text-sm opacity-90">Your Trusted Travel Partner</p>
+                <h3 className="text-base font-bold">TravelOps Pro</h3>
+                <p className="text-xs opacity-90">Your Trusted Travel Partner</p>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-6 text-sm opacity-90 mb-4">
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4" />
+            <div className="flex items-center justify-center gap-4 text-xs opacity-90 mb-3">
+              <div className="flex items-center gap-1.5">
+                <Phone className="w-3 h-3" />
                 <span>+977-1-4567890</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" />
+              <div className="flex items-center gap-1.5">
+                <Mail className="w-3 h-3" />
                 <span>info@travelops.pro</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Globe className="w-4 h-4" />
+              <div className="flex items-center gap-1.5">
+                <Globe className="w-3 h-3" />
                 <span>www.travelops.pro</span>
               </div>
             </div>
             <div 
-              className="pt-4 text-xs opacity-80"
+              className="pt-3 text-[10px] opacity-80"
               style={{ borderTop: '1px solid rgba(255, 255, 255, 0.2)' }}
             >
               <p>Generated on {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-              <p className="mt-1">© 2026 TravelOps Pro. All rights reserved.</p>
+              <p className="mt-0.5">© 2026 TravelOps Pro. All rights reserved.</p>
             </div>
           </div>
         </div>
