@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Building2, DollarSign, Shield, Database, ArrowLeft, Save,
-  Palette, Globe, Users, HardDrive, Image, FileText
+  Palette, Globe, Users, HardDrive, Image, FileText, Plus, Edit2, Trash2, Check, X, Download, Upload, AlertCircle
 } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 
@@ -15,6 +15,38 @@ interface CategoryConfig {
   color: string;
   bgColor: string;
   textColor: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
+
+interface BrandingSettings {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  companyName: string;
+  tagline: string;
+  email: string;
+  phone: string;
+  logo: string | null;
+  favicon: string | null;
+}
+
+interface CurrencySettings {
+  currency: string;
+  symbolPosition: string;
+  decimalPlaces: string;
+  thousandsSeparator: string;
+  taxRate: string;
+  taxId: string;
+  includeTax: boolean;
+  fiscalYearStart: string;
+  currentFiscalYear: string;
 }
 
 const categoryConfig: CategoryConfig[] = [
@@ -56,10 +88,231 @@ const categoryConfig: CategoryConfig[] = [
   }
 ];
 
+const defaultUsers: User[] = [
+  { id: '1', name: 'System Admin', email: 'admin@travelops.pro', role: 'Admin', status: 'Active' },
+  { id: '2', name: 'Sarah Johnson', email: 'sarah@travelops.pro', role: 'Sales Agent', status: 'Active' },
+  { id: '3', name: 'Michael Chen', email: 'michael@travelops.pro', role: 'Operations', status: 'Active' },
+  { id: '4', name: 'Emily Davis', email: 'emily@travelops.pro', role: 'Accountant', status: 'Active' },
+];
+
 export default function Settings() {
   const { play } = useSound();
   const [view, setView] = useState<'menu' | 'category'>('menu');
   const [selectedCategory, setSelectedCategory] = useState<SettingsCategory | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  
+  // Branding settings state
+  const [branding, setBranding] = useState<BrandingSettings>(() => {
+    const saved = localStorage.getItem('branding_settings');
+    return saved ? JSON.parse(saved) : {
+      primaryColor: '#012871',
+      secondaryColor: '#f35500',
+      accentColor: '#10b981',
+      companyName: 'TravelOps Pro',
+      tagline: 'Tour & Travel Management',
+      email: 'info@travelops.pro',
+      phone: '+977-1-4567890',
+      logo: null,
+      favicon: null,
+    };
+  });
+
+  // Currency settings state
+  const [currency, setCurrency] = useState<CurrencySettings>(() => {
+    const saved = localStorage.getItem('currency_settings');
+    return saved ? JSON.parse(saved) : {
+      currency: 'NPR - Nepalese Rupee',
+      symbolPosition: 'Before amount (रु100)',
+      decimalPlaces: '2',
+      thousandsSeparator: 'Comma (1,00,000)',
+      taxRate: '13',
+      taxId: '601234567',
+      includeTax: true,
+      fiscalYearStart: 'Shrawan (Mid July)',
+      currentFiscalYear: '2082/083',
+    };
+  });
+
+  // Users state
+  const [users, setUsers] = useState<User[]>(() => {
+    const saved = localStorage.getItem('users_data');
+    return saved ? JSON.parse(saved) : defaultUsers;
+  });
+
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [editingUser, setEditingUser] = useState<string | null>(null);
+  const [newUser, setNewUser] = useState<Partial<User>>({
+    name: '',
+    email: '',
+    role: 'Sales Agent',
+    status: 'Active'
+  });
+
+  // Show toast notification
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  // Save branding settings
+  const saveBranding = () => {
+    localStorage.setItem('branding_settings', JSON.stringify(branding));
+    showToast('Branding settings saved successfully!');
+    play('success');
+  };
+
+  // Save currency settings
+  const saveCurrency = () => {
+    localStorage.setItem('currency_settings', JSON.stringify(currency));
+    showToast('Currency settings saved successfully!');
+    play('success');
+  };
+
+  // Handle logo upload
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setBranding({ ...branding, logo: e.target?.result as string });
+        showToast('Logo uploaded successfully!');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle favicon upload
+  const handleFaviconUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setBranding({ ...branding, favicon: e.target?.result as string });
+        showToast('Favicon uploaded successfully!');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Add new user
+  const handleAddUser = () => {
+    if (!newUser.name || !newUser.email) {
+      showToast('Please fill in all required fields', 'error');
+      return;
+    }
+    const user: User = {
+      id: Date.now().toString(),
+      name: newUser.name!,
+      email: newUser.email!,
+      role: newUser.role!,
+      status: newUser.status!,
+    };
+    const updatedUsers = [...users, user];
+    setUsers(updatedUsers);
+    localStorage.setItem('users_data', JSON.stringify(updatedUsers));
+    setNewUser({ name: '', email: '', role: 'Sales Agent', status: 'Active' });
+    setShowAddUser(false);
+    showToast('User added successfully!');
+    play('success');
+  };
+
+  // Edit user
+  const handleEditUser = (userId: string) => {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      setNewUser(user);
+      setEditingUser(userId);
+      setShowAddUser(true);
+    }
+  };
+
+  // Save edited user
+  const handleSaveEditUser = () => {
+    if (!newUser.name || !newUser.email) {
+      showToast('Please fill in all required fields', 'error');
+      return;
+    }
+    const updatedUsers = users.map(u => 
+      u.id === editingUser ? { ...u, ...newUser } : u
+    );
+    setUsers(updatedUsers);
+    localStorage.setItem('users_data', JSON.stringify(updatedUsers));
+    setEditingUser(null);
+    setShowAddUser(false);
+    setNewUser({ name: '', email: '', role: 'Sales Agent', status: 'Active' });
+    showToast('User updated successfully!');
+    play('success');
+  };
+
+  // Delete user
+  const handleDeleteUser = (userId: string) => {
+    if (userId === '1') {
+      showToast('Cannot delete system admin', 'error');
+      return;
+    }
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      const updatedUsers = users.filter(u => u.id !== userId);
+      setUsers(updatedUsers);
+      localStorage.setItem('users_data', JSON.stringify(updatedUsers));
+      showToast('User deleted successfully!');
+      play('success');
+    }
+  };
+
+  // Backup data
+  const handleBackup = () => {
+    const backupData = {
+      branding: localStorage.getItem('branding_settings'),
+      currency: localStorage.getItem('currency_settings'),
+      users: localStorage.getItem('users_data'),
+      timestamp: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `travelops-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Backup downloaded successfully!');
+    play('success');
+  };
+
+  // Restore data
+  const handleRestore = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const backupData = JSON.parse(e.target?.result as string);
+          if (backupData.branding) localStorage.setItem('branding_settings', backupData.branding);
+          if (backupData.currency) localStorage.setItem('currency_settings', backupData.currency);
+          if (backupData.users) localStorage.setItem('users_data', backupData.users);
+          showToast('Data restored successfully! Reloading...');
+          play('success');
+          setTimeout(() => window.location.reload(), 1500);
+        } catch (error) {
+          showToast('Invalid backup file', 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  // Clear all data
+  const handleClearData = () => {
+    if (window.confirm('Are you sure you want to clear all data? This cannot be undone!')) {
+      localStorage.removeItem('branding_settings');
+      localStorage.removeItem('currency_settings');
+      localStorage.removeItem('users_data');
+      showToast('All data cleared! Reloading...');
+      play('success');
+      setTimeout(() => window.location.reload(), 1500);
+    }
+  };
 
   if (view === 'menu') {
     return (
@@ -103,6 +356,16 @@ export default function Settings() {
             );
           })}
         </div>
+
+        {/* Toast Notification */}
+        {toast && (
+          <div className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 ${
+            toast.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+          }`}>
+            {toast.type === 'success' ? <Check className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+            <span>{toast.message}</span>
+          </div>
+        )}
       </div>
     );
   }
@@ -121,18 +384,42 @@ export default function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Company Logo</label>
-                    <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center">
-                      <Image className="w-12 h-12 text-slate-400 mx-auto mb-2" />
-                      <p className="text-sm text-slate-600">Click to upload logo</p>
-                      <p className="text-xs text-slate-400 mt-1">PNG, JPG up to 5MB</p>
+                    <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center relative overflow-hidden">
+                      {branding.logo ? (
+                        <img src={branding.logo} alt="Logo" className="w-full h-32 object-contain" />
+                      ) : (
+                        <>
+                          <Image className="w-12 h-12 text-slate-400 mx-auto mb-2" />
+                          <p className="text-sm text-slate-600">Click to upload logo</p>
+                          <p className="text-xs text-slate-400 mt-1">PNG, JPG up to 5MB</p>
+                        </>
+                      )}
+                      <input 
+                        type="file" 
+                        accept="image/png,image/jpeg"
+                        onChange={handleLogoUpload}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                      />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Favicon</label>
-                    <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center">
-                      <FileText className="w-12 h-12 text-slate-400 mx-auto mb-2" />
-                      <p className="text-sm text-slate-600">Click to upload favicon</p>
-                      <p className="text-xs text-slate-400 mt-1">ICO, PNG 32x32px</p>
+                    <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center relative overflow-hidden">
+                      {branding.favicon ? (
+                        <img src={branding.favicon} alt="Favicon" className="w-16 h-16 object-contain mx-auto" />
+                      ) : (
+                        <>
+                          <FileText className="w-12 h-12 text-slate-400 mx-auto mb-2" />
+                          <p className="text-sm text-slate-600">Click to upload favicon</p>
+                          <p className="text-xs text-slate-400 mt-1">ICO, PNG 32x32px</p>
+                        </>
+                      )}
+                      <input 
+                        type="file" 
+                        accept="image/png,image/jpeg,image/x-icon"
+                        onChange={handleFaviconUpload}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                      />
                     </div>
                   </div>
                 </div>
@@ -143,15 +430,30 @@ export default function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Primary Color</label>
-                    <input type="color" defaultValue="#012871" className="w-full h-12 border border-slate-200 rounded-lg cursor-pointer" />
+                    <input 
+                      type="color" 
+                      value={branding.primaryColor}
+                      onChange={(e) => setBranding({...branding, primaryColor: e.target.value})}
+                      className="w-full h-12 border border-slate-200 rounded-lg cursor-pointer" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Secondary Color</label>
-                    <input type="color" defaultValue="#f35500" className="w-full h-12 border border-slate-200 rounded-lg cursor-pointer" />
+                    <input 
+                      type="color" 
+                      value={branding.secondaryColor}
+                      onChange={(e) => setBranding({...branding, secondaryColor: e.target.value})}
+                      className="w-full h-12 border border-slate-200 rounded-lg cursor-pointer" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Accent Color</label>
-                    <input type="color" defaultValue="#10b981" className="w-full h-12 border border-slate-200 rounded-lg cursor-pointer" />
+                    <input 
+                      type="color" 
+                      value={branding.accentColor}
+                      onChange={(e) => setBranding({...branding, accentColor: e.target.value})}
+                      className="w-full h-12 border border-slate-200 rounded-lg cursor-pointer" 
+                    />
                   </div>
                 </div>
               </div>
@@ -161,21 +463,50 @@ export default function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Company Name</label>
-                    <input type="text" defaultValue="TravelOps Pro" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
+                    <input 
+                      type="text" 
+                      value={branding.companyName}
+                      onChange={(e) => setBranding({...branding, companyName: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Tagline</label>
-                    <input type="text" defaultValue="Tour & Travel Management" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
+                    <input 
+                      type="text" 
+                      value={branding.tagline}
+                      onChange={(e) => setBranding({...branding, tagline: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input type="email" defaultValue="info@travelops.pro" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
+                    <input 
+                      type="email" 
+                      value={branding.email}
+                      onChange={(e) => setBranding({...branding, email: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Phone</label>
-                    <input type="tel" defaultValue="+977-1-4567890" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
+                    <input 
+                      type="tel" 
+                      value={branding.phone}
+                      onChange={(e) => setBranding({...branding, phone: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                    />
                   </div>
                 </div>
+              </div>
+
+              <div className="border-t border-slate-200 pt-6">
+                <button 
+                  onClick={saveBranding}
+                  className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg font-medium hover:shadow-lg transition-all"
+                >
+                  <Save className="w-4 h-4" /> Save Branding Settings
+                </button>
               </div>
             </div>
           );
@@ -188,7 +519,11 @@ export default function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Default Currency</label>
-                    <select className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none">
+                    <select 
+                      value={currency.currency}
+                      onChange={(e) => setCurrency({...currency, currency: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                    >
                       <option>NPR - Nepalese Rupee</option>
                       <option>USD - US Dollar</option>
                       <option>EUR - Euro</option>
@@ -198,14 +533,22 @@ export default function Settings() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Currency Symbol Position</label>
-                    <select className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none">
+                    <select 
+                      value={currency.symbolPosition}
+                      onChange={(e) => setCurrency({...currency, symbolPosition: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                    >
                       <option>Before amount (रु100)</option>
                       <option>After amount (100 रु)</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Decimal Places</label>
-                    <select className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none">
+                    <select 
+                      value={currency.decimalPlaces}
+                      onChange={(e) => setCurrency({...currency, decimalPlaces: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                    >
                       <option>2</option>
                       <option>0</option>
                       <option>3</option>
@@ -213,7 +556,11 @@ export default function Settings() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Thousands Separator</label>
-                    <select className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none">
+                    <select 
+                      value={currency.thousandsSeparator}
+                      onChange={(e) => setCurrency({...currency, thousandsSeparator: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                    >
                       <option>Comma (1,00,000)</option>
                       <option>Space (1 00 000)</option>
                       <option>None (100000)</option>
@@ -227,15 +574,30 @@ export default function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Default VAT/Tax Rate (%)</label>
-                    <input type="number" defaultValue="13" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
+                    <input 
+                      type="number" 
+                      value={currency.taxRate}
+                      onChange={(e) => setCurrency({...currency, taxRate: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Tax ID / PAN Number</label>
-                    <input type="text" defaultValue="601234567" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
+                    <input 
+                      type="text" 
+                      value={currency.taxId}
+                      onChange={(e) => setCurrency({...currency, taxId: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                    />
                   </div>
                   <div className="md:col-span-2">
                     <label className="flex items-center gap-2">
-                      <input type="checkbox" defaultChecked className="w-4 h-4 text-[#012871] rounded" />
+                      <input 
+                        type="checkbox" 
+                        checked={currency.includeTax}
+                        onChange={(e) => setCurrency({...currency, includeTax: e.target.checked})}
+                        className="w-4 h-4 text-[#012871] rounded" 
+                      />
                       <span className="text-sm text-slate-700">Include tax in all prices by default</span>
                     </label>
                   </div>
@@ -247,7 +609,11 @@ export default function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Fiscal Year Start</label>
-                    <select className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none">
+                    <select 
+                      value={currency.fiscalYearStart}
+                      onChange={(e) => setCurrency({...currency, fiscalYearStart: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                    >
                       <option>Shrawan (Mid July)</option>
                       <option>January</option>
                       <option>April</option>
@@ -255,9 +621,23 @@ export default function Settings() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Current Fiscal Year</label>
-                    <input type="text" defaultValue="2082/083" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" />
+                    <input 
+                      type="text" 
+                      value={currency.currentFiscalYear}
+                      onChange={(e) => setCurrency({...currency, currentFiscalYear: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                    />
                   </div>
                 </div>
+              </div>
+
+              <div className="border-t border-slate-200 pt-6">
+                <button 
+                  onClick={saveCurrency}
+                  className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg font-medium hover:shadow-lg transition-all"
+                >
+                  <Save className="w-4 h-4" /> Save Currency Settings
+                </button>
               </div>
             </div>
           );
@@ -267,10 +647,89 @@ export default function Settings() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-slate-800">Staff Users</h3>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg font-medium hover:shadow-lg transition-all">
+                <button 
+                  onClick={() => {
+                    setShowAddUser(true);
+                    setEditingUser(null);
+                    setNewUser({ name: '', email: '', role: 'Sales Agent', status: 'Active' });
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg font-medium hover:shadow-lg transition-all"
+                >
                   <Users className="w-4 h-4" /> Add User
                 </button>
               </div>
+
+              {/* Add/Edit User Modal */}
+              {showAddUser && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-xl p-6 w-full max-w-md">
+                    <h3 className="text-lg font-semibold mb-4">{editingUser ? 'Edit User' : 'Add New User'}</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Name</label>
+                        <input 
+                          type="text" 
+                          value={newUser.name}
+                          onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                          placeholder="Enter user name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <input 
+                          type="email" 
+                          value={newUser.email}
+                          onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none" 
+                          placeholder="Enter email address"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                        <select 
+                          value={newUser.role}
+                          onChange={(e) => setNewUser({...newUser, role: e.target.value})}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                        >
+                          <option>Admin</option>
+                          <option>Sales Agent</option>
+                          <option>Operations</option>
+                          <option>Accountant</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                        <select 
+                          value={newUser.status}
+                          onChange={(e) => setNewUser({...newUser, status: e.target.value})}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#012871] outline-none"
+                        >
+                          <option>Active</option>
+                          <option>Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 mt-6">
+                      <button 
+                        onClick={() => {
+                          setShowAddUser(false);
+                          setEditingUser(null);
+                        }}
+                        className="flex-1 px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50"
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        onClick={editingUser ? handleSaveEditUser : handleAddUser}
+                        className="flex-1 px-4 py-2 bg-gradient-to-r from-[#012871] to-[#011950] text-white rounded-lg hover:shadow-lg"
+                      >
+                        {editingUser ? 'Save Changes' : 'Add User'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -284,62 +743,54 @@ export default function Settings() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    <tr>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold text-white">SA</div>
-                          <span className="text-sm font-medium text-slate-800">System Admin</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-600">admin@travelops.pro</td>
-                      <td className="px-4 py-3"><span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Admin</span></td>
-                      <td className="px-4 py-3"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Active</span></td>
-                      <td className="px-4 py-3 text-right">
-                        <button className="text-sm text-[#012871] hover:underline">Edit</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white">SJ</div>
-                          <span className="text-sm font-medium text-slate-800">Sarah Johnson</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-600">sarah@travelops.pro</td>
-                      <td className="px-4 py-3"><span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Sales Agent</span></td>
-                      <td className="px-4 py-3"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Active</span></td>
-                      <td className="px-4 py-3 text-right">
-                        <button className="text-sm text-[#012871] hover:underline">Edit</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-xs font-bold text-white">MC</div>
-                          <span className="text-sm font-medium text-slate-800">Michael Chen</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-600">michael@travelops.pro</td>
-                      <td className="px-4 py-3"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Operations</span></td>
-                      <td className="px-4 py-3"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Active</span></td>
-                      <td className="px-4 py-3 text-right">
-                        <button className="text-sm text-[#012871] hover:underline">Edit</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center text-xs font-bold text-white">ED</div>
-                          <span className="text-sm font-medium text-slate-800">Emily Davis</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-600">emily@travelops.pro</td>
-                      <td className="px-4 py-3"><span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">Accountant</span></td>
-                      <td className="px-4 py-3"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Active</span></td>
-                      <td className="px-4 py-3 text-right">
-                        <button className="text-sm text-[#012871] hover:underline">Edit</button>
-                      </td>
-                    </tr>
+                    {users.map((user) => (
+                      <tr key={user.id}>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#012871] to-[#011950] flex items-center justify-center text-xs font-bold text-white">
+                              {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            </div>
+                            <span className="text-sm font-medium text-slate-800">{user.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-slate-600">{user.email}</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            user.role === 'Admin' ? 'bg-purple-100 text-purple-700' :
+                            user.role === 'Sales Agent' ? 'bg-blue-100 text-blue-700' :
+                            user.role === 'Operations' ? 'bg-green-100 text-green-700' :
+                            'bg-orange-100 text-orange-700'
+                          }`}>
+                            {user.role}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            user.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                          }`}>
+                            {user.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <div className="flex gap-2 justify-end">
+                            <button 
+                              onClick={() => handleEditUser(user.id)}
+                              className="text-sm text-[#012871] hover:underline"
+                            >
+                              Edit
+                            </button>
+                            {user.id !== '1' && (
+                              <button 
+                                onClick={() => handleDeleteUser(user.id)}
+                                className="text-sm text-red-600 hover:underline"
+                              >
+                                Delete
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
